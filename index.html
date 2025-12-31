@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غمدان عبده | مبرمج ومحلل نظم محترف</title>
+    <title>غمدان عبده | خريج علوم حاسوب ومحلل نظم محترف</title>
     
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts - Tajawal (تجوال) -->
+    <!-- Google Fonts - أفضل الخطوط العربية -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Swiper JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    
+    <!-- Light Gallery -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lightgallery-bundle.min.css">
     
     <!-- Main CSS -->
     <link rel="stylesheet" href="style.css">
@@ -24,7 +32,7 @@
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
     
     <style>
-        /* Preloader */
+        /* Preloader محسن */
         #preloader {
             position: fixed;
             top: 0;
@@ -39,75 +47,236 @@
             transition: opacity 0.5s ease;
         }
         
+        .loader-container {
+            text-align: center;
+        }
+        
         .loader {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             position: relative;
+            margin: 0 auto 30px;
         }
         
         .loader-circle {
             position: absolute;
             width: 100%;
             height: 100%;
-            border: 3px solid transparent;
-            border-top: 3px solid #6c63ff;
+            border: 4px solid transparent;
+            border-top: 4px solid #6c63ff;
             border-radius: 50%;
-            animation: rotate 1.5s linear infinite;
+            animation: rotate 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
         }
         
         .loader-circle:nth-child(2) {
-            border-top: 3px solid #36d1dc;
-            animation-delay: 0.5s;
+            border-top: 4px solid #36d1dc;
+            animation-delay: 0.3s;
         }
         
         .loader-circle:nth-child(3) {
-            border-top: 3px solid #ff6b6b;
-            animation-delay: 1s;
+            border-top: 4px solid #ff6b6b;
+            animation-delay: 0.6s;
+        }
+        
+        .loader-circle:nth-child(4) {
+            border-top: 4px solid #4ecdc4;
+            animation-delay: 0.9s;
         }
         
         .loader-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+            background: linear-gradient(45deg, #6c63ff, #36d1dc, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 2s infinite alternate;
+        }
+        
+        .loader-subtext {
+            color: rgba(255, 255, 255, 0.8);
             font-family: 'Tajawal', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
         }
         
         @keyframes rotate {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        @keyframes textGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.3); }
+        }
+        
+        /* Welcome Message */
+        #welcomeMessage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.95) 50%, rgba(36, 36, 62, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .welcome-content {
+            text-align: center;
+            padding: 40px;
+            max-width: 800px;
+            animation: welcomeFadeIn 1.5s ease-out;
+        }
+        
+        .welcome-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #6c63ff, #36d1dc, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: titleGlow 3s infinite alternate;
+        }
+        
+        .welcome-subtitle {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .welcome-name {
+            font-family: 'El Messiri', sans-serif;
+            font-size: 60px;
+            font-weight: 700;
+            color: white;
+            margin: 30px 0;
+            padding: 20px 40px;
+            background: linear-gradient(45deg, rgba(108, 99, 255, 0.2), rgba(54, 209, 220, 0.2));
+            border-radius: 20px;
+            border: 2px solid rgba(108, 99, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: namePulse 2s infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-name::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: nameShine 3s infinite linear;
+            transform: rotate(45deg);
+        }
+        
+        .enter-btn {
+            padding: 18px 50px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #6c63ff, #36d1dc);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .enter-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.6);
+        }
+        
+        .enter-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: btnShine 3s infinite linear;
+            transform: rotate(45deg);
+        }
+        
+        @keyframes welcomeFadeIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(108, 99, 255, 0.3)); }
+            100% { filter: drop-shadow(0 0 20px rgba(54, 209, 220, 0.5)); }
+        }
+        
+        @keyframes namePulse {
+            0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+            100% { transform: scale(1.03); box-shadow: 0 15px 40px rgba(108, 99, 255, 0.5); }
+        }
+        
+        @keyframes nameShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        @keyframes btnShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
     </style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="loader">
-            <div class="loader-circle"></div>
-            <div class="loader-circle"></div>
-            <div class="loader-circle"></div>
-            <div class="loader-text">جاري التحميل...</div>
+    <!-- Welcome Message -->
+    <div id="welcomeMessage">
+        <div class="welcome-content">
+            <h1 class="welcome-title animate__animated animate__fadeInDown">مرحباً بك في عالمي الرقمي</h1>
+            <p class="welcome-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                حيث الإبداع التقني يلتقي بالتميز البرمجي
+            </p>
+            <div class="welcome-name animate__animated animate__zoomIn animate__delay-2s">
+                غمدان عبده علي صالح
+            </div>
+            <p class="welcome-subtitle animate__animated animate__fadeInUp animate__delay-3s">
+                خريج علوم حاسوب | محلل ومبرمج نظم محترف
+            </p>
+            <button class="enter-btn animate__animated animate__pulse animate__delay-4s animate__infinite">
+                <i class="fas fa-arrow-right"></i> ادخل إلى المحفظة
+            </button>
         </div>
     </div>
 
-    <!-- Floating Particles Background -->
-    <div id="particles-bg"></div>
-    
-    <!-- Floating Code Elements -->
-    <div class="floating-code">
-        <div class="code-tag">&lt;html&gt;</div>
-        <div class="code-tag">&lt;php&gt;</div>
-        <div class="code-tag">&lt;js&gt;</div>
-        <div class="code-tag">&lt;css&gt;</div>
-        <div class="code-tag">&lt;python&gt;</div>
-        <div class="code-tag">&lt;sql&gt;</div>
-        <div class="code-tag">function()</div>
-        <div class="code-tag">.class{}</div>
-        <div class="code-tag">#id{}</div>
-        <div class="code-tag">$var</div>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="loader">
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+            </div>
+            <div class="loader-text">جاري تحميل المحفظة...</div>
+            <div class="loader-subtext">خريج علوم حاسوب - جامعة إقليم سبا</div>
+        </div>
     </div>
 
     <!-- Header -->
@@ -119,8 +288,8 @@
                         <i class="fas fa-code"></i>
                     </div>
                     <div class="logo-text">
-                        <span class="logo-name">غمدان عبده</span>
-                        <span class="logo-title">محلل نظم</span>
+                        <span class="logo-name" data-text="غمدان عبده">غمدان عبده</span>
+                        <span class="logo-title">خريج علوم حاسوب</span>
                     </div>
                 </div>
             </div>
@@ -130,49 +299,55 @@
                     <li class="nav-item">
                         <a href="#home" class="nav-link active">
                             <i class="fas fa-home"></i>
-                            <span>الرئيسية</span>
+                            <span data-translate="home">الرئيسية</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#about" class="nav-link">
-                            <i class="fas fa-user"></i>
-                            <span>عني</span>
+                            <i class="fas fa-user-tie"></i>
+                            <span data-translate="about">عني</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#education" class="nav-link">
                             <i class="fas fa-graduation-cap"></i>
-                            <span>التعليم</span>
+                            <span data-translate="education">التعليم</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#skills" class="nav-link">
                             <i class="fas fa-cogs"></i>
-                            <span>المهارات</span>
+                            <span data-translate="skills">المهارات</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#projects" class="nav-link">
                             <i class="fas fa-project-diagram"></i>
-                            <span>المشاريع</span>
+                            <span data-translate="projects">المشاريع</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#gallery" class="nav-link">
+                            <i class="fas fa-images"></i>
+                            <span data-translate="gallery">معرض الصور</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#experience" class="nav-link">
                             <i class="fas fa-briefcase"></i>
-                            <span>الخبرات</span>
+                            <span data-translate="experience">الخبرات</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#games" class="nav-link">
                             <i class="fas fa-gamepad"></i>
-                            <span>الألعاب</span>
+                            <span data-translate="games">التحدي التقني</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#contact" class="nav-link">
                             <i class="fas fa-envelope"></i>
-                            <span>التواصل</span>
+                            <span data-translate="contact">التواصل</span>
                         </a>
                     </li>
                 </ul>
@@ -204,80 +379,81 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero-section">
-        <div class="hero-container">
+        <div class="particles-bg" id="heroParticles"></div>
+        <div class="container">
             <div class="hero-content">
                 <div class="hero-text" data-aos="fade-up">
                     <div class="greeting">
                         <div class="greeting-text">
-                            <span class="hello">مرحباً</span>
+                            <span class="hello">مرحباً، أنا</span>
                             <div class="wave-hand">👋</div>
                         </div>
                         <div class="intro">
-                            أنا <span class="highlight">غمدان عبده</span>
+                            <span class="highlight" data-text="غمدان عبده">غمدان عبده</span>
                         </div>
                     </div>
                     
                     <h1 class="hero-title">
-                        <span class="title-line">مبرمج ومحلل</span>
-                        <span class="title-line">نظم <span class="gradient-text">محترف</span></span>
+                        <span class="title-line">خريج علوم الحاسوب</span>
+                        <span class="title-line gradient-text">ومحلل نظم محترف</span>
                     </h1>
                     
                     <p class="hero-description">
-                        خريج تكنولوجيا المعلومات وعلوم الحاسوب بجامعة إقليم سبا. 
-                        متخصص في تطوير الأنظمة الإلكترونية وإدارة قواعد البيانات 
+                        خريج تكنولوجيا المعلومات وعلوم الحاسوب بجامعة إقليم سبا بتقدير جيد جداً. 
+                        متخصص في تطوير الأنظمة الإلكترونية، إدارة قواعد البيانات، 
                         وتصميم حلول الأرشفة الرقمية لتعزيز كفاءة المؤسسات.
                     </p>
                     
                     <div class="hero-actions">
                         <a href="#contact" class="btn btn-primary btn-glow">
                             <i class="fas fa-paper-plane"></i>
-                            <span>تواصل معي</span>
+                            <span data-translate="contact_me">تواصل معي</span>
                         </a>
                         <a href="#projects" class="btn btn-outline">
                             <i class="fas fa-eye"></i>
-                            <span>تصفح المشاريع</span>
+                            <span data-translate="view_projects">تصفح المشاريع</span>
                         </a>
                         <button class="btn btn-secondary" id="downloadCVBtn">
                             <i class="fas fa-download"></i>
-                            <span>تحميل السيرة الذاتية</span>
+                            <span data-translate="download_cv">تحميل السيرة الذاتية</span>
                         </button>
                     </div>
                     
                     <div class="hero-stats">
-                        <div class="stat-card">
+                        <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
                             <div class="stat-icon">
                                 <i class="fas fa-code"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-number" data-count="5">0</div>
-                                <div class="stat-label">لغات برمجة</div>
+                                <div class="stat-label" data-translate="programming_languages">لغات برمجة</div>
                             </div>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
                             <div class="stat-icon">
                                 <i class="fas fa-project-diagram"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-number" data-count="25">0</div>
-                                <div class="stat-label">مشروع مكتمل</div>
+                                <div class="stat-label" data-translate="completed_projects">مشروع مكتمل</div>
                             </div>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
                             <div class="stat-icon">
                                 <i class="fas fa-award"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-number" data-count="3">0</div>
-                                <div class="stat-label">سنوات خبرة</div>
+                                <div class="stat-label" data-translate="years_experience">سنوات خبرة</div>
                             </div>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card" data-aos="zoom-in" data-aos-delay="400">
                             <div class="stat-icon">
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-number" data-count="50">0</div>
-                                <div class="stat-label">عميل راضٍ</div>
+                                <div class="stat-label" data-translate="satisfied_clients">عميل راضٍ</div>
                             </div>
                         </div>
                     </div>
@@ -288,8 +464,7 @@
                         <div class="profile-wrapper">
                             <div class="profile-circle">
                                 <div class="profile-inner">
-                                    <!-- Default profile icon or upload your image -->
-                                    <div class="profile-default">
+                                    <div class="profile-default" id="profileImage">
                                         <i class="fas fa-user-tie"></i>
                                     </div>
                                 </div>
@@ -301,20 +476,20 @@
                         </div>
                         
                         <div class="profile-badges">
-                            <div class="badge" data-tooltip="PHP Developer">
+                            <div class="badge" data-tooltip="خريج علوم حاسوب">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="badge" data-tooltip="مطور PHP">
                                 <i class="fab fa-php"></i>
                             </div>
-                            <div class="badge" data-tooltip="JavaScript Expert">
+                            <div class="badge" data-tooltip="مطور JavaScript">
                                 <i class="fab fa-js"></i>
                             </div>
-                            <div class="badge" data-tooltip="Database Admin">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <div class="badge" data-tooltip="System Analyst">
+                            <div class="badge" data-tooltip="محلل نظم">
                                 <i class="fas fa-sitemap"></i>
                             </div>
-                            <div class="badge" data-tooltip="Web Designer">
-                                <i class="fas fa-paint-brush"></i>
+                            <div class="badge" data-tooltip="إدارة قواعد بيانات">
+                                <i class="fas fa-database"></i>
                             </div>
                         </div>
                         
@@ -325,29 +500,44 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Scroll Indicator -->
-            <div class="scroll-indicator">
-                <div class="mouse">
-                    <div class="wheel"></div>
-                </div>
-                <div class="arrow">
-                    <i class="fas fa-chevron-down"></i>
-                </div>
+        </div>
+        
+        <!-- Floating Code Elements -->
+        <div class="floating-code">
+            <div class="code-tag">&lt;html&gt;</div>
+            <div class="code-tag">&lt;php&gt;</div>
+            <div class="code-tag">&lt;js&gt;</div>
+            <div class="code-tag">&lt;css&gt;</div>
+            <div class="code-tag">&lt;python&gt;</div>
+            <div class="code-tag">&lt;sql&gt;</div>
+            <div class="code-tag">AI{}</div>
+            <div class="code-tag">ML()</div>
+            <div class="code-tag">class{}</div>
+            <div class="code-tag">#id{}</div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow">
+                <i class="fas fa-chevron-down"></i>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="section about-section">
+        <div class="particles-bg" id="aboutParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">عن غمدان عبده</span>
+                        <span class="title-text" data-translate="about_me">عن غمدان عبده</span>
                         <span class="title-line"></span>
                     </h2>
-                    <p class="section-subtitle">
+                    <p class="section-subtitle" data-translate="about_title">
                         تعرف على مسيرتي المهنية والإنجازات
                     </p>
                 </div>
@@ -358,22 +548,28 @@
                     <div class="about-image">
                         <div class="image-frame">
                             <div class="frame-decoration"></div>
-                            <div class="image-placeholder">
-                                <i class="fas fa-user-tie"></i>
+                            <div class="image-upload-container">
+                                <input type="file" id="imageUpload" accept="image/*" hidden>
+                                <div class="image-placeholder" id="aboutImage">
+                                    <i class="fas fa-user-tie"></i>
+                                    <button class="upload-btn" onclick="document.getElementById('imageUpload').click()">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="image-glow"></div>
                         </div>
                     </div>
                     
                     <div class="about-info">
-                        <h3 class="info-title">المعلومات الشخصية</h3>
+                        <h3 class="info-title" data-translate="personal_info">المعلومات الشخصية</h3>
                         <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-icon">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <div class="info-content">
-                                    <span class="info-label">الاسم الكامل:</span>
+                                    <span class="info-label" data-translate="full_name">الاسم الكامل:</span>
                                     <span class="info-value">غمدان عبده علي صالح</span>
                                 </div>
                             </div>
@@ -382,7 +578,7 @@
                                     <i class="fas fa-calendar-alt"></i>
                                 </div>
                                 <div class="info-content">
-                                    <span class="info-label">تاريخ الميلاد:</span>
+                                    <span class="info-label" data-translate="birth_date">تاريخ الميلاد:</span>
                                     <span class="info-value">2 أغسطس 1997</span>
                                 </div>
                             </div>
@@ -391,7 +587,7 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                 </div>
                                 <div class="info-content">
-                                    <span class="info-label">المدينة:</span>
+                                    <span class="info-label" data-translate="city">المدينة:</span>
                                     <span class="info-value">الريعة - مارب</span>
                                 </div>
                             </div>
@@ -400,7 +596,7 @@
                                     <i class="fas fa-heart"></i>
                                 </div>
                                 <div class="info-content">
-                                    <span class="info-label">الحالة الاجتماعية:</span>
+                                    <span class="info-label" data-translate="marital_status">الحالة الاجتماعية:</span>
                                     <span class="info-value">متزوج</span>
                                 </div>
                             </div>
@@ -409,7 +605,7 @@
                                     <i class="fas fa-envelope"></i>
                                 </div>
                                 <div class="info-content">
-                                    <span class="info-label">البريد الإلكتروني:</span>
+                                    <span class="info-label" data-translate="email">البريد الإلكتروني:</span>
                                     <span class="info-value">gamdan.abdu@example.com</span>
                                 </div>
                             </div>
@@ -418,7 +614,7 @@
                                     <i class="fas fa-phone"></i>
                                 </div>
                                 <div class="info-content">
-                                    <span class="info-label">رقم الهاتف:</span>
+                                    <span class="info-label" data-translate="phone">رقم الهاتف:</span>
                                     <span class="info-value">+967 777 888 999</span>
                                 </div>
                             </div>
@@ -427,22 +623,27 @@
                 </div>
                 
                 <div class="about-description" data-aos="fade-left">
-                    <h3 class="description-title">نبذة عني</h3>
+                    <h3 class="description-title" data-translate="bio_title">نبذة عني</h3>
                     <div class="description-text">
                         <p>
-                            <strong>مبرمج ومحلل نظم بخلفية إدارية</strong>، 
-                            أجيد استخدام لغات البرمجة (PHP, JavaScript, C#, Python). 
-                            أمتلك خبرة في إدارة الأنظمة وتصميم النماذج والتقارير الإدارية.
+                            <strong>خريج علوم حاسوب</strong> من جامعة إقليم سبا بتقدير جيد جداً، 
+                            متخصص في تكنولوجيا المعلومات وعلوم الحاسوب. أمتلك خبرة عملية في 
+                            تحليل وتصميم الأنظمة الإلكترونية.
                         </p>
                         <p>
-                            أسعى لتوظيف مهاراتي لتعزيز كفاءة المؤسسات من خلال 
-                            <strong>حلول الأرشفة الرقمية ورقمنة البيانات</strong>، 
-                            وذلك باستخدام أحدث التقنيات والأساليب البرمجية.
+                            <strong>مبرمج ومحلل نظم</strong> بخلفية إدارية متينة، أجيد استخدام 
+                            لغات البرمجة المختلفة (PHP, JavaScript, C#, Python) لتحويل 
+                            الأفكار إلى حلول عملية.
                         </p>
                         <p>
-                            أؤمن بأهمية العمل الجماعي والتواصل الفعال لتحقيق 
-                            الأهداف المشتركة، وأتمتع بمهارات التعلم السريع والتكيف 
-                            مع المتغيرات التقنية.
+                            أسعى لتوظيف مهاراتي في <strong>التحليل والبرمجة</strong> لتعزيز 
+                            كفاءة المؤسسات من خلال حلول الأرشفة الرقمية ورقمنة البيانات، 
+                            باستخدام أحدث التقنيات والأساليب البرمجية.
+                        </p>
+                        <p>
+                            أؤمن بأهمية <strong>العمل الجماعي والتواصل الفعال</strong> لتحقيق 
+                            الأهداف المشتركة، وأتمتع بمهارات التعلم السريع والتكيف مع المتغيرات 
+                            التقنية في عالم التكنولوجيا المتسارع.
                         </p>
                     </div>
                     
@@ -450,7 +651,7 @@
                         <div class="quote-icon">
                             <i class="fas fa-quote-right"></i>
                         </div>
-                        <div class="quote-text">
+                        <div class="quote-text" data-translate="quote">
                             "التكنولوجيا ليست مجرد أدوات، بل هي حلول تخلق مستقبلاً أفضل"
                         </div>
                     </div>
@@ -458,11 +659,11 @@
                     <div class="about-actions">
                         <button class="btn btn-primary" id="viewFullCV">
                             <i class="fas fa-file-alt"></i>
-                            <span>عرض السيرة الكاملة</span>
+                            <span data-translate="view_full_cv">عرض السيرة الكاملة</span>
                         </button>
                         <a href="#contact" class="btn btn-outline">
                             <i class="fas fa-handshake"></i>
-                            <span>لنتعاون معاً</span>
+                            <span data-translate="lets_collaborate">لنتعاون معاً</span>
                         </a>
                     </div>
                 </div>
@@ -472,14 +673,15 @@
 
     <!-- Education Section -->
     <section id="education" class="section education-section">
+        <div class="particles-bg" id="educationParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">التعليم والمؤهلات</span>
+                        <span class="title-text" data-translate="education_title">التعليم والمؤهلات</span>
                         <span class="title-line"></span>
                     </h2>
-                    <p class="section-subtitle">
+                    <p class="section-subtitle" data-translate="education_subtitle">
                         الشهادات العلمية والدورات التدريبية
                     </p>
                 </div>
@@ -487,32 +689,32 @@
             
             <div class="education-timeline" data-aos="fade-up">
                 <div class="timeline">
-                    <!-- Education Item 1 -->
+                    <!-- البكالوريوس -->
                     <div class="timeline-item">
                         <div class="timeline-dot">
                             <div class="dot"></div>
                         </div>
                         <div class="timeline-content">
-                            <div class="timeline-date">2021 - 2025</div>
+                            <div class="timeline-date" data-translate="graduation_year">2021 - 2025</div>
                             <div class="timeline-card">
                                 <div class="card-header">
                                     <div class="edu-icon">
                                         <i class="fas fa-university"></i>
                                     </div>
                                     <div class="edu-title">
-                                        <h3>بكالوريوس علوم الحاسوب</h3>
-                                        <h4>جامعة إقليم سبا</h4>
+                                        <h3 data-translate="bachelor_degree">بكالوريوس علوم الحاسوب</h3>
+                                        <h4 data-translate="university">جامعة إقليم سبا</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <p class="edu-description">
+                                    <p class="edu-description" data-translate="degree_description">
                                         تخصص في تكنولوجيا المعلومات وعلوم الحاسوب 
                                         بكلية الحاسوب وتكنولوجيا المعلومات.
                                     </p>
                                     <div class="edu-details">
                                         <span class="detail-item">
                                             <i class="fas fa-star"></i>
-                                            التقدير: جيد جداً
+                                            <span data-translate="grade">التقدير: جيد جداً</span>
                                         </span>
                                         <span class="detail-item">
                                             <i class="fas fa-book"></i>
@@ -524,6 +726,7 @@
                                         <span class="skill-tag">شبكات</span>
                                         <span class="skill-tag">قواعد بيانات</span>
                                         <span class="skill-tag">ذكاء اصطناعي</span>
+                                        <span class="skill-tag">تطوير ويب</span>
                                     </div>
                                 </div>
                                 <div class="card-footer">
@@ -536,21 +739,21 @@
                         </div>
                     </div>
                     
-                    <!-- Education Item 2 -->
+                    <!-- الثانوية -->
                     <div class="timeline-item">
                         <div class="timeline-dot">
                             <div class="dot"></div>
                         </div>
                         <div class="timeline-content">
-                            <div class="timeline-date">2016</div>
+                            <div class="timeline-date" data-translate="year_2016">2016</div>
                             <div class="timeline-card">
                                 <div class="card-header">
                                     <div class="edu-icon">
                                         <i class="fas fa-school"></i>
                                     </div>
                                     <div class="edu-title">
-                                        <h3>الثانوية العامة</h3>
-                                        <h4>مدرسة الثورة - الريعة</h4>
+                                        <h3 data-translate="high_school">الثانوية العامة</h3>
+                                        <h4 data-translate="school_name">مدرسة الثورة - الريعة</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -560,7 +763,7 @@
                                     <div class="edu-details">
                                         <span class="detail-item">
                                             <i class="fas fa-graduation-cap"></i>
-                                            الفرع: علمي
+                                            <span data-translate="scientific_section">الفرع: علمي</span>
                                         </span>
                                         <span class="detail-item">
                                             <i class="fas fa-map-marker-alt"></i>
@@ -572,21 +775,21 @@
                         </div>
                     </div>
                     
-                    <!-- Courses -->
+                    <!-- الدورات -->
                     <div class="timeline-item">
                         <div class="timeline-dot">
                             <div class="dot"></div>
                         </div>
                         <div class="timeline-content">
-                            <div class="timeline-date">الدورات</div>
+                            <div class="timeline-date" data-translate="courses_title">الدورات</div>
                             <div class="timeline-card">
                                 <div class="card-header">
                                     <div class="edu-icon">
                                         <i class="fas fa-certificate"></i>
                                     </div>
                                     <div class="edu-title">
-                                        <h3>الدورات التدريبية</h3>
-                                        <h4>شهادات متخصصة</h4>
+                                        <h3 data-translate="courses_title">الدورات التدريبية</h3>
+                                        <h4 data-translate="courses_subtitle">شهادات متخصصة</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -596,7 +799,7 @@
                                                 <i class="fas fa-shield-alt"></i>
                                             </div>
                                             <div class="course-info">
-                                                <h5>الأمن السيبراني</h5>
+                                                <h5 data-translate="cyber_security">الأمن السيبراني</h5>
                                                 <p>جامعة سيئون</p>
                                             </div>
                                         </div>
@@ -605,7 +808,7 @@
                                                 <i class="fas fa-desktop"></i>
                                             </div>
                                             <div class="course-info">
-                                                <h5>الرخصة الدولية لقيادة الحاسوب</h5>
+                                                <h5 data-translate="icdl_certificate">الرخصة الدولية لقيادة الحاسوب</h5>
                                                 <p>شهادة ICDL معتمدة</p>
                                             </div>
                                         </div>
@@ -614,7 +817,7 @@
                                                 <i class="fas fa-lock"></i>
                                             </div>
                                             <div class="course-info">
-                                                <h5>حماية الطرفيات والأجهزة</h5>
+                                                <h5 data-translate="device_protection">حماية الطرفيات والأجهزة</h5>
                                                 <p>جامعة سيئون</p>
                                             </div>
                                         </div>
@@ -623,8 +826,8 @@
                                                 <i class="fas fa-language"></i>
                                             </div>
                                             <div class="course-info">
-                                                <h5>اللغة الإنجليزية</h5>
-                                                <p>المستوى: متوسط</p>
+                                                <h5 data-translate="english_language">اللغة الإنجليزية</h5>
+                                                <p data-translate="intermediate_level">المستوى: متوسط</p>
                                             </div>
                                         </div>
                                     </div>
@@ -639,27 +842,28 @@
 
     <!-- Skills Section -->
     <section id="skills" class="section skills-section">
+        <div class="particles-bg" id="skillsParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">المهارات التقنية</span>
+                        <span class="title-text" data-translate="skills_title">المهارات التقنية</span>
                         <span class="title-line"></span>
                     </h2>
-                    <p class="section-subtitle">
+                    <p class="section-subtitle" data-translate="skills_subtitle">
                         التقنيات والأدوات التي أتقنها
                     </p>
                 </div>
             </div>
             
             <div class="skills-container">
-                <!-- Programming Languages -->
+                <!-- لغات البرمجة -->
                 <div class="skills-category" data-aos="fade-right">
                     <div class="category-header">
                         <div class="category-icon">
                             <i class="fas fa-code"></i>
                         </div>
-                        <h3>لغات البرمجة</h3>
+                        <h3 data-translate="programming_languages_title">لغات البرمجة</h3>
                     </div>
                     <div class="skills-list">
                         <div class="skill-item">
@@ -710,16 +914,28 @@
                                 <div class="skill-progress" style="width: 80%"></div>
                             </div>
                         </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <div class="skill-name">
+                                    <i class="fab fa-java"></i>
+                                    <span>Java</span>
+                                </div>
+                                <div class="skill-percent">75%</div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Web Development -->
+                <!-- تطوير الويب -->
                 <div class="skills-category" data-aos="fade-right" data-aos-delay="100">
                     <div class="category-header">
                         <div class="category-icon">
                             <i class="fas fa-laptop-code"></i>
                         </div>
-                        <h3>تطوير الويب</h3>
+                        <h3 data-translate="web_development_title">تطوير الويب</h3>
                     </div>
                     <div class="skills-list">
                         <div class="skill-item">
@@ -761,25 +977,25 @@
                         <div class="skill-item">
                             <div class="skill-info">
                                 <div class="skill-name">
-                                    <i class="fas fa-code"></i>
-                                    <span>jQuery</span>
+                                    <i class="fab fa-react"></i>
+                                    <span>React</span>
                                 </div>
-                                <div class="skill-percent">90%</div>
+                                <div class="skill-percent">85%</div>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
+                                <div class="skill-progress" style="width: 85%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Databases -->
+                <!-- قواعد البيانات -->
                 <div class="skills-category" data-aos="fade-right" data-aos-delay="200">
                     <div class="category-header">
                         <div class="category-icon">
                             <i class="fas fa-database"></i>
                         </div>
-                        <h3>قواعد البيانات</h3>
+                        <h3 data-translate="databases_title">قواعد البيانات</h3>
                     </div>
                     <div class="skills-list">
                         <div class="skill-item">
@@ -818,50 +1034,117 @@
                                 <div class="skill-progress" style="width: 75%"></div>
                             </div>
                         </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <div class="skill-name">
+                                    <i class="fas fa-cloud"></i>
+                                    <span>Firebase</span>
+                                </div>
+                                <div class="skill-percent">80%</div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Tools & Technologies -->
+                <!-- الذكاء الاصطناعي -->
                 <div class="skills-category" data-aos="fade-right" data-aos-delay="300">
                     <div class="category-header">
                         <div class="category-icon">
-                            <i class="fas fa-tools"></i>
+                            <i class="fas fa-brain"></i>
                         </div>
-                        <h3>الأدوات والتقنيات</h3>
+                        <h3>الذكاء الاصطناعي والتعلم الآلي</h3>
                     </div>
-                    <div class="tools-grid">
-                        <div class="tool-item" data-tooltip="Git Version Control">
-                            <i class="fab fa-git-alt"></i>
-                            <span>Git</span>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <div class="skill-name">
+                                    <i class="fab fa-python"></i>
+                                    <span>TensorFlow</span>
+                                </div>
+                                <div class="skill-percent">70%</div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 70%"></div>
+                            </div>
                         </div>
-                        <div class="tool-item" data-tooltip="XAMPP Server">
-                            <i class="fas fa-server"></i>
-                            <span>XAMPP</span>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <div class="skill-name">
+                                    <i class="fas fa-robot"></i>
+                                    <span>PyTorch</span>
+                                </div>
+                                <div class="skill-percent">65%</div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 65%"></div>
+                            </div>
                         </div>
-                        <div class="tool-item" data-tooltip="Composer PHP">
-                            <i class="fas fa-code-branch"></i>
-                            <span>Composer</span>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <div class="skill-name">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Data Analysis</span>
+                                </div>
+                                <div class="skill-percent">80%</div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
                         </div>
-                        <div class="tool-item" data-tooltip="Visual Studio Code">
-                            <i class="fas fa-code"></i>
-                            <span>VS Code</span>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <div class="skill-name">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <span>Neural Networks</span>
+                                </div>
+                                <div class="skill-percent">70%</div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 70%"></div>
+                            </div>
                         </div>
-                        <div class="tool-item" data-tooltip="Microsoft Office">
-                            <i class="fas fa-file-excel"></i>
-                            <span>Office Suite</span>
-                        </div>
-                        <div class="tool-item" data-tooltip="System Analysis">
-                            <i class="fas fa-sitemap"></i>
-                            <span>تحليل النظم</span>
-                        </div>
-                        <div class="tool-item" data-tooltip="Digital Archiving">
-                            <i class="fas fa-archive"></i>
-                            <span>الأرشفة الرقمية</span>
-                        </div>
-                        <div class="tool-item" data-tooltip="Problem Solving">
-                            <i class="fas fa-lightbulb"></i>
-                            <span>إيجاد الحلول</span>
-                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- الأدوات والتقنيات -->
+            <div class="tools-section" data-aos="fade-up" data-aos-delay="400">
+                <h3 class="tools-title" data-translate="tools_technologies_title">الأدوات والتقنيات</h3>
+                <div class="tools-grid">
+                    <div class="tool-item" data-tooltip="Git Version Control">
+                        <i class="fab fa-git-alt"></i>
+                        <span>Git</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="XAMPP Server">
+                        <i class="fas fa-server"></i>
+                        <span>XAMPP</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="Visual Studio Code">
+                        <i class="fas fa-code"></i>
+                        <span>VS Code</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="Docker Containers">
+                        <i class="fab fa-docker"></i>
+                        <span>Docker</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="Postman API">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Postman</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="Figma Design">
+                        <i class="fab fa-figma"></i>
+                        <span>Figma</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="Photoshop">
+                        <i class="fas fa-paint-brush"></i>
+                        <span>Photoshop</span>
+                    </div>
+                    <div class="tool-item" data-tooltip="Microsoft Office">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Office Suite</span>
                     </div>
                 </div>
             </div>
@@ -870,14 +1153,15 @@
 
     <!-- Projects Section -->
     <section id="projects" class="section projects-section">
+        <div class="particles-bg" id="projectsParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">المشاريع والأعمال</span>
+                        <span class="title-text" data-translate="projects_title">المشاريع والأعمال</span>
                         <span class="title-line"></span>
                     </h2>
-                    <p class="section-subtitle">
+                    <p class="section-subtitle" data-translate="projects_subtitle">
                         أبرز المشاريع التي قمت بتطويرها وتنفيذها
                     </p>
                 </div>
@@ -887,23 +1171,23 @@
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">
                         <i class="fas fa-layer-group"></i>
-                        الكل
+                        <span data-translate="all_projects">الكل</span>
                     </button>
                     <button class="filter-btn" data-filter="web">
                         <i class="fas fa-globe"></i>
-                        تطبيقات ويب
+                        <span data-translate="web_apps">تطبيقات ويب</span>
                     </button>
                     <button class="filter-btn" data-filter="system">
                         <i class="fas fa-sitemap"></i>
-                        أنظمة إدارية
+                        <span data-translate="management_systems">أنظمة إدارية</span>
                     </button>
-                    <button class="filter-btn" data-filter="game">
-                        <i class="fas fa-gamepad"></i>
-                        ألعاب
+                    <button class="filter-btn" data-filter="mobile">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>تطبيقات جوال</span>
                     </button>
-                    <button class="filter-btn" data-filter="other">
-                        <i class="fas fa-archive"></i>
-                        أرشفة رقمية
+                    <button class="filter-btn" data-filter="ai">
+                        <i class="fas fa-brain"></i>
+                        <span>ذكاء اصطناعي</span>
                     </button>
                 </div>
             </div>
@@ -916,15 +1200,15 @@
                             <div class="project-tag">نظام إداري</div>
                             <div class="project-overlay">
                                 <div class="overlay-content">
-                                    <h4>بوابة الطالب الإلكترونية</h4>
+                                    <h4 data-translate="student_portal">بوابة الطالب الإلكترونية</h4>
                                     <p>نظام متكامل لإدارة شؤون الطلاب</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">بوابة الطالب الإلكترونية</h3>
-                        <p class="project-description">
+                        <h3 class="project-title" data-translate="student_portal">بوابة الطالب الإلكترونية</h3>
+                        <p class="project-description" data-translate="student_portal_desc">
                             نظام متكامل لإدارة وتسجيل الطلاب في الكلية، يتضمن 
                             نظام الحضور والغياب، النتائج، الجداول الدراسية، 
                             والخدمات الأكاديمية المختلفة.
@@ -934,94 +1218,43 @@
                             <span class="tech-tag">MySQL</span>
                             <span class="tech-tag">JavaScript</span>
                             <span class="tech-tag">Bootstrap</span>
+                            <span class="tech-tag">AJAX</span>
                         </div>
-                        <div class="project-features">
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>إدارة الطلاب</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>نتائج الامتحانات</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>جداول الدروس</span>
+                        <div class="project-gallery">
+                            <div class="gallery-preview">
+                                <div class="preview-image">
+                                    <img src="images/projects/student1.jpg" alt="Student Portal" onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
+                                </div>
+                                <div class="preview-stats">
+                                    <span><i class="fas fa-image"></i> 5 صور</span>
+                                </div>
                             </div>
                         </div>
                         <div class="project-actions">
                             <button class="btn btn-sm btn-outline view-project" data-project="1">
                                 <i class="fas fa-eye"></i>
-                                عرض التفاصيل
+                                <span data-translate="view_details">عرض التفاصيل</span>
                             </button>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Project 2: Balloon Game -->
-                <div class="project-card" data-aos="zoom-in" data-aos-delay="100" data-category="game">
-                    <div class="project-image">
-                        <div class="image-container">
-                            <div class="project-tag">لعبة</div>
-                            <div class="project-overlay">
-                                <div class="overlay-content">
-                                    <h4>لعبة رمي البالون</h4>
-                                    <p>لعبة تفاعلية بتقنيات متقدمة</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">لعبة رمي البالون</h3>
-                        <p class="project-description">
-                            لعبة تفاعلية تم تطويرها بلغة C# باستخدام .NET Framework، 
-                            تحتوي على مؤثرات بصرية وصوتية متقدمة، ونظام نقاط 
-                            ومستويات متدرجة الصعوبة.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">C#</span>
-                            <span class="tech-tag">.NET</span>
-                            <span class="tech-tag">Windows Forms</span>
-                        </div>
-                        <div class="project-features">
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>مؤثرات بصرية</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>نظام النقاط</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>مستويات متعددة</span>
-                            </div>
-                        </div>
-                        <div class="project-actions">
-                            <a href="BalloonGame.exe" class="btn btn-sm btn-primary download-game">
-                                <i class="fas fa-download"></i>
-                                تحميل اللعبة
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project 3: Digital Archive -->
-                <div class="project-card" data-aos="zoom-in" data-aos-delay="200" data-category="other">
+                <!-- Project 2: Digital Archive -->
+                <div class="project-card" data-aos="zoom-in" data-aos-delay="100" data-category="system">
                     <div class="project-image">
                         <div class="image-container">
                             <div class="project-tag">أرشفة رقمية</div>
                             <div class="project-overlay">
                                 <div class="overlay-content">
-                                    <h4>نظام الأرشيف الرقمي</h4>
+                                    <h4 data-translate="digital_archive_system">نظام الأرشيف الرقمي</h4>
                                     <p>حلول متكاملة للأرشفة</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">نظام الأرشيف الرقمي</h3>
-                        <p class="project-description">
+                        <h3 class="project-title" data-translate="digital_archive_system">نظام الأرشيف الرقمي</h3>
+                        <p class="project-description" data-translate="digital_archive_desc">
                             نظام متكامل لإدارة وأرشفة الوثائق الرقمية، يدعم 
                             تصنيف المستندات، البحث المتقدم، النسخ الاحتياطي، 
                             وإدارة الصلاحيات للمستخدمين.
@@ -1031,25 +1264,68 @@
                             <span class="tech-tag">MySQL</span>
                             <span class="tech-tag">JavaScript</span>
                             <span class="tech-tag">PDF</span>
+                            <span class="tech-tag">Search</span>
                         </div>
-                        <div class="project-features">
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>تصنيف المستندات</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>بحث متقدم</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>إدارة الصلاحيات</span>
+                        <div class="project-gallery">
+                            <div class="gallery-preview">
+                                <div class="preview-image">
+                                    <img src="images/projects/archive1.jpg" alt="Digital Archive" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
+                                </div>
+                                <div class="preview-stats">
+                                    <span><i class="fas fa-image"></i> 4 صور</span>
+                                </div>
                             </div>
                         </div>
                         <div class="project-actions">
                             <button class="btn btn-sm btn-outline view-project" data-project="3">
                                 <i class="fas fa-eye"></i>
-                                عرض التفاصيل
+                                <span data-translate="view_details">عرض التفاصيل</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3: AI Chatbot -->
+                <div class="project-card" data-aos="zoom-in" data-aos-delay="200" data-category="ai">
+                    <div class="project-image">
+                        <div class="image-container">
+                            <div class="project-tag">ذكاء اصطناعي</div>
+                            <div class="project-overlay">
+                                <div class="overlay-content">
+                                    <h4>مساعد ذكي للمناهج الدراسية</h4>
+                                    <p>روبوت محادثة باستخدام الذكاء الاصطناعي</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">مساعد ذكي للمناهج الدراسية</h3>
+                        <p class="project-description">
+                            روبوت محادثة يعتمد على الذكاء الاصطناعي لمساعدة الطلاب 
+                            في فهم المناهج الدراسية، الإجابة على الأسئلة، وتقديم 
+                            شروحات تفاعلية للمفاهيم العلمية.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">TensorFlow</span>
+                            <span class="tech-tag">NLP</span>
+                            <span class="tech-tag">API</span>
+                            <span class="tech-tag">React</span>
+                        </div>
+                        <div class="project-gallery">
+                            <div class="gallery-preview">
+                                <div class="preview-image">
+                                    <img src="images/projects/ai1.jpg" alt="AI Chatbot" onerror="this.src='https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
+                                </div>
+                                <div class="preview-stats">
+                                    <span><i class="fas fa-image"></i> 6 صور</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-sm btn-outline view-project" data-project="5">
+                                <i class="fas fa-eye"></i>
+                                <span data-translate="view_details">عرض التفاصيل</span>
                             </button>
                         </div>
                     </div>
@@ -1062,15 +1338,15 @@
                             <div class="project-tag">موقع ويب</div>
                             <div class="project-overlay">
                                 <div class="overlay-content">
-                                    <h4>موقع شخصي تفاعلي</h4>
+                                    <h4 data-translate="personal_website">موقع شخصي تفاعلي</h4>
                                     <p>تصميم وتطوير موقع احترافي</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">موقع شخصي تفاعلي</h3>
-                        <p class="project-description">
+                        <h3 class="project-title" data-translate="personal_website">موقع شخصي تفاعلي</h3>
+                        <p class="project-description" data-translate="personal_website_desc">
                             تصميم وتطوير موقع شخصي متكامل بتقنيات حديثة، 
                             يدعم العرض على جميع الأجهزة، ويحتوي على 
                             تأثيرات بصرية متقدمة وواجهة مستخدم تفاعلية.
@@ -1080,25 +1356,22 @@
                             <span class="tech-tag">CSS3</span>
                             <span class="tech-tag">JavaScript</span>
                             <span class="tech-tag">Responsive</span>
+                            <span class="tech-tag">PWA</span>
                         </div>
-                        <div class="project-features">
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>تصميم متجاوب</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>تأثيرات متقدمة</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-check-circle"></i>
-                                <span>واجهة تفاعلية</span>
+                        <div class="project-gallery">
+                            <div class="gallery-preview">
+                                <div class="preview-image">
+                                    <img src="images/projects/portfolio1.jpg" alt="Portfolio" onerror="this.src='https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
+                                </div>
+                                <div class="preview-stats">
+                                    <span><i class="fas fa-image"></i> 8 صور</span>
+                                </div>
                             </div>
                         </div>
                         <div class="project-actions">
                             <button class="btn btn-sm btn-outline view-project" data-project="4">
                                 <i class="fas fa-eye"></i>
-                                عرض التفاصيل
+                                <span data-translate="view_details">عرض التفاصيل</span>
                             </button>
                         </div>
                     </div>
@@ -1123,16 +1396,201 @@
         </div>
     </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="section experience-section">
+    <!-- Gallery Section -->
+    <section id="gallery" class="section gallery-section">
+        <div class="particles-bg" id="galleryParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">الخبرات التطبيقية</span>
+                        <span class="title-text" data-translate="gallery">معرض الصور الشخصي</span>
                         <span class="title-line"></span>
                     </h2>
                     <p class="section-subtitle">
+                        صور شخصية ومهنية تعكس مسيرتي وتجربتي
+                    </p>
+                </div>
+            </div>
+            
+            <div class="gallery-controls" data-aos="fade-up">
+                <div class="gallery-filter">
+                    <button class="gallery-filter-btn active" data-filter="all">
+                        <i class="fas fa-th"></i> الكل
+                    </button>
+                    <button class="gallery-filter-btn" data-filter="personal">
+                        <i class="fas fa-user"></i> شخصية
+                    </button>
+                    <button class="gallery-filter-btn" data-filter="professional">
+                        <i class="fas fa-briefcase"></i> مهنية
+                    </button>
+                    <button class="gallery-filter-btn" data-filter="projects">
+                        <i class="fas fa-project-diagram"></i> مشاريع
+                    </button>
+                    <button class="gallery-filter-btn" data-filter="graduation">
+                        <i class="fas fa-graduation-cap"></i> تخرج
+                    </button>
+                </div>
+                
+                <div class="upload-section">
+                    <input type="file" id="galleryUpload" accept="image/*" multiple hidden>
+                    <button class="btn btn-primary" onclick="document.getElementById('galleryUpload').click()">
+                        <i class="fas fa-upload"></i> رفع صور جديدة
+                    </button>
+                </div>
+            </div>
+            
+            <div class="gallery-grid" id="photoGallery" data-aos="fade-up" data-aos-delay="100">
+                <!-- ستتم إضافة الصور ديناميكياً -->
+                <div class="gallery-item" data-category="graduation">
+                    <div class="gallery-image">
+                        <img src="images/gallery/graduation1.jpg" alt="حفل التخرج" 
+                             onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>حفل التخرج</h4>
+                                <p>جامعة إقليم سبا</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="professional">
+                    <div class="gallery-image">
+                        <img src="images/gallery/work1.jpg" alt="العمل على مشروع" 
+                             onerror="this.src='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>العمل على مشروع</h4>
+                                <p>تطوير نظام إلكتروني</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="personal">
+                    <div class="gallery-image">
+                        <img src="images/gallery/personal1.jpg" alt="صورة شخصية" 
+                             onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>صورة شخصية</h4>
+                                <p>غمدان عبده</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="projects">
+                    <div class="gallery-image">
+                        <img src="images/gallery/project1.jpg" alt="عرض مشروع" 
+                             onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>عرض مشروع</h4>
+                                <p>بوابة الطالب الإلكترونية</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="graduation">
+                    <div class="gallery-image">
+                        <img src="images/gallery/graduation2.jpg" alt="شهادة التخرج" 
+                             onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>شهادة التخرج</h4>
+                                <p>بكالوريوس علوم الحاسوب</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="professional">
+                    <div class="gallery-image">
+                        <img src="images/gallery/work2.jpg" alt="ورشة عمل" 
+                             onerror="this.src='https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>ورشة عمل</h4>
+                                <p>تطوير برمجيات</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="personal">
+                    <div class="gallery-image">
+                        <img src="images/gallery/personal2.jpg" alt="صورة احترافية" 
+                             onerror="this.src='https://images.unsplash.com/photo-1507591064344-4c6ce005-128?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>صورة احترافية</h4>
+                                <p>محلل ومبرمج نظم</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="projects">
+                    <div class="gallery-image">
+                        <img src="images/gallery/project2.jpg" alt="تصميم واجهة" 
+                             onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>تصميم واجهة</h4>
+                                <p>نظام الأرشيف الرقمي</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="graduation">
+                    <div class="gallery-image">
+                        <img src="images/gallery/graduation3.jpg" alt="حفل التكريم" 
+                             onerror="this.src='https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>حفل التكريم</h4>
+                                <p>تقدير جيد جداً</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="professional">
+                    <div class="gallery-image">
+                        <img src="images/gallery/work3.jpg" alt="لقاء عمل" 
+                             onerror="this.src='https://images.unsplash.com/photo-1551836026-d5c2c5af91f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                        <div class="gallery-overlay">
+                            <div class="overlay-content">
+                                <h4>لقاء عمل</h4>
+                                <p>عرض مشروع للعميل</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-load-more" data-aos="fade-up" data-aos-delay="200">
+                <button class="btn btn-outline" id="loadMorePhotos">
+                    <i class="fas fa-plus"></i> تحميل المزيد من الصور
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section experience-section">
+        <div class="particles-bg" id="experienceParticles"></div>
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <span class="title-text" data-translate="experience_title">الخبرات التطبيقية</span>
+                        <span class="title-line"></span>
+                    </h2>
+                    <p class="section-subtitle" data-translate="experience_subtitle">
                         المشاريع والتجارب العملية
                     </p>
                 </div>
@@ -1146,12 +1604,12 @@
                                 <i class="fas fa-laptop-code"></i>
                             </div>
                             <div class="exp-title">
-                                <h3>محلل ومبرمج نظام بوابة الطالب</h3>
-                                <h4>كلية الحاسوب - جامعة إقليم سبا</h4>
+                                <h3 data-translate="system_analyst">محلل ومبرمج نظام بوابة الطالب</h3>
+                                <h4 data-translate="college_computer">كلية الحاسوب - جامعة إقليم سبا</h4>
                             </div>
                         </div>
                         <div class="exp-body">
-                            <p class="exp-description">
+                            <p class="exp-description" data-translate="experience_desc">
                                 قمت بتحليل وتصميم وبرمجة النظام الإلكتروني 
                                 للبوابة الطلابية، والذي يهدف إلى أتمتة 
                                 وتسهيل وصول الطلاب للخدمات الأكاديمية.
@@ -1160,29 +1618,34 @@
                                 <div class="detail">
                                     <i class="fas fa-bullseye"></i>
                                     <span>
-                                        <strong>الهدف:</strong> أتمتة الخدمات الأكاديمية
+                                        <strong data-translate="goal">الهدف:</strong> 
+                                        <span data-translate="goal_text">أتمتة الخدمات الأكاديمية</span>
                                     </span>
                                 </div>
                                 <div class="detail">
                                     <i class="fas fa-tools"></i>
                                     <span>
-                                        <strong>الأدوات:</strong> XAMPP, Composer, Git, VS Code
+                                        <strong data-translate="tools">الأدوات:</strong> 
+                                        <span data-translate="tools_text">XAMPP, Composer, Git, VS Code</span>
                                     </span>
                                 </div>
                                 <div class="detail">
                                     <i class="fas fa-code"></i>
                                     <span>
-                                        <strong>التقنيات:</strong> SQL, PHP, CSS, JavaScript, Bootstrap
+                                        <strong data-translate="technologies">التقنيات:</strong> 
+                                        <span data-translate="technologies_text">SQL, PHP, CSS, JavaScript, Bootstrap</span>
                                     </span>
                                 </div>
                             </div>
                             <div class="exp-features">
-                                <h5>المميزات الرئيسية:</h5>
+                                <h5 data-translate="key_features">المميزات الرئيسية:</h5>
                                 <ul>
                                     <li>تسجيل الطلاب وإدارة البيانات</li>
                                     <li>عرض الجداول الدراسية والنتائج</li>
                                     <li>نظام الحضور والغياب الإلكتروني</li>
                                     <li>خدمات إلكترونية متنوعة للطلاب</li>
+                                    <li>لوحة تحكم للمدرسين والإدارة</li>
+                                    <li>نظام صلاحيات متكامل</li>
                                 </ul>
                             </div>
                         </div>
@@ -1195,7 +1658,7 @@
                         <div class="summary-item">
                             <div class="skill-progress">
                                 <div class="skill-label">
-                                    <span>تحليل النظم</span>
+                                    <span data-translate="system_analysis">تحليل النظم</span>
                                     <span>90%</span>
                                 </div>
                                 <div class="progress-bar">
@@ -1206,7 +1669,7 @@
                         <div class="summary-item">
                             <div class="skill-progress">
                                 <div class="skill-label">
-                                    <span>إدارة المشاريع</span>
+                                    <span data-translate="project_management">إدارة المشاريع</span>
                                     <span>85%</span>
                                 </div>
                                 <div class="progress-bar">
@@ -1217,7 +1680,7 @@
                         <div class="summary-item">
                             <div class="skill-progress">
                                 <div class="skill-label">
-                                    <span>العمل الجماعي</span>
+                                    <span data-translate="teamwork">العمل الجماعي</span>
                                     <span>95%</span>
                                 </div>
                                 <div class="progress-bar">
@@ -1228,7 +1691,7 @@
                         <div class="summary-item">
                             <div class="skill-progress">
                                 <div class="skill-label">
-                                    <span>التواصل الفعال</span>
+                                    <span data-translate="effective_communication">التواصل الفعال</span>
                                     <span>88%</span>
                                 </div>
                                 <div class="progress-bar">
@@ -1239,39 +1702,39 @@
                     </div>
                     
                     <div class="additional-skills">
-                        <h3>مهارات إضافية</h3>
+                        <h3 data-translate="additional_skills">مهارات إضافية</h3>
                         <div class="skill-chips">
                             <span class="skill-chip">
                                 <i class="fas fa-keyboard"></i>
-                                استخدام الحاسوب بكفاءة
+                                <span data-translate="computer_skills">استخدام الحاسوب بكفاءة</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-mouse-pointer"></i>
-                                الطباعة السريعة
+                                <span data-translate="fast_typing">الطباعة السريعة</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-file-word"></i>
-                                إجادة حزمة Office
+                                <span data-translate="office_suite">إجادة حزمة Office</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-archive"></i>
-                                إدارة السجلات والأرشفة
+                                <span data-translate="records_management">إدارة السجلات والأرشفة</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-users"></i>
-                                العمل ضمن فريق
+                                <span data-translate="team_work">العمل ضمن فريق</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-brain"></i>
-                                التعلم السريع
+                                <span data-translate="fast_learning">التعلم السريع</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-language"></i>
-                                العربية (لغة أم)
+                                <span data-translate="arabic_language">العربية (لغة أم)</span>
                             </span>
                             <span class="skill-chip">
                                 <i class="fas fa-language"></i>
-                                الإنجليزية (متوسط)
+                                <span data-translate="english_language_skill">الإنجليزية (متوسط)</span>
                             </span>
                         </div>
                     </div>
@@ -1282,109 +1745,206 @@
 
     <!-- Games Section -->
     <section id="games" class="section games-section">
+        <div class="particles-bg" id="gamesParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">الألعاب التفاعلية</span>
+                        <span class="title-text">التحدي التقني</span>
                         <span class="title-line"></span>
                     </h2>
                     <p class="section-subtitle">
-                        استمتع بألعاب برمجية صممتها خصيصاً
+                        اختبر معرفتك في الذكاء الاصطناعي والتقنية
                     </p>
                 </div>
             </div>
             
             <div class="games-container">
-                <!-- JavaScript Game -->
+                <!-- AI Quiz Game -->
                 <div class="game-wrapper" data-aos="fade-right">
                     <div class="game-card interactive">
                         <div class="game-header">
-                            <h3>لعبة البرمجة السريعة</h3>
-                            <span class="game-badge">JavaScript</span>
+                            <h3>تحدي الذكاء الاصطناعي</h3>
+                            <span class="game-badge">من سيربح المليون</span>
                         </div>
                         <div class="game-body">
-                            <div id="codingGame">
-                                <div class="game-instructions">
-                                    <h4>تعليمات اللعبة:</h4>
-                                    <p>اكتب رمز JavaScript الصحيح لإكمال المهمة</p>
-                                    <div class="game-task">
-                                        <p>المهمة: أضف الأرقام من 1 إلى 5</p>
-                                        <div class="code-editor">
-                                            <pre><code>function sumNumbers() {
-    let sum = 0;
-    // اكتب الكود هنا
-    return sum;
-}</code></pre>
-                                            <textarea id="codeInput" placeholder="اكتب حلك هنا..."></textarea>
+                            <div id="aiQuizGame">
+                                <div class="quiz-container">
+                                    <div class="quiz-start-screen" id="quizStartScreen">
+                                        <div class="quiz-welcome">
+                                            <h4>🏆 تحدي الذكاء الاصطناعي والتقنية 🏆</h4>
+                                            <p>اختبر معرفتك في عالم الذكاء الاصطناعي والتقنية الحديثة</p>
+                                            <div class="quiz-instructions">
+                                                <div class="instruction">
+                                                    <i class="fas fa-question-circle"></i>
+                                                    <span>15 سؤالاً في الذكاء الاصطناعي</span>
+                                                </div>
+                                                <div class="instruction">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>30 ثانية لكل سؤال</span>
+                                                </div>
+                                                <div class="instruction">
+                                                    <i class="fas fa-trophy"></i>
+                                                    <span>اربح مليون نقطة افتراضية</span>
+                                                </div>
+                                                <div class="instruction">
+                                                    <i class="fas fa-life-ring"></i>
+                                                    <span>3 مساعدات متاحة</span>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary btn-start-quiz">
+                                                <i class="fas fa-play"></i> ابدأ التحدي
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="game-controls">
-                                        <button id="checkCode" class="btn btn-primary">
-                                            <i class="fas fa-play"></i>
-                                            تشغيل الكود
-                                        </button>
-                                        <button id="resetCode" class="btn btn-outline">
-                                            <i class="fas fa-redo"></i>
-                                            إعادة تعيين
-                                        </button>
+                                    
+                                    <div class="quiz-game-screen" id="quizGameScreen" style="display: none;">
+                                        <div class="quiz-info">
+                                            <div class="quiz-stats">
+                                                <div class="stat">
+                                                    <i class="fas fa-question"></i>
+                                                    <span>السؤال: <span id="currentQuestion">1</span>/15</span>
+                                                </div>
+                                                <div class="stat">
+                                                    <i class="fas fa-star"></i>
+                                                    <span>النقاط: <span id="quizScore">0</span></span>
+                                                </div>
+                                                <div class="stat">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>الوقت: <span id="quizTimer">30</span>ث</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="quiz-helpers">
+                                                <button class="helper-btn" id="fiftyFifty">
+                                                    <i class="fas fa-adjust"></i>
+                                                    50:50
+                                                </button>
+                                                <button class="helper-btn" id="audienceHelp">
+                                                    <i class="fas fa-users"></i>
+                                                    مساعدة الجمهور
+                                                </button>
+                                                <button class="helper-btn" id="phoneFriend">
+                                                    <i class="fas fa-phone"></i>
+                                                    اتصال بصديق
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="quiz-question">
+                                            <h4 id="questionText">جاري تحميل السؤال...</h4>
+                                            <div class="question-level">
+                                                <span class="level-badge" id="questionLevel">سهل</span>
+                                                <span class="category-badge" id="questionCategory">الذكاء الاصطناعي</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="quiz-options" id="quizOptions">
+                                            <!-- سيتم ملؤه ديناميكياً -->
+                                        </div>
+                                        
+                                        <div class="quiz-actions">
+                                            <button class="btn btn-outline" id="nextQuestion">
+                                                <i class="fas fa-forward"></i> التالي
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="game-footer">
-                            <div class="game-stats">
-                                <div class="stat">
-                                    <i class="fas fa-star"></i>
-                                    <span>النقاط: <span id="gameScore">0</span></span>
-                                </div>
-                                <div class="stat">
-                                    <i class="fas fa-clock"></i>
-                                    <span>الوقت: <span id="gameTimer">60</span>ث</span>
+                                    
+                                    <div class="quiz-end-screen" id="quizEndScreen" style="display: none;">
+                                        <div class="quiz-results">
+                                            <h4>🎉 انتهى التحدي! 🎉</h4>
+                                            <div class="final-score">
+                                                <div class="score-circle">
+                                                    <span class="score-number" id="finalScore">0</span>
+                                                    <span class="score-label">نقطة</span>
+                                                </div>
+                                            </div>
+                                            <p class="result-message" id="resultMessage"></p>
+                                            <div class="quiz-stats-summary">
+                                                <div class="stat-summary">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    <span>الإجابات الصحيحة: <span id="correctAnswers">0</span></span>
+                                                </div>
+                                                <div class="stat-summary">
+                                                    <i class="fas fa-times-circle"></i>
+                                                    <span>الإجابات الخاطئة: <span id="wrongAnswers">0</span></span>
+                                                </div>
+                                                <div class="stat-summary">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>الوقت المستغرق: <span id="totalTime">0</span>ث</span>
+                                                </div>
+                                            </div>
+                                            <div class="end-quiz-buttons">
+                                                <button class="btn btn-primary btn-play-again">
+                                                    <i class="fas fa-redo"></i> حاول مرة أخرى
+                                                </button>
+                                                <button class="btn btn-outline btn-share-score">
+                                                    <i class="fas fa-share"></i> شارك نتيجتك
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Balloon Game Download -->
+                <!-- Coding Challenge -->
                 <div class="game-wrapper" data-aos="fade-left">
-                    <div class="game-card download">
+                    <div class="game-card coding">
                         <div class="game-header">
-                            <h3>لعبة رمي البالون</h3>
-                            <span class="game-badge">C# .NET</span>
+                            <h3>تحدي البرمجة</h3>
+                            <span class="game-badge">JavaScript</span>
                         </div>
                         <div class="game-body">
-                            <div class="game-preview">
-                                <div class="preview-image">
-                                    <i class="fas fa-gamepad"></i>
+                            <div class="coding-challenge">
+                                <div class="challenge-description">
+                                    <h4>مهمة البرمجة:</h4>
+                                    <p>اكتب دالة JavaScript لحل المشكلة التالية:</p>
+                                    <div class="problem-statement">
+                                        <p><strong>المشكلة:</strong> اكتب دالة تقبل مصفوفة من الأرقام وتعيد مجموع جميع الأعداد الزوجية.</p>
+                                        <div class="code-example">
+                                            <pre><code>function sumEvenNumbers(arr) {
+    // اكتب كودك هنا
+}</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="preview-info">
-                                    <h4>مميزات اللعبة:</h4>
-                                    <ul>
-                                        <li><i class="fas fa-check"></i> جرافيكس متقدم</li>
-                                        <li><i class="fas fa-check"></i> مؤثرات صوتية</li>
-                                        <li><i class="fas fa-check"></i> نظام نقاط</li>
-                                        <li><i class="fas fa-check"></i> مستويات متعددة</li>
-                                    </ul>
+                                
+                                <div class="code-editor-container">
+                                    <div class="editor-header">
+                                        <span>محرر الكود</span>
+                                        <div class="editor-actions">
+                                            <button class="btn btn-sm btn-run-code">
+                                                <i class="fas fa-play"></i> تشغيل
+                                            </button>
+                                            <button class="btn btn-sm btn-reset-code">
+                                                <i class="fas fa-redo"></i> إعادة تعيين
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <textarea id="codeEditor" placeholder="اكتب حلّك هنا..."></textarea>
+                                    <div class="test-cases">
+                                        <h5>حالات الاختبار:</h5>
+                                        <div class="test-case">
+                                            <span>المدخل: [1, 2, 3, 4, 5]</span>
+                                            <span>المخرج المتوقع: 6</span>
+                                        </div>
+                                        <div class="test-case">
+                                            <span>المدخل: [10, 21, 32, 43]</span>
+                                            <span>المخرج المتوقع: 42</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="output-container">
+                                    <h5>النتيجة:</h5>
+                                    <div id="codeOutput">
+                                        <p>انتظر نتيجة تنفيذ الكود...</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="game-footer">
-                            <div class="download-info">
-                                <div class="info-item">
-                                    <i class="fas fa-desktop"></i>
-                                    <span>نظام التشغيل: Windows</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-download"></i>
-                                    <span>الحجم: 15 MB</span>
-                                </div>
-                            </div>
-                            <a href="BalloonGame.exe" class="btn btn-primary btn-block download-game">
-                                <i class="fas fa-download"></i>
-                                تحميل اللعبة الآن
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -1394,14 +1954,15 @@
 
     <!-- Contact Section -->
     <section id="contact" class="section contact-section">
+        <div class="particles-bg" id="contactParticles"></div>
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <span class="title-text">تواصل معي</span>
+                        <span class="title-text" data-translate="contact_title">تواصل معي</span>
                         <span class="title-line"></span>
                     </h2>
-                    <p class="section-subtitle">
+                    <p class="section-subtitle" data-translate="contact_subtitle">
                         لنتعاون معاً لتحقيق أفكارك
                     </p>
                 </div>
@@ -1411,8 +1972,8 @@
                 <div class="contact-info" data-aos="fade-right">
                     <div class="info-card">
                         <div class="info-header">
-                            <h3>معلومات التواصل</h3>
-                            <p>أرحب بأي استفسار أو فرصة عمل</p>
+                            <h3 data-translate="contact_info">معلومات التواصل</h3>
+                            <p data-translate="contact_welcome">أرحب بأي استفسار أو فرصة عمل</p>
                         </div>
                         
                         <div class="info-items">
@@ -1421,7 +1982,7 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                 </div>
                                 <div class="item-content">
-                                    <h4>العنوان</h4>
+                                    <h4 data-translate="address">العنوان</h4>
                                     <p>محافظة مارب - الريعة<br>الجمهورية اليمنية</p>
                                 </div>
                             </div>
@@ -1431,7 +1992,7 @@
                                     <i class="fas fa-phone"></i>
                                 </div>
                                 <div class="item-content">
-                                    <h4>الهاتف</h4>
+                                    <h4 data-translate="phone_number">الهاتف</h4>
                                     <p>+967 777 888 999</p>
                                 </div>
                             </div>
@@ -1441,14 +2002,14 @@
                                     <i class="fas fa-envelope"></i>
                                 </div>
                                 <div class="item-content">
-                                    <h4>البريد الإلكتروني</h4>
+                                    <h4 data-translate="email_address">البريد الإلكتروني</h4>
                                     <p>gamdan.abdu@example.com</p>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="social-media">
-                            <h4>وسائل التواصل الاجتماعي</h4>
+                            <h4 data-translate="social_media">وسائل التواصل الاجتماعي</h4>
                             <div class="social-icons">
                                 <a href="#" class="social-icon linkedin" title="LinkedIn">
                                     <i class="fab fa-linkedin"></i>
@@ -1476,46 +2037,46 @@
                 <div class="contact-form" data-aos="fade-left">
                     <div class="form-card">
                         <div class="form-header">
-                            <h3>أرسل رسالة</h3>
-                            <p>سأرد عليك في أقرب وقت ممكن</p>
+                            <h3 data-translate="send_message">أرسل رسالة</h3>
+                            <p data-translate="reply_time">سأرد عليك في أقرب وقت ممكن</p>
                         </div>
                         
                         <form id="contactForm">
                             <div class="form-group">
                                 <label for="name">
                                     <i class="fas fa-user"></i>
-                                    الاسم الكامل
+                                    <span data-translate="full_name_field">الاسم الكامل</span>
                                 </label>
-                                <input type="text" id="name" placeholder="أدخل اسمك" required>
+                                <input type="text" id="name" data-translate="enter_name" placeholder="أدخل اسمك" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="email">
                                     <i class="fas fa-envelope"></i>
-                                    البريد الإلكتروني
+                                    <span data-translate="email_field">البريد الإلكتروني</span>
                                 </label>
-                                <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required>
+                                <input type="email" id="email" data-translate="enter_email" placeholder="أدخل بريدك الإلكتروني" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="subject">
                                     <i class="fas fa-tag"></i>
-                                    موضوع الرسالة
+                                    <span data-translate="message_subject">موضوع الرسالة</span>
                                 </label>
-                                <input type="text" id="subject" placeholder="موضوع الرسالة" required>
+                                <input type="text" id="subject" data-translate="enter_subject" placeholder="موضوع الرسالة" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="message">
                                     <i class="fas fa-comment"></i>
-                                    الرسالة
+                                    <span data-translate="message_field">الرسالة</span>
                                 </label>
-                                <textarea id="message" rows="5" placeholder="اكتب رسالتك هنا..." required></textarea>
+                                <textarea id="message" rows="5" data-translate="write_message" placeholder="اكتب رسالتك هنا..." required></textarea>
                             </div>
                             
                             <button type="submit" class="btn btn-primary btn-block">
                                 <i class="fas fa-paper-plane"></i>
-                                إرسال الرسالة
+                                <span data-translate="send_message_button">إرسال الرسالة</span>
                             </button>
                         </form>
                     </div>
@@ -1534,43 +2095,43 @@
                             <i class="fas fa-code"></i>
                             <div class="logo-text">
                                 <h3>غمدان عبده</h3>
-                                <p>مبرمج ومحلل نظم</p>
+                                <p>خريج علوم حاسوب</p>
                             </div>
                         </div>
                         <p class="footer-description">
-                            متخصص في تطوير الحلول البرمجية وتصميم الأنظمة الإلكترونية 
-                            لتعزيز كفاءة المؤسسات والشركات.
+                            متخصص في تطوير الحلول البرمجية وتحليل النظم الإلكترونية 
+                            لتعزيز كفاءة المؤسسات والشركات باستخدام أحدث التقنيات.
                         </p>
                     </div>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>روابط سريعة</h4>
+                    <h4 data-translate="quick_links">روابط سريعة</h4>
                     <ul class="footer-links">
-                        <li><a href="#home"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
-                        <li><a href="#about"><i class="fas fa-chevron-left"></i> عني</a></li>
-                        <li><a href="#skills"><i class="fas fa-chevron-left"></i> المهارات</a></li>
-                        <li><a href="#projects"><i class="fas fa-chevron-left"></i> المشاريع</a></li>
-                        <li><a href="#contact"><i class="fas fa-chevron-left"></i> التواصل</a></li>
+                        <li><a href="#home"><i class="fas fa-chevron-left"></i> <span data-translate="home">الرئيسية</span></a></li>
+                        <li><a href="#about"><i class="fas fa-chevron-left"></i> <span data-translate="about">عني</span></a></li>
+                        <li><a href="#skills"><i class="fas fa-chevron-left"></i> <span data-translate="skills">المهارات</span></a></li>
+                        <li><a href="#projects"><i class="fas fa-chevron-left"></i> <span data-translate="projects">المشاريع</span></a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-left"></i> <span data-translate="contact">التواصل</span></a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>الخدمات</h4>
+                    <h4 data-translate="services">الخدمات</h4>
                     <ul class="footer-services">
-                        <li><i class="fas fa-code"></i> تطوير الويب</li>
-                        <li><i class="fas fa-sitemap"></i> تحليل النظم</li>
-                        <li><i class="fas fa-database"></i> قواعد البيانات</li>
-                        <li><i class="fas fa-archive"></i> الأرشفة الرقمية</li>
-                        <li><i class="fas fa-gamepad"></i> تطوير الألعاب</li>
+                        <li><i class="fas fa-code"></i> <span data-translate="web_development">تطوير الويب</span></li>
+                        <li><i class="fas fa-sitemap"></i> <span data-translate="system_analysis">تحليل النظم</span></li>
+                        <li><i class="fas fa-database"></i> <span data-translate="database_management">قواعد البيانات</span></li>
+                        <li><i class="fas fa-archive"></i> <span data-translate="digital_archiving">الأرشفة الرقمية</span></li>
+                        <li><i class="fas fa-brain"></i> <span>حلول الذكاء الاصطناعي</span></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>النشرة البريدية</h4>
-                    <p>اشترك للحصول على آخر التحديثات</p>
+                    <h4 data-translate="newsletter">النشرة البريدية</h4>
+                    <p data-translate="newsletter_text">اشترك للحصول على آخر التحديثات</p>
                     <form id="newsletterForm" class="newsletter-form">
-                        <input type="email" placeholder="بريدك الإلكتروني" required>
+                        <input type="email" data-translate="enter_email_newsletter" placeholder="بريدك الإلكتروني" required>
                         <button type="submit">
                             <i class="fas fa-paper-plane"></i>
                         </button>
@@ -1580,8 +2141,8 @@
             
             <div class="footer-bottom">
                 <div class="copyright">
-                    <p>&copy; 2024 <strong>غمدان عبده</strong>. جميع الحقوق محفوظة.</p>
-                    <p>تم التصميم والتطوير بواسطة غمدان عبده</p>
+                    <p>&copy; 2024 <strong>غمدان عبده</strong>. <span data-translate="copyright">جميع الحقوق محفوظة</span>.</p>
+                    <p data-translate="developed_by">تم التصميم والتطوير بواسطة غمدان عبده</p>
                 </div>
                 
                 <div class="footer-badges">
@@ -1589,6 +2150,7 @@
                     <span class="badge"><i class="fab fa-css3-alt"></i> CSS3</span>
                     <span class="badge"><i class="fab fa-js"></i> JavaScript</span>
                     <span class="badge"><i class="fab fa-php"></i> PHP</span>
+                    <span class="badge"><i class="fab fa-python"></i> Python</span>
                 </div>
             </div>
         </div>
@@ -1601,10 +2163,13 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/lightgallery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     
     <!-- Main JavaScript -->
     <script src="script.js"></script>
-    <script src="game.js"></script>
+    <script src="game-ai-quiz.js"></script>
     
     <script>
         // Initialize AOS
@@ -1614,16 +2179,121 @@
             offset: 100
         });
         
-        // Hide preloader
+        // Hide welcome message and preloader
         window.addEventListener('load', function() {
             setTimeout(function() {
+                const welcomeMessage = document.getElementById('welcomeMessage');
                 const preloader = document.getElementById('preloader');
-                preloader.style.opacity = '0';
+                
+                welcomeMessage.style.opacity = '0';
                 setTimeout(function() {
-                    preloader.style.display = 'none';
+                    welcomeMessage.style.display = 'none';
+                    
+                    preloader.style.opacity = '0';
+                    setTimeout(function() {
+                        preloader.style.display = 'none';
+                    }, 500);
                 }, 500);
-            }, 1500);
+                
+                // Initialize particles for each section
+                initParticles();
+            }, 3000);
         });
+        
+        // Enter button
+        document.querySelector('.enter-btn').addEventListener('click', function() {
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const preloader = document.getElementById('preloader');
+            
+            welcomeMessage.style.opacity = '0';
+            setTimeout(function() {
+                welcomeMessage.style.display = 'none';
+                
+                preloader.style.opacity = '1';
+                preloader.style.display = 'flex';
+                
+                setTimeout(function() {
+                    preloader.style.opacity = '0';
+                    setTimeout(function() {
+                        preloader.style.display = 'none';
+                    }, 500);
+                }, 2000);
+            }, 500);
+        });
+        
+        // Initialize particles
+        function initParticles() {
+            const sections = ['hero', 'about', 'education', 'skills', 'projects', 'gallery', 'experience', 'games', 'contact'];
+            
+            sections.forEach(section => {
+                const element = document.getElementById(`${section}Particles`);
+                if (element) {
+                    particlesJS(`${section}Particles`, {
+                        particles: {
+                            number: {
+                                value: section === 'hero' ? 80 : 50,
+                                density: {
+                                    enable: true,
+                                    value_area: 800
+                                }
+                            },
+                            color: {
+                                value: section === 'hero' ? ['#6c63ff', '#36d1dc', '#ff6b6b'] : 
+                                       section === 'about' ? ['#4ecdc4', '#44a08d'] :
+                                       section === 'education' ? ['#ffd166', '#ef476f'] :
+                                       section === 'skills' ? ['#118ab2', '#06d6a0'] :
+                                       section === 'projects' ? ['#7209b7', '#3a0ca3'] :
+                                       section === 'gallery' ? ['#ff9e00', '#ff5400'] :
+                                       section === 'experience' ? ['#4361ee', '#3a0ca3'] :
+                                       section === 'games' ? ['#f72585', '#b5179e'] :
+                                       ['#4cc9f0', '#4361ee']
+                            },
+                            shape: {
+                                type: 'circle'
+                            },
+                            opacity: {
+                                value: 0.5,
+                                random: true
+                            },
+                            size: {
+                                value: 3,
+                                random: true
+                            },
+                            line_linked: {
+                                enable: true,
+                                distance: 150,
+                                color: '#ffffff',
+                                opacity: 0.2,
+                                width: 1
+                            },
+                            move: {
+                                enable: true,
+                                speed: section === 'hero' ? 3 : 2,
+                                direction: 'none',
+                                random: true,
+                                straight: false,
+                                out_mode: 'out',
+                                bounce: false
+                            }
+                        },
+                        interactivity: {
+                            detect_on: 'canvas',
+                            events: {
+                                onhover: {
+                                    enable: true,
+                                    mode: 'repulse'
+                                },
+                                onclick: {
+                                    enable: true,
+                                    mode: 'push'
+                                }
+                            }
+                        },
+                        retina_detect: true
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>

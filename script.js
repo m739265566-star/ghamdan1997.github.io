@@ -1,27 +1,33 @@
-// ===== DOM Elements =====
-const preloader = document.getElementById('preloader');
-const themeToggle = document.getElementById('themeToggle');
-const backToTop = document.getElementById('backToTop');
-const navToggle = document.getElementById('navToggle');
-const navMenu = document.querySelector('.nav-menu');
-const langButtons = document.querySelectorAll('.lang-btn');
-const contactForm = document.getElementById('contactForm');
-const newsletterForm = document.getElementById('newsletterForm');
-const downloadCVBtn = document.getElementById('downloadCVBtn');
-const viewFullCV = document.getElementById('viewFullCV');
-const filterButtons = document.querySelectorAll('.filter-btn');
-const projectCards = document.querySelectorAll('.project-card');
-const viewProjectButtons = document.querySelectorAll('.view-project');
-const projectModal = document.getElementById('projectModal');
-const modalClose = document.querySelector('.modal-close');
-const modalOverlay = document.querySelector('.modal-overlay');
-const scrollIndicator = document.querySelector('.scroll-indicator');
-const navbar = document.querySelector('.navbar');
-const navLinks = document.querySelectorAll('.nav-link');
-const sectionHeaders = document.querySelectorAll('.section-header');
-const statNumbers = document.querySelectorAll('.stat-number');
-const skillProgressBars = document.querySelectorAll('.skill-progress');
-const progressFills = document.querySelectorAll('.progress-fill');
+/* ===================================================
+   ملف JavaScript الرئيسي - موقع غمدان عبده
+   إجمالي الأسطر: 2000+ سطر
+   تصميم متجاوب مع أناقة واحترافية
+   =================================================== */
+
+// ===== Configuration =====
+const CONFIG = {
+    // Animation Delays
+    animationDelay: 100,
+    scrollThreshold: 100,
+    
+    // Colors
+    primaryColor: '#6c63ff',
+    secondaryColor: '#36d1dc',
+    accentColor: '#ff6b6b',
+    
+    // API Endpoints
+    api: {
+        contact: '/api/contact',
+        newsletter: '/api/newsletter'
+    },
+    
+    // Game Settings
+    game: {
+        maxPoints: 1000000,
+        timePerQuestion: 30,
+        helpCount: 3
+    }
+};
 
 // ===== Theme Management =====
 class ThemeManager {
@@ -38,35 +44,224 @@ class ThemeManager {
     applyTheme() {
         if (this.theme === 'dark') {
             document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>الوضع المضيء</span>';
+            document.querySelector('#themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>الوضع المضيء</span>';
+            this.applyDarkModeStyles();
         } else {
             document.body.classList.remove('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>الوضع الداكن</span>';
+            document.querySelector('#themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>الوضع الداكن</span>';
+            this.applyLightModeStyles();
         }
+        
+        this.updateThemeColors();
+    }
+
+    applyDarkModeStyles() {
+        document.documentElement.style.setProperty('--primary-color', '#a29bfe');
+        document.documentElement.style.setProperty('--secondary-color', '#4ecdc4');
+        document.documentElement.style.setProperty('--accent-color', '#ff8e8e');
+        
+        const style = document.createElement('style');
+        style.id = 'dark-mode-styles';
+        style.textContent = `
+            body.dark-mode {
+                --gradient-1: linear-gradient(135deg, #6c63ff, #36d1dc);
+                --gradient-2: linear-gradient(135deg, #ff6b6b, #ffd166);
+                --gradient-3: linear-gradient(135deg, #4ecdc4, #44a08d);
+            }
+            
+            body.dark-mode .floating-code .code-tag {
+                color: rgba(162, 155, 254, 0.3);
+                text-shadow: 0 0 10px rgba(162, 155, 254, 0.5);
+            }
+            
+            body.dark-mode .particles-bg {
+                opacity: 0.2;
+            }
+            
+            body.dark-mode .stat-card {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            body.dark-mode .skill-bar {
+                background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            }
+        `;
+        
+        const oldStyles = document.getElementById('dark-mode-styles');
+        if (oldStyles) oldStyles.remove();
+        
+        document.head.appendChild(style);
+    }
+
+    applyLightModeStyles() {
+        document.documentElement.style.setProperty('--primary-color', CONFIG.primaryColor);
+        document.documentElement.style.setProperty('--secondary-color', CONFIG.secondaryColor);
+        document.documentElement.style.setProperty('--accent-color', CONFIG.accentColor);
+        
+        const darkStyles = document.getElementById('dark-mode-styles');
+        if (darkStyles) darkStyles.remove();
+    }
+
+    updateThemeColors() {
+        const hour = new Date().getHours();
+        let gradient;
+        
+        if (hour >= 6 && hour < 12) {
+            gradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        } else if (hour >= 12 && hour < 18) {
+            gradient = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+        } else if (hour >= 18 && hour < 21) {
+            gradient = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+        } else {
+            gradient = 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)';
+        }
+        
+        document.documentElement.style.setProperty('--dynamic-gradient', gradient);
     }
 
     toggleTheme() {
         this.theme = this.theme === 'light' ? 'dark' : 'light';
         localStorage.setItem('theme', this.theme);
+        
+        document.body.style.transition = 'all 0.5s ease';
         this.applyTheme();
         
-        // إشعار
+        setTimeout(() => {
+            document.body.style.transition = '';
+        }, 500);
+        
         this.showNotification(
-            `تم تفعيل الوضع ${this.theme === 'dark' ? 'الداكن' : 'المضيء'}`,
+            `تم تفعيل الوضع ${this.theme === 'dark' ? 'الداكن ✨' : 'المضيء ☀️'}`,
             'success'
         );
+        
+        if (window.particlesJS) {
+            this.updateParticles();
+        }
     }
 
-    setupEventListeners() {
-        themeToggle.addEventListener('click', () => this.toggleTheme());
+    updateParticles() {
+        if (this.theme === 'dark') {
+            particlesJS('heroParticles', {
+                particles: {
+                    color: {
+                        value: ['#a29bfe', '#4ecdc4', '#ff8e8e']
+                    }
+                }
+            });
+        } else {
+            particlesJS('heroParticles', {
+                particles: {
+                    color: {
+                        value: ['#6c63ff', '#36d1dc', '#ff6b6b']
+                    }
+                }
+            });
+        }
     }
 
     showNotification(message, type = 'info') {
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    left: 20px;
+                    background: white;
+                    padding: 16px 24px;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 16px;
+                    z-index: 9999;
+                    transform: translateY(-100px);
+                    animation: slideDown 0.5s ease forwards;
+                    max-width: 400px;
+                    border-right: 4px solid;
+                }
+                
+                body.dark-mode .notification {
+                    background: rgba(30, 30, 30, 0.95);
+                    backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    color: white;
+                }
+                
+                .notification.success {
+                    border-right-color: #4ecdc4;
+                }
+                
+                .notification.info {
+                    border-right-color: #6c63ff;
+                }
+                
+                .notification.warning {
+                    border-right-color: #ffd166;
+                }
+                
+                .notification.error {
+                    border-right-color: #ef476f;
+                }
+                
+                .notification-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    flex: 1;
+                }
+                
+                .notification-content i {
+                    font-size: 20px;
+                }
+                
+                .notification.success .notification-content i { color: #4ecdc4; }
+                .notification.info .notification-content i { color: #6c63ff; }
+                .notification.warning .notification-content i { color: #ffd166; }
+                .notification.error .notification-content i { color: #ef476f; }
+                
+                .notification-close {
+                    background: none;
+                    border: none;
+                    color: #718096;
+                    cursor: pointer;
+                    font-size: 16px;
+                    padding: 8px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                }
+                
+                .notification-close:hover {
+                    background: rgba(0,0,0,0.1);
+                }
+                
+                body.dark-mode .notification-close:hover {
+                    background: rgba(255,255,255,0.1);
+                }
+                
+                @keyframes slideDown {
+                    to { transform: translateY(0); }
+                }
+                
+                @keyframes slideUp {
+                    from { transform: translateY(0); opacity: 1; }
+                    to { transform: translateY(-100px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.innerHTML = `
             <div class="notification-content">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                                  type === 'warning' ? 'exclamation-triangle' : 
+                                  type === 'error' ? 'times-circle' : 'info-circle'}"></i>
                 <span>${message}</span>
             </div>
             <button class="notification-close">
@@ -76,88 +271,26 @@ class ThemeManager {
         
         document.body.appendChild(notification);
         
-        // إضافة الأنماط
-        const style = document.createElement('style');
-        style.textContent = `
-            .notification {
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                background: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 15px;
-                z-index: 9999;
-                transform: translateX(-100%);
-                animation: slideIn 0.3s ease forwards;
-                max-width: 400px;
-            }
-            
-            body.dark-mode .notification {
-                background: #1e1e1e;
-                color: white;
-            }
-            
-            .notification.success {
-                border-right: 4px solid #10b981;
-            }
-            
-            .notification.info {
-                border-right: 4px solid #6c63ff;
-            }
-            
-            .notification-content {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                flex: 1;
-            }
-            
-            .notification-close {
-                background: none;
-                border: none;
-                color: #718096;
-                cursor: pointer;
-                font-size: 14px;
-                padding: 5px;
-                border-radius: 5px;
-                transition: all 0.3s ease;
-            }
-            
-            .notification-close:hover {
-                background: rgba(0,0,0,0.1);
-                color: #2d3748;
-            }
-            
-            body.dark-mode .notification-close:hover {
-                background: rgba(255,255,255,0.1);
-                color: white;
-            }
-            
-            @keyframes slideIn {
-                to { transform: translateX(0); }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // إغلاق الإشعار
         const closeBtn = notification.querySelector('.notification-close');
         closeBtn.addEventListener('click', () => {
-            notification.style.animation = 'slideOut 0.3s ease forwards';
+            notification.style.animation = 'slideUp 0.3s ease forwards';
             setTimeout(() => notification.remove(), 300);
         });
         
-        // إغلاق تلقائي بعد 5 ثواني
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.style.animation = 'slideOut 0.3s ease forwards';
+                notification.style.animation = 'slideUp 0.3s ease forwards';
                 setTimeout(() => notification.remove(), 300);
             }
         }, 5000);
+    }
+
+    setupEventListeners() {
+        document.querySelector('#themeToggle').addEventListener('click', () => this.toggleTheme());
+        
+        setInterval(() => {
+            this.updateThemeColors();
+        }, 3600000);
     }
 }
 
@@ -167,348 +300,40 @@ class LanguageManager {
         this.currentLang = localStorage.getItem('language') || 'ar';
         this.translations = {
             ar: {
-                // Navigation
                 'home': 'الرئيسية',
                 'about': 'عني',
                 'education': 'التعليم',
                 'skills': 'المهارات',
                 'projects': 'المشاريع',
+                'gallery': 'معرض الصور',
                 'experience': 'الخبرات',
-                'games': 'الألعاب',
+                'games': 'التحدي التقني',
                 'contact': 'التواصل',
-                
-                // Hero
-                'greeting': 'مرحباً بك، أنا',
-                'title': 'مبرمج ومحلل نظم محترف',
-                'description': 'خريج تكنولوجيا المعلومات وعلوم الحاسوب بجامعة إقليم سبا. متخصص في تطوير الأنظمة الإلكترونية وإدارة قواعد البيانات وتصميم حلول الأرشفة الرقمية.',
                 'contact_me': 'تواصل معي',
                 'view_projects': 'تصفح المشاريع',
                 'download_cv': 'تحميل السيرة الذاتية',
-                
-                // Stats
                 'programming_languages': 'لغات برمجة',
                 'completed_projects': 'مشروع مكتمل',
                 'years_experience': 'سنوات خبرة',
-                'satisfied_clients': 'عميل راضٍ',
-                
-                // About
-                'about_me': 'عن غمدان عبده',
-                'about_title': 'تعرف على مسيرتي المهنية والإنجازات',
-                'personal_info': 'المعلومات الشخصية',
-                'full_name': 'الاسم الكامل',
-                'birth_date': 'تاريخ الميلاد',
-                'city': 'المدينة',
-                'marital_status': 'الحالة الاجتماعية',
-                'email': 'البريد الإلكتروني',
-                'phone': 'رقم الهاتف',
-                'bio_title': 'نبذة عني',
-                'bio_text': 'مبرمج ومحلل نظم بخلفية إدارية، أجيد استخدام لغات البرمجة. أمتلك خبرة في إدارة الأنظمة وتصميم النماذج والتقارير الإدارية.',
-                'quote': '"التكنولوجيا ليست مجرد أدوات، بل هي حلول تخلق مستقبلاً أفضل"',
-                'view_full_cv': 'عرض السيرة الكاملة',
-                'lets_collaborate': 'لنتعاون معاً',
-                
-                // Education
-                'education_title': 'التعليم والمؤهلات',
-                'education_subtitle': 'الشهادات العلمية والدورات التدريبية',
-                'bachelor_degree': 'بكالوريوس علوم الحاسوب',
-                'university': 'جامعة إقليم سبا',
-                'graduation_year': '2021 - 2025',
-                'grade': 'التقدير: جيد جداً',
-                'degree_description': 'تخصص في تكنولوجيا المعلومات وعلوم الحاسوب بكلية الحاسوب وتكنولوجيا المعلومات.',
-                'high_school': 'الثانوية العامة',
-                'school_name': 'مدرسة الثورة - الريعة',
-                'year_2016': '2016',
-                'scientific_section': 'الفرع: علمي',
-                'courses_title': 'الدورات التدريبية',
-                'courses_subtitle': 'شهادات متخصصة',
-                'cyber_security': 'الأمن السيبراني',
-                'icdl_certificate': 'الرخصة الدولية لقيادة الحاسوب',
-                'device_protection': 'حماية الطرفيات والأجهزة',
-                'english_language': 'اللغة الإنجليزية',
-                'intermediate_level': 'المستوى: متوسط',
-                
-                // Skills
-                'skills_title': 'المهارات التقنية',
-                'skills_subtitle': 'التقنيات والأدوات التي أتقنها',
-                'programming_languages_title': 'لغات البرمجة',
-                'web_development_title': 'تطوير الويب',
-                'databases_title': 'قواعد البيانات',
-                'tools_technologies_title': 'الأدوات والتقنيات',
-                
-                // Projects
-                'projects_title': 'المشاريع والأعمال',
-                'projects_subtitle': 'أبرز المشاريع التي قمت بتطويرها وتنفيذها',
-                'all_projects': 'الكل',
-                'web_apps': 'تطبيقات ويب',
-                'management_systems': 'أنظمة إدارية',
-                'games_section': 'ألعاب',
-                'digital_archive': 'أرشفة رقمية',
-                'student_portal': 'بوابة الطالب الإلكترونية',
-                'student_portal_desc': 'نظام متكامل لإدارة وتسجيل الطلاب في الكلية',
-                'balloon_game': 'لعبة رمي البالون',
-                'balloon_game_desc': 'لعبة تفاعلية تم تطويرها بلغة C#',
-                'digital_archive_system': 'نظام الأرشيف الرقمي',
-                'digital_archive_desc': 'نظام متكامل لإدارة وأرشفة الوثائق الرقمية',
-                'personal_website': 'موقع شخصي تفاعلي',
-                'personal_website_desc': 'تصميم وتطوير موقع شخصي متكامل بتقنيات حديثة',
-                'view_details': 'عرض التفاصيل',
-                'download_game': 'تحميل اللعبة',
-                
-                // Experience
-                'experience_title': 'الخبرات التطبيقية',
-                'experience_subtitle': 'المشاريع والتجارب العملية',
-                'system_analyst': 'محلل ومبرمج نظام بوابة الطالب',
-                'college_computer': 'كلية الحاسوب - جامعة إقليم سبا',
-                'experience_desc': 'قمت بتحليل وتصميم وبرمجة النظام الإلكتروني للبوابة الطلابية',
-                'goal': 'الهدف',
-                'goal_text': 'أتمتة الخدمات الأكاديمية',
-                'tools': 'الأدوات',
-                'tools_text': 'XAMPP, Composer, Git, VS Code',
-                'technologies': 'التقنيات',
-                'technologies_text': 'SQL, PHP, CSS, JavaScript, Bootstrap',
-                'key_features': 'المميزات الرئيسية',
-                'system_analysis': 'تحليل النظم',
-                'project_management': 'إدارة المشاريع',
-                'teamwork': 'العمل الجماعي',
-                'effective_communication': 'التواصل الفعال',
-                'additional_skills': 'مهارات إضافية',
-                'computer_skills': 'استخدام الحاسوب بكفاءة',
-                'fast_typing': 'الطباعة السريعة',
-                'office_suite': 'إجادة حزمة Office',
-                'records_management': 'إدارة السجلات والأرشفة',
-                'team_work': 'العمل ضمن فريق',
-                'fast_learning': 'التعلم السريع',
-                'arabic_language': 'العربية (لغة أم)',
-                'english_language_skill': 'الإنجليزية (متوسط)',
-                
-                // Games
-                'games_title': 'الألعاب التفاعلية',
-                'games_subtitle': 'استمتع بألعاب برمجية صممتها خصيصاً',
-                'coding_game': 'لعبة البرمجة السريعة',
-                'game_instructions': 'تعليمات اللعبة',
-                'game_task': 'اكتب رمز JavaScript الصحيح لإكمال المهمة',
-                'task_description': 'المهمة: أضف الأرقام من 1 إلى 5',
-                'write_solution': 'اكتب حلك هنا...',
-                'run_code': 'تشغيل الكود',
-                'reset_code': 'إعادة تعيين',
-                'points': 'النقاط',
-                'time': 'الوقت',
-                'seconds': 'ث',
-                'game_features': 'مميزات اللعبة',
-                'advanced_graphics': 'جرافيكس متقدم',
-                'sound_effects': 'مؤثرات صوتية',
-                'points_system': 'نظام نقاط',
-                'multiple_levels': 'مستويات متعددة',
-                'operating_system': 'نظام التشغيل',
-                'size': 'الحجم',
-                'download_now': 'تحميل اللعبة الآن',
-                
-                // Contact
-                'contact_title': 'تواصل معي',
-                'contact_subtitle': 'لنتعاون معاً لتحقيق أفكارك',
-                'contact_info': 'معلومات التواصل',
-                'contact_welcome': 'أرحب بأي استفسار أو فرصة عمل',
-                'address': 'العنوان',
-                'phone_number': 'الهاتف',
-                'email_address': 'البريد الإلكتروني',
-                'social_media': 'وسائل التواصل الاجتماعي',
-                'send_message': 'أرسل رسالة',
-                'reply_time': 'سأرد عليك في أقرب وقت ممكن',
-                'full_name_field': 'الاسم الكامل',
-                'enter_name': 'أدخل اسمك',
-                'email_field': 'البريد الإلكتروني',
-                'enter_email': 'أدخل بريدك الإلكتروني',
-                'message_subject': 'موضوع الرسالة',
-                'enter_subject': 'موضوع الرسالة',
-                'message_field': 'الرسالة',
-                'write_message': 'اكتب رسالتك هنا...',
-                'send_message_button': 'إرسال الرسالة',
-                
-                // Footer
-                'quick_links': 'روابط سريعة',
-                'services': 'الخدمات',
-                'web_development': 'تطوير الويب',
-                'system_analysis': 'تحليل النظم',
-                'database_management': 'قواعد البيانات',
-                'digital_archiving': 'الأرشفة الرقمية',
-                'game_development': 'تطوير الألعاب',
-                'newsletter': 'النشرة البريدية',
-                'newsletter_text': 'اشترك للحصول على آخر التحديثات',
-                'enter_email_newsletter': 'بريدك الإلكتروني',
-                'copyright': 'جميع الحقوق محفوظة',
-                'developed_by': 'تم التصميم والتطوير بواسطة غمدان عبده'
+                'satisfied_clients': 'عميل راضٍ'
             },
             en: {
-                // Navigation
                 'home': 'Home',
                 'about': 'About',
                 'education': 'Education',
                 'skills': 'Skills',
                 'projects': 'Projects',
+                'gallery': 'Gallery',
                 'experience': 'Experience',
-                'games': 'Games',
+                'games': 'Tech Challenge',
                 'contact': 'Contact',
-                
-                // Hero
-                'greeting': 'Hello, I am',
-                'title': 'Professional Programmer & Systems Analyst',
-                'description': 'Graduate in Information Technology and Computer Science from Saba Region University. Specialized in developing electronic systems, database management, and designing digital archiving solutions.',
                 'contact_me': 'Contact Me',
                 'view_projects': 'View Projects',
                 'download_cv': 'Download CV',
-                
-                // Stats
                 'programming_languages': 'Programming Languages',
                 'completed_projects': 'Completed Projects',
                 'years_experience': 'Years Experience',
-                'satisfied_clients': 'Satisfied Clients',
-                
-                // About
-                'about_me': 'About Gamdan Abdu',
-                'about_title': 'Learn about my career journey and achievements',
-                'personal_info': 'Personal Information',
-                'full_name': 'Full Name',
-                'birth_date': 'Date of Birth',
-                'city': 'City',
-                'marital_status': 'Marital Status',
-                'email': 'Email Address',
-                'phone': 'Phone Number',
-                'bio_title': 'About Me',
-                'bio_text': 'Programmer and systems analyst with administrative background. Proficient in programming languages. Experienced in system management, form design, and administrative reports.',
-                'quote': '"Technology is not just tools, but solutions that create a better future"',
-                'view_full_cv': 'View Full CV',
-                'lets_collaborate': "Let's Collaborate",
-                
-                // Education
-                'education_title': 'Education & Qualifications',
-                'education_subtitle': 'Academic certificates and training courses',
-                'bachelor_degree': 'Bachelor of Computer Science',
-                'university': 'Saba Region University',
-                'graduation_year': '2021 - 2025',
-                'grade': 'Grade: Very Good',
-                'degree_description': 'Specialized in Information Technology and Computer Science at the Faculty of Computer and Information Technology.',
-                'high_school': 'High School',
-                'school_name': 'Al-Thawra School - Riya',
-                'year_2016': '2016',
-                'scientific_section': 'Section: Scientific',
-                'courses_title': 'Training Courses',
-                'courses_subtitle': 'Professional Certificates',
-                'cyber_security': 'Cyber Security',
-                'icdl_certificate': 'International Computer Driving License',
-                'device_protection': 'Endpoint & Device Protection',
-                'english_language': 'English Language',
-                'intermediate_level': 'Level: Intermediate',
-                
-                // Skills
-                'skills_title': 'Technical Skills',
-                'skills_subtitle': 'Technologies and tools I master',
-                'programming_languages_title': 'Programming Languages',
-                'web_development_title': 'Web Development',
-                'databases_title': 'Databases',
-                'tools_technologies_title': 'Tools & Technologies',
-                
-                // Projects
-                'projects_title': 'Projects & Works',
-                'projects_subtitle': 'Most notable projects I have developed and implemented',
-                'all_projects': 'All',
-                'web_apps': 'Web Applications',
-                'management_systems': 'Management Systems',
-                'games_section': 'Games',
-                'digital_archive': 'Digital Archive',
-                'student_portal': 'Electronic Student Portal',
-                'student_portal_desc': 'Integrated system for managing and registering college students',
-                'balloon_game': 'Balloon Throw Game',
-                'balloon_game_desc': 'Interactive game developed with C#',
-                'digital_archive_system': 'Digital Archive System',
-                'digital_archive_desc': 'Integrated system for managing and archiving digital documents',
-                'personal_website': 'Interactive Personal Website',
-                'personal_website_desc': 'Design and development of a comprehensive personal website with modern technologies',
-                'view_details': 'View Details',
-                'download_game': 'Download Game',
-                
-                // Experience
-                'experience_title': 'Practical Experience',
-                'experience_subtitle': 'Projects and practical experiences',
-                'system_analyst': 'System Analyst & Programmer - Student Portal',
-                'college_computer': 'Computer College - Saba Region University',
-                'experience_desc': 'I analyzed, designed, and programmed the electronic student portal system',
-                'goal': 'Goal',
-                'goal_text': 'Automating academic services',
-                'tools': 'Tools',
-                'tools_text': 'XAMPP, Composer, Git, VS Code',
-                'technologies': 'Technologies',
-                'technologies_text': 'SQL, PHP, CSS, JavaScript, Bootstrap',
-                'key_features': 'Key Features',
-                'system_analysis': 'System Analysis',
-                'project_management': 'Project Management',
-                'teamwork': 'Teamwork',
-                'effective_communication': 'Effective Communication',
-                'additional_skills': 'Additional Skills',
-                'computer_skills': 'Efficient computer use',
-                'fast_typing': 'Fast typing',
-                'office_suite': 'Proficient in Office suite',
-                'records_management': 'Records management & archiving',
-                'team_work': 'Team work',
-                'fast_learning': 'Fast learning',
-                'arabic_language': 'Arabic (Native)',
-                'english_language_skill': 'English (Intermediate)',
-                
-                // Games
-                'games_title': 'Interactive Games',
-                'games_subtitle': 'Enjoy programming games I designed specially',
-                'coding_game': 'Fast Coding Game',
-                'game_instructions': 'Game Instructions',
-                'game_task': 'Write the correct JavaScript code to complete the task',
-                'task_description': 'Task: Add numbers from 1 to 5',
-                'write_solution': 'Write your solution here...',
-                'run_code': 'Run Code',
-                'reset_code': 'Reset',
-                'points': 'Points',
-                'time': 'Time',
-                'seconds': 's',
-                'game_features': 'Game Features',
-                'advanced_graphics': 'Advanced graphics',
-                'sound_effects': 'Sound effects',
-                'points_system': 'Points system',
-                'multiple_levels': 'Multiple levels',
-                'operating_system': 'Operating System',
-                'size': 'Size',
-                'download_now': 'Download Now',
-                
-                // Contact
-                'contact_title': 'Contact Me',
-                'contact_subtitle': "Let's collaborate to achieve your ideas",
-                'contact_info': 'Contact Information',
-                'contact_welcome': 'I welcome any inquiry or job opportunity',
-                'address': 'Address',
-                'phone_number': 'Phone',
-                'email_address': 'Email Address',
-                'social_media': 'Social Media',
-                'send_message': 'Send Message',
-                'reply_time': 'I will reply to you as soon as possible',
-                'full_name_field': 'Full Name',
-                'enter_name': 'Enter your name',
-                'email_field': 'Email Address',
-                'enter_email': 'Enter your email',
-                'message_subject': 'Message Subject',
-                'enter_subject': 'Message subject',
-                'message_field': 'Message',
-                'write_message': 'Write your message here...',
-                'send_message_button': 'Send Message',
-                
-                // Footer
-                'quick_links': 'Quick Links',
-                'services': 'Services',
-                'web_development': 'Web Development',
-                'system_analysis': 'System Analysis',
-                'database_management': 'Database Management',
-                'digital_archiving': 'Digital Archiving',
-                'game_development': 'Game Development',
-                'newsletter': 'Newsletter',
-                'newsletter_text': 'Subscribe to get the latest updates',
-                'enter_email_newsletter': 'Your email',
-                'copyright': 'All rights reserved',
-                'developed_by': 'Designed & Developed by Gamdan Abdu'
+                'satisfied_clients': 'Satisfied Clients'
             }
         };
         this.init();
@@ -517,19 +342,19 @@ class LanguageManager {
     init() {
         this.applyLanguage();
         this.setupEventListeners();
+        this.setupRTLSupport();
     }
 
     applyLanguage() {
-        // تغيير اتجاه الصفحة
         document.documentElement.lang = this.currentLang;
         document.documentElement.dir = this.currentLang === 'ar' ? 'rtl' : 'ltr';
-        document.body.className = this.currentLang === 'ar' ? 'ar-mode' : 'en-mode';
         
-        // تحديث النصوص
+        document.body.className = document.body.className.replace(/\b(ar-mode|en-mode)\b/g, '');
+        document.body.classList.add(`${this.currentLang}-mode`);
+        
         this.updateTexts();
         
-        // تحديث الأزرار النشطة
-        langButtons.forEach(btn => {
+        document.querySelectorAll('.lang-btn').forEach(btn => {
             if (btn.dataset.lang === this.currentLang) {
                 btn.classList.add('active');
             } else {
@@ -537,57 +362,123 @@ class LanguageManager {
             }
         });
         
-        // حفظ اللغة
         localStorage.setItem('language', this.currentLang);
+        
+        document.dispatchEvent(new CustomEvent('languageChanged', {
+            detail: { lang: this.currentLang }
+        }));
     }
 
     updateTexts() {
         const texts = this.translations[this.currentLang];
         
-        // تحديث النصوص
         document.querySelectorAll('[data-translate]').forEach(element => {
             const key = element.dataset.translate;
             if (texts[key]) {
-                element.textContent = texts[key];
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = texts[key];
+                } else {
+                    element.textContent = texts[key];
+                }
             }
         });
         
-        // تحديث النصوص في العناصر الخاصة
         this.updateDynamicTexts(texts);
+        
+        document.title = this.currentLang === 'ar' 
+            ? 'غمدان عبده | خريج علوم حاسوب ومحلل نظم محترف'
+            : 'Gamdan Abdu | Computer Science Graduate & Systems Analyst';
     }
 
     updateDynamicTexts(texts) {
-        // تحديث النصوص الديناميكية
         const elementsToUpdate = {
             '.greeting .hello': texts.greeting,
-            '.hero-title': texts.title,
-            '.hero-description': texts.description,
-            '.section-header .section-title': texts.about_me,
-            '.section-subtitle': texts.about_title,
-            // أضف المزيد حسب الحاجة
+            '.enter-btn': this.currentLang === 'ar' 
+                ? '<i class="fas fa-arrow-right"></i> ادخل إلى المحفظة' 
+                : '<i class="fas fa-arrow-right"></i> Enter Portfolio'
         };
         
         Object.entries(elementsToUpdate).forEach(([selector, text]) => {
             const element = document.querySelector(selector);
             if (element) {
-                element.textContent = text;
+                if (selector === '.enter-btn') {
+                    element.innerHTML = text;
+                } else {
+                    element.textContent = text;
+                }
             }
         });
     }
 
+    setupRTLSupport() {
+        const style = document.createElement('style');
+        style.id = 'rtl-styles';
+        style.textContent = `
+            body[dir="rtl"] .hero-content {
+                direction: rtl;
+            }
+            
+            body[dir="rtl"] .timeline::before {
+                right: 20px;
+                left: auto;
+            }
+            
+            body[dir="rtl"] .timeline-dot {
+                right: 8px;
+                left: auto;
+            }
+            
+            body[dir="rtl"] .timeline-item {
+                padding-right: 60px;
+                padding-left: 0;
+            }
+            
+            body[dir="ltr"] .timeline::before {
+                left: 20px;
+                right: auto;
+            }
+            
+            body[dir="ltr"] .timeline-dot {
+                left: 8px;
+                right: auto;
+            }
+            
+            body[dir="ltr"] .timeline-item {
+                padding-left: 60px;
+                padding-right: 0;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     switchLanguage(lang) {
         this.currentLang = lang;
-        this.applyLanguage();
         
-        // إشعار
+        document.body.style.opacity = '0.8';
+        document.body.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+            this.applyLanguage();
+            document.body.style.opacity = '1';
+            
+            setTimeout(() => {
+                document.body.style.transition = '';
+            }, 300);
+        }, 300);
+        
+        const themeManager = new ThemeManager();
         themeManager.showNotification(
-            `Language switched to ${lang === 'ar' ? 'Arabic' : 'English'}`,
+            `🌍 ${lang === 'ar' ? 'تم التبديل إلى اللغة العربية' : 'Switched to English'}`,
             'success'
         );
+        
+        if (window.AOS) {
+            AOS.refresh();
+        }
     }
 
     setupEventListeners() {
-        langButtons.forEach(btn => {
+        document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 this.switchLanguage(btn.dataset.lang);
             });
@@ -606,39 +497,30 @@ class NavigationManager {
         this.setupEventListeners();
         this.setupScrollSpy();
         this.setupMobileMenu();
+        this.setupSmoothScroll();
     }
 
     setupEventListeners() {
-        // التنقل السلس
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = anchor.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    // إغلاق القائمة المتنقلة إذا كانت مفتوحة
-                    if (navMenu.classList.contains('active')) {
-                        navMenu.classList.remove('active');
-                    }
-                    
-                    // التمرير السلس
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    
-                    // تحديث الرابط النشط
-                    this.updateActiveNav(anchor);
-                }
-            });
+        window.addEventListener('scroll', () => {
+            this.handleScroll();
+            this.toggleHeaderShadow();
         });
 
-        // إغلاق القائمة عند النقر خارجها
         document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+            const navMenu = document.querySelector('.nav-menu');
+            const navToggle = document.querySelector('#navToggle');
+            
+            if (!navMenu.contains(e.target) && !navToggle.contains(e.target) && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+
+        document.addEventListener('languageChanged', () => {
+            const navMenu = document.querySelector('.nav-menu');
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                document.querySelector('#navToggle').innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
     }
@@ -647,7 +529,7 @@ class NavigationManager {
         const sections = document.querySelectorAll('section[id]');
         const observerOptions = {
             root: null,
-            rootMargin: '-50% 0px -50% 0px',
+            rootMargin: '-20% 0px -20% 0px',
             threshold: 0
         };
 
@@ -655,7 +537,15 @@ class NavigationManager {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     this.currentSection = entry.target.id;
-                    this.updateActiveNavBySection();
+                    this.updateActiveNav();
+                    
+                    entry.target.classList.add('active-section');
+                    
+                    sections.forEach(section => {
+                        if (section !== entry.target) {
+                            section.classList.remove('active-section');
+                        }
+                    });
                 }
             });
         }, observerOptions);
@@ -665,275 +555,562 @@ class NavigationManager {
         });
     }
 
-    updateActiveNav(clickedLink) {
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-        });
-        clickedLink.classList.add('active');
-    }
-
-    updateActiveNavBySection() {
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${this.currentSection}`) {
-                link.classList.add('active');
-            }
-        });
-    }
-
     setupMobileMenu() {
+        const navToggle = document.querySelector('#navToggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (!navToggle) return;
+
         navToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             navMenu.classList.toggle('active');
+            
+            if (navMenu.classList.contains('active')) {
+                navToggle.innerHTML = '<i class="fas fa-times"></i>';
+                navToggle.classList.add('active');
+            } else {
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                navToggle.classList.remove('active');
+            }
         });
 
-        // إغلاق القائمة عند النقر على رابط
-        navLinks.forEach(link => {
+        document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 if (navMenu.classList.contains('active')) {
                     navMenu.classList.remove('active');
+                    navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    navToggle.classList.remove('active');
                 }
             });
         });
     }
+
+    setupSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                const targetId = anchor.getAttribute('href');
+                if (targetId === '#' || !targetId) return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    
+                    anchor.classList.add('clicked');
+                    setTimeout(() => {
+                        anchor.classList.remove('clicked');
+                    }, 300);
+                    
+                    const navMenu = document.querySelector('.nav-menu');
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        document.querySelector('#navToggle').innerHTML = '<i class="fas fa-bars"></i>';
+                        document.querySelector('#navToggle').classList.remove('active');
+                    }
+                    
+                    const targetPosition = targetElement.offsetTop - 80;
+                    const startPosition = window.pageYOffset;
+                    const distance = targetPosition - startPosition;
+                    const duration = 800;
+                    let start = null;
+                    
+                    const easeInOutCubic = (t) => {
+                        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+                    };
+                    
+                    const animation = (currentTime) => {
+                        if (start === null) start = currentTime;
+                        const timeElapsed = currentTime - start;
+                        const run = easeInOutCubic(timeElapsed / duration);
+                        window.scrollTo(0, startPosition + distance * run);
+                        
+                        if (timeElapsed < duration) {
+                            requestAnimationFrame(animation);
+                        } else {
+                            this.updateActiveNav(anchor);
+                        }
+                    };
+                    
+                    requestAnimationFrame(animation);
+                }
+            });
+        });
+    }
+
+    handleScroll() {
+        const scrollPosition = window.scrollY;
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        const backToTop = document.querySelector('#backToTop');
+        
+        if (scrollIndicator) {
+            if (scrollPosition > 100) {
+                scrollIndicator.style.opacity = '0';
+                scrollIndicator.style.visibility = 'hidden';
+            } else {
+                scrollIndicator.style.opacity = '1';
+                scrollIndicator.style.visibility = 'visible';
+            }
+        }
+        
+        if (backToTop) {
+            if (scrollPosition > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+    }
+
+    toggleHeaderShadow() {
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+    }
+
+    updateActiveNav(clickedLink = null) {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            
+            link.style.transform = 'scale(1)';
+            link.style.opacity = '0.8';
+            
+            setTimeout(() => {
+                link.style.transform = '';
+                link.style.opacity = '';
+            }, 300);
+        });
+        
+        if (clickedLink) {
+            clickedLink.classList.add('active');
+        } else {
+            const activeLink = document.querySelector(`.nav-link[href="#${this.currentSection}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+        
+        const activeLink = document.querySelector('.nav-link.active');
+        if (activeLink) {
+            activeLink.style.transform = 'scale(1.1)';
+            activeLink.style.opacity = '1';
+            
+            activeLink.classList.add('glowing');
+            setTimeout(() => {
+                activeLink.classList.remove('glowing');
+            }, 1000);
+        }
+    }
 }
 
-// ===== Projects Management =====
-class ProjectsManager {
+// ===== Image Management =====
+class ImageManager {
     constructor() {
-        this.projects = [
-            {
-                id: 1,
-                title: 'بوابة الطالب الإلكترونية',
-                category: 'system',
-                description: 'نظام متكامل لإدارة شؤون الطلاب في الكلية، يتضمن نظام الحضور والغياب، النتائج، الجداول الدراسية، والخدمات الأكاديمية المختلفة.',
-                longDescription: 'تم تطوير هذا النظام باستخدام PHP وMySQL وJavaScript مع واجهة مستخدم متطورة باستخدام Bootstrap. النظام يتضمن:<br><br>• إدارة بيانات الطلاب<br>• نظام الحضور والغياب الإلكتروني<br>• رصد النتائج وإصدار التقارير<br>• جداول الدروس والامتحانات<br>• خدمات إلكترونية متنوعة للطلاب<br>• لوحة تحكم للمدرسين والإدارة<br>• نظام صلاحيات متكامل',
-                technologies: ['PHP', 'MySQL', 'JavaScript', 'Bootstrap', 'jQuery', 'AJAX'],
-                features: ['إدارة الطلاب', 'نتائج الامتحانات', 'جداول الدروس', 'نظام الحضور', 'خدمات إلكترونية'],
-                images: ['project1-1.jpg', 'project1-2.jpg', 'project1-3.jpg'],
-                demoUrl: '#',
-                githubUrl: '#'
-            },
-            {
-                id: 2,
-                title: 'لعبة رمي البالون',
-                category: 'game',
-                description: 'لعبة تفاعلية تم تطويرها بلغة C# باستخدام .NET Framework، تحتوي على مؤثرات بصرية وصوتية متقدمة، ونظام نقاط ومستويات متدرجة الصعوبة.',
-                longDescription: 'لعبة ثلاثية الأبعاد تم تطويرها باستخدام C# و.NET Framework مع مكتبات جرافيكس متقدمة. المميزات:<br><br>• جرافيكس ثلاثي الأبعاد<br>• نظام فيزياء واقعي<br>• مؤثرات صوتية متعددة<br>• 10 مستويات متدرجة الصعوبة<br>• نظام نقاط وترتيب عالمي<br>• دعم اللغة العربية والإنجليزية<br>• واجهة مستبدلة سهلة الاستخدام',
-                technologies: ['C#', '.NET Framework', 'Windows Forms', 'DirectX'],
-                features: ['مؤثرات بصرية', 'نظام النقاط', 'مستويات متعددة', 'جرافيكس ثلاثي الأبعاد'],
-                images: ['project2-1.jpg', 'project2-2.jpg', 'project2-3.jpg'],
-                demoUrl: '#',
-                downloadUrl: 'BalloonGame.exe'
-            },
-            {
-                id: 3,
-                title: 'نظام الأرشيف الرقمي',
-                category: 'other',
-                description: 'نظام متكامل لإدارة وأرشفة الوثائق الرقمية، يدعم تصنيف المستندات، البحث المتقدم، النسخ الاحتياطي، وإدارة الصلاحيات للمستخدمين.',
-                longDescription: 'نظام أرشفة متكامل تم تطويره لتلبية احتياجات المؤسسات الحكومية والخاصة. المميزات:<br><br>• رفع وتصنيف المستندات<br>• نظام بحث متقدم (نص كامل)<br>• إدارة الصلاحيات والصلاحيات<br>• نسخ احتياطي تلقائي<br>• سجل التعديلات والمراجعات<br>• تصدير التقارير (PDF, Excel)<br>• دعم تعدد اللغات<br>• واجهة مستبدلة متجاوبة',
-                technologies: ['PHP', 'MySQL', 'JavaScript', 'Bootstrap', 'PDF Library', 'Search Engine'],
-                features: ['تصنيف المستندات', 'بحث متقدم', 'إدارة الصلاحيات', 'نسخ احتياطي'],
-                images: ['project3-1.jpg', 'project3-2.jpg', 'project3-3.jpg'],
-                demoUrl: '#',
-                githubUrl: '#'
-            },
-            {
-                id: 4,
-                title: 'موقع شخصي تفاعلي',
-                category: 'web',
-                description: 'تصميم وتطوير موقع شخصي متكامل بتقنيات حديثة، يدعم العرض على جميع الأجهزة، ويحتوي على تأثيرات بصرية متقدمة وواجهة مستخدم تفاعلية.',
-                longDescription: 'موقع شخصي احترافي تم تطويره باستخدام أحدث تقنيات الويب. المميزات:<br><br>• تصميم متجاوب مع جميع الشاشات<br>• تأثيرات بصرية متقدمة (CSS3, JavaScript)<br>• نظام إدارة محتوى مخصص<br>• معرض صور تفاعلي<br>• نموذج تواصل آمن<br>• تحسين لمحركات البحث (SEO)<br>• دعم التطبيق التقدمي (PWA)<br>• نظام الترجمة (العربية/الإنجليزية)',
-                technologies: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'MySQL', 'jQuery', 'AJAX'],
-                features: ['تصميم متجاوب', 'تأثيرات متقدمة', 'واجهة تفاعلية', 'SEO محسن'],
-                images: ['project4-1.jpg', 'project4-2.jpg', 'project4-3.jpg'],
-                demoUrl: '#',
-                githubUrl: '#'
-            }
-        ];
-        this.currentFilter = 'all';
+        this.uploadedImages = new Map();
         this.init();
     }
 
     init() {
-        this.setupEventListeners();
-        this.setupProjectModal();
-        this.filterProjects();
+        this.setupImageUpload();
+        this.setupGallery();
+        this.setupLightbox();
+        this.loadStoredImages();
     }
 
-    setupEventListeners() {
-        // تصفية المشاريع
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // إزالة النشاط من جميع الأزرار
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                // إضافة النشاط للزر المحدد
-                button.classList.add('active');
-                // تطبيق التصفية
-                this.currentFilter = button.dataset.filter;
-                this.filterProjects();
+    setupImageUpload() {
+        const imageUpload = document.getElementById('imageUpload');
+        if (imageUpload) {
+            imageUpload.addEventListener('change', (e) => {
+                this.handleImageUpload(e.target.files[0], 'profile');
             });
-        });
+        }
 
-        // تحميل ملف السيرة الذاتية
-        downloadCVBtn?.addEventListener('click', () => {
-            this.downloadFile('graduation.pdf', 'سيرة_ذاتية_غمدان_عبده.pdf');
-        });
+        const uploadBtn = document.querySelector('.upload-btn');
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', () => {
+                document.getElementById('imageUpload').click();
+            });
+        }
 
-        viewFullCV?.addEventListener('click', () => {
-            window.open('graduation.pdf', '_blank');
-        });
+        const galleryUpload = document.getElementById('galleryUpload');
+        if (galleryUpload) {
+            galleryUpload.addEventListener('change', (e) => {
+                this.handleGalleryUpload(e.target.files);
+            });
+        }
     }
 
-    filterProjects() {
-        projectCards.forEach(card => {
-            const category = card.dataset.category;
+    setupGallery() {
+        const galleryFilterBtns = document.querySelectorAll('.gallery-filter-btn');
+        if (galleryFilterBtns) {
+            galleryFilterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.dataset.filter;
+                    this.filterGallery(filter);
+                    
+                    galleryFilterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        }
+
+        const loadMorePhotos = document.getElementById('loadMorePhotos');
+        if (loadMorePhotos) {
+            loadMorePhotos.addEventListener('click', () => {
+                this.loadMoreGalleryPhotos();
+            });
+        }
+
+        this.initLightGallery();
+    }
+
+    setupLightbox() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .lightbox-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                backdrop-filter: blur(20px);
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
             
-            if (this.currentFilter === 'all' || category === this.currentFilter) {
-                card.classList.remove('hidden');
-                card.style.display = 'block';
-            } else {
-                card.classList.add('hidden');
-                card.style.display = 'none';
+            .lightbox-overlay.active {
+                display: flex;
+                opacity: 1;
             }
-        });
-    }
-
-    setupProjectModal() {
-        // فتح المشروع
-        viewProjectButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const projectId = button.dataset.project;
-                const project = this.projects.find(p => p.id == projectId);
-                if (project) {
-                    this.openProjectModal(project);
-                }
-            });
-        });
-
-        // إغلاق المشروع
-        modalClose?.addEventListener('click', () => this.closeProjectModal());
-        modalOverlay?.addEventListener('click', () => this.closeProjectModal());
-
-        // إغلاق بالزر ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && projectModal.style.display === 'block') {
-                this.closeProjectModal();
+            
+            .lightbox-content {
+                position: relative;
+                max-width: 90%;
+                max-height: 90%;
             }
-        });
-    }
-
-    openProjectModal(project) {
-        const modalBody = projectModal.querySelector('.modal-body');
-        
-        modalBody.innerHTML = `
-            <div class="project-modal-content">
-                <div class="project-modal-images">
-                    <div class="main-image">
-                        <img src="images/projects/${project.images[0]}" alt="${project.title}" 
-                             onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'">
-                    </div>
-                    <div class="thumbnail-images">
-                        ${project.images.map((img, index) => `
-                            <img src="images/projects/${img}" alt="${project.title} ${index + 1}"
-                                 onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <div class="project-modal-details">
-                    <h3>${project.title}</h3>
-                    <div class="project-category">
-                        <span class="category-tag">${this.getCategoryName(project.category)}</span>
-                    </div>
-                    
-                    <div class="project-description">
-                        <h4>وصف المشروع</h4>
-                        <p>${project.longDescription}</p>
-                    </div>
-                    
-                    <div class="project-technologies">
-                        <h4>التقنيات المستخدمة</h4>
-                        <div class="tech-tags">
-                            ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="project-features">
-                        <h4>المميزات الرئيسية</h4>
-                        <ul>
-                            ${project.features.map(feature => `<li><i class="fas fa-check"></i> ${feature}</li>`).join('')}
-                        </ul>
-                    </div>
-                    
-                    <div class="project-links">
-                        ${project.demoUrl !== '#' ? `
-                            <a href="${project.demoUrl}" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> عرض العرض الحي
-                            </a>
-                        ` : ''}
-                        
-                        ${project.githubUrl !== '#' ? `
-                            <a href="${project.githubUrl}" class="btn btn-outline" target="_blank">
-                                <i class="fab fa-github"></i> عرض الكود المصدري
-                            </a>
-                        ` : ''}
-                        
-                        ${project.downloadUrl ? `
-                            <a href="${project.downloadUrl}" class="btn btn-secondary" download>
-                                <i class="fas fa-download"></i> تحميل المشروع
-                            </a>
-                        ` : ''}
-                    </div>
-                </div>
-            </div>
+            
+            .lightbox-img {
+                max-width: 100%;
+                max-height: 90vh;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                animation: zoomIn 0.3s ease;
+            }
+            
+            .lightbox-close {
+                position: absolute;
+                top: -40px;
+                right: -40px;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                color: white;
+                font-size: 20px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .lightbox-close:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: rotate(90deg);
+            }
+            
+            @keyframes zoomIn {
+                from { transform: scale(0.8); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
         `;
-        
-        // إضافة أحداث للصور المصغرة
-        const thumbnails = modalBody.querySelectorAll('.thumbnail-images img');
-        const mainImage = modalBody.querySelector('.main-image img');
-        
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', () => {
-                mainImage.src = thumb.src;
-            });
-        });
-        
-        // إظهار المودال
-        projectModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        document.head.appendChild(style);
     }
 
-    closeProjectModal() {
-        projectModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+    initLightGallery() {
+        const galleryImages = document.querySelectorAll('.gallery-image img');
+        galleryImages.forEach((img) => {
+            img.addEventListener('click', () => {
+                this.openLightbox(img.src, img.alt);
+            });
+        });
+    }
+
+    handleImageUpload(file, type) {
+        if (!file) return;
+        
+        if (!file.type.match('image.*')) {
+            const themeManager = new ThemeManager();
+            themeManager.showNotification('الرجاء اختيار ملف صورة فقط', 'error');
+            return;
+        }
+        
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            const imageUrl = e.target.result;
+            
+            if (type === 'profile') {
+                this.updateProfileImage(imageUrl);
+                localStorage.setItem('profileImage', imageUrl);
+                
+                const themeManager = new ThemeManager();
+                themeManager.showNotification('تم تحديث صورة الملف الشخصي بنجاح', 'success');
+            }
+        };
+        
+        reader.onerror = () => {
+            const themeManager = new ThemeManager();
+            themeManager.showNotification('حدث خطأ في تحميل الصورة', 'error');
+        };
+        
+        reader.readAsDataURL(file);
+    }
+
+    handleGalleryUpload(files) {
+        if (!files.length) return;
+        
+        let uploadedCount = 0;
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        
+        Array.from(files).forEach((file) => {
+            if (!validTypes.includes(file.type)) {
+                const themeManager = new ThemeManager();
+                themeManager.showNotification(`الملف ${file.name} ليس صورة مدعومة`, 'warning');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                const themeManager = new ThemeManager();
+                themeManager.showNotification(`الملف ${file.name} كبير جداً (الحد: 5MB)`, 'warning');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const imageUrl = e.target.result;
+                this.addGalleryImage(imageUrl, file.name, 'personal');
+                uploadedCount++;
+                
+                if (uploadedCount === files.length) {
+                    const themeManager = new ThemeManager();
+                    themeManager.showNotification(`تم رفع ${uploadedCount} صورة بنجاح`, 'success');
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    }
+
+    updateProfileImage(imageUrl) {
+        const profileImage = document.getElementById('profileImage');
+        if (profileImage) {
+            profileImage.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = 'غمدان عبده';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '50%';
+            profileImage.appendChild(img);
+            
+            profileImage.style.animation = 'pulse 0.5s ease';
+            setTimeout(() => {
+                profileImage.style.animation = '';
+            }, 500);
+        }
+        
+        const aboutImage = document.getElementById('aboutImage');
+        if (aboutImage) {
+            aboutImage.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = 'غمدان عبده';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '12px';
+            aboutImage.appendChild(img);
+        }
+    }
+
+    addGalleryImage(imageUrl, filename, category = 'personal') {
+        const galleryGrid = document.getElementById('photoGallery');
+        if (!galleryGrid) return;
+        
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.dataset.category = category;
+        
+        const galleryImage = document.createElement('div');
+        galleryImage.className = 'gallery-image';
+        
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = filename;
+        img.loading = 'lazy';
+        
+        const galleryOverlay = document.createElement('div');
+        galleryOverlay.className = 'gallery-overlay';
+        
+        const overlayContent = document.createElement('div');
+        overlayContent.className = 'overlay-content';
+        
+        const title = document.createElement('h4');
+        title.textContent = filename.split('.')[0];
+        
+        const description = document.createElement('p');
+        description.textContent = this.getCategoryName(category);
+        
+        overlayContent.appendChild(title);
+        overlayContent.appendChild(description);
+        galleryOverlay.appendChild(overlayContent);
+        galleryImage.appendChild(img);
+        galleryImage.appendChild(galleryOverlay);
+        galleryItem.appendChild(galleryImage);
+        
+        galleryItem.style.opacity = '0';
+        galleryItem.style.transform = 'translateY(20px)';
+        
+        galleryGrid.appendChild(galleryItem);
+        
+        img.addEventListener('click', () => {
+            this.openLightbox(imageUrl, filename);
+        });
+        
+        this.saveGalleryImage(imageUrl, filename, category);
+        
+        setTimeout(() => {
+            galleryItem.style.transition = 'all 0.5s ease';
+            galleryItem.style.opacity = '1';
+            galleryItem.style.transform = 'translateY(0)';
+        }, 100);
     }
 
     getCategoryName(category) {
         const categories = {
-            'web': 'تطبيق ويب',
-            'system': 'نظام إداري',
-            'game': 'لعبة',
-            'other': 'أرشفة رقمية'
+            'personal': 'صورة شخصية',
+            'professional': 'صورة مهنية',
+            'projects': 'مشروع',
+            'graduation': 'تخرج'
         };
         return categories[category] || category;
     }
 
-    downloadFile(url, filename) {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    saveGalleryImage(imageUrl, filename, category) {
+        const galleryImages = JSON.parse(localStorage.getItem('galleryImages') || '[]');
+        galleryImages.push({
+            url: imageUrl,
+            filename: filename,
+            category: category,
+            date: new Date().toISOString()
+        });
+        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+    }
+
+    loadStoredImages() {
+        const storedProfileImage = localStorage.getItem('profileImage');
+        if (storedProfileImage) {
+            this.updateProfileImage(storedProfileImage);
+        }
         
-        themeManager.showNotification('جاري تحميل السيرة الذاتية...', 'success');
+        const galleryImages = JSON.parse(localStorage.getItem('galleryImages') || '[]');
+        galleryImages.forEach(image => {
+            this.addGalleryImage(image.url, image.filename, image.category);
+        });
+    }
+
+    filterGallery(filter) {
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        galleryItems.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+                item.style.display = 'block';
+                item.style.animation = 'fadeIn 0.5s ease';
+                setTimeout(() => {
+                    item.style.animation = '';
+                }, 500);
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    loadMoreGalleryPhotos() {
+        const sampleImages = [
+            {
+                url: 'https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                filename: 'برمجة',
+                category: 'professional'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                filename: 'تطوير',
+                category: 'projects'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
+                filename: 'تصميم',
+                category: 'professional'
+            }
+        ];
+        
+        sampleImages.forEach(image => {
+            this.addGalleryImage(image.url, image.filename, image.category);
+        });
+        
+        const themeManager = new ThemeManager();
+        themeManager.showNotification('تم تحميل 3 صور إضافية', 'success');
+    }
+
+    openLightbox(imageUrl, caption) {
+        const lightbox = document.createElement('div');
+        lightbox.className = 'lightbox-overlay';
+        lightbox.innerHTML = `
+            <div class="lightbox-content">
+                <img src="${imageUrl}" alt="${caption}" class="lightbox-img">
+                <button class="lightbox-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(lightbox);
+        
+        setTimeout(() => {
+            lightbox.classList.add('active');
+        }, 10);
+        
+        const closeBtn = lightbox.querySelector('.lightbox-close');
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                lightbox.remove();
+            }, 300);
+        });
+        
+        document.addEventListener('keydown', function handleKeydown(e) {
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+                setTimeout(() => {
+                    lightbox.remove();
+                }, 300);
+                document.removeEventListener('keydown', handleKeydown);
+            }
+        });
     }
 }
 
-// ===== Animations Manager =====
-class AnimationsManager {
+// ===== Animation Manager =====
+class AnimationManager {
     constructor() {
         this.init();
     }
@@ -943,29 +1120,63 @@ class AnimationsManager {
         this.setupCounterAnimations();
         this.setupSkillAnimations();
         this.setupBackToTop();
-        this.setupParticles();
+        this.setupHoverEffects();
     }
 
     setupScrollAnimations() {
-        // إخفاء مؤشر التمرير عند التمرير
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                scrollIndicator?.style.opacity = '0';
-                scrollIndicator?.style.visibility = 'hidden';
-            } else {
-                scrollIndicator?.style.opacity = '1';
-                scrollIndicator?.style.visibility = 'visible';
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('[data-aos]');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('aos-animate');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll();
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            [data-aos] {
+                opacity: 0;
+                transition: all 0.8s ease;
             }
-        });
-
-        // تأثير الشريط العلوي
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+            
+            [data-aos].aos-animate {
+                opacity: 1;
+                transform: translateY(0) !important;
             }
-        });
+            
+            [data-aos="fade-up"] {
+                transform: translateY(50px);
+            }
+            
+            [data-aos="fade-down"] {
+                transform: translateY(-50px);
+            }
+            
+            [data-aos="fade-left"] {
+                transform: translateX(-50px);
+            }
+            
+            [data-aos="fade-right"] {
+                transform: translateX(50px);
+            }
+            
+            [data-aos="zoom-in"] {
+                transform: scale(0.9);
+            }
+            
+            [data-aos="zoom-out"] {
+                transform: scale(1.1);
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     setupCounterAnimations() {
@@ -991,20 +1202,37 @@ class AnimationsManager {
     }
 
     animateCounters() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        
         statNumbers.forEach(stat => {
             const target = parseInt(stat.dataset.count);
             const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
+            const startTime = Date.now();
             
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
+            const updateCounter = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOutExpo = (x) => {
+                    return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+                };
+                
+                const current = Math.floor(easeOutExpo(progress) * target);
+                stat.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    stat.textContent = target;
+                    
+                    stat.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        stat.style.transform = 'scale(1)';
+                    }, 300);
                 }
-                stat.textContent = Math.floor(current);
-            }, 16);
+            };
+            
+            updateCounter();
         });
     }
 
@@ -1012,7 +1240,7 @@ class AnimationsManager {
         const observerOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.5
+            threshold: 0.3
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -1031,137 +1259,348 @@ class AnimationsManager {
     }
 
     animateSkills() {
+        const skillProgressBars = document.querySelectorAll('.skill-progress');
+        
         skillProgressBars.forEach((bar, index) => {
             const width = bar.style.width;
             bar.style.width = '0';
             
             setTimeout(() => {
-                bar.style.transition = 'width 1.5s ease-in-out';
+                bar.style.transition = 'width 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
                 bar.style.width = width;
+                
+                bar.parentElement.classList.add('animating');
+                setTimeout(() => {
+                    bar.parentElement.classList.remove('animating');
+                }, 1500);
             }, index * 200);
         });
     }
 
     setupBackToTop() {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
-            }
-        });
-
+        const backToTop = document.querySelector('#backToTop');
+        if (!backToTop) return;
+        
         backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+            this.scrollToTop();
+        });
+        
+        backToTop.addEventListener('mouseenter', () => {
+            backToTop.style.transform = 'scale(1.1)';
+            backToTop.style.boxShadow = '0 10px 30px rgba(108, 99, 255, 0.4)';
+        });
+        
+        backToTop.addEventListener('mouseleave', () => {
+            backToTop.style.transform = '';
+            backToTop.style.boxShadow = '';
+        });
+    }
+
+    scrollToTop() {
+        const startPosition = window.pageYOffset;
+        const duration = 800;
+        let start = null;
+        
+        const easeInOutCubic = (t) => {
+            return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        };
+        
+        const animation = (currentTime) => {
+            if (start === null) start = currentTime;
+            const timeElapsed = currentTime - start;
+            const run = easeInOutCubic(timeElapsed / duration);
+            window.scrollTo(0, startPosition * (1 - run));
+            
+            if (timeElapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        };
+        
+        requestAnimationFrame(animation);
+    }
+
+    setupHoverEffects() {
+        const cards = document.querySelectorAll('.card, .project-card, .skill-category, .timeline-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                this.addHoverEffect(card);
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                this.removeHoverEffect(card);
+            });
+        });
+        
+        const buttons = document.querySelectorAll('.btn');
+        
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                button.style.transform = 'translateY(-3px)';
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = '';
             });
         });
     }
 
-    setupParticles() {
-        const canvas = document.createElement('canvas');
-        canvas.id = 'particles-canvas';
-        document.getElementById('particles-bg').appendChild(canvas);
-        
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-        
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        class Particle {
-            constructor() {
-                this.reset();
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-            }
-            
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.color = `rgba(${Math.floor(Math.random() * 100 + 156)}, ${Math.floor(Math.random() * 100 + 156)}, 255, ${Math.random() * 0.5 + 0.1})`;
-            }
-            
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                
-                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
-                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
-                
-                if (this.size > 0.2) this.size -= 0.001;
-                if (this.size <= 0.2) this.reset();
-            }
-            
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        
-        const initParticles = () => {
-            particles = [];
-            const particleCount = Math.min(100, Math.floor((canvas.width * canvas.height) / 10000));
-            
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-        };
-        
-        const connectParticles = () => {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 100) {
-                        ctx.strokeStyle = `rgba(108, 99, 255, ${0.1 * (1 - distance / 100)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        };
-        
-        const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-            
-            connectParticles();
-            requestAnimationFrame(animate);
-        };
-        
-        initParticles();
-        animate();
-        
-        // إعادة إنشاء الجسيمات عند تغيير الحجم
-        window.addEventListener('resize', () => {
-            setTimeout(initParticles, 100);
-        });
+    addHoverEffect(element) {
+        element.style.transform = 'translateY(-10px) scale(1.02)';
+        element.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
+        element.classList.add('hover-glow');
+    }
+
+    removeHoverEffect(element) {
+        element.style.transform = '';
+        element.style.boxShadow = '';
+        element.classList.remove('hover-glow');
     }
 }
 
-// ===== Form Management =====
-class FormManager {
+// ===== Projects Management =====
+class ProjectsManager {
+    constructor() {
+        this.projects = [
+            {
+                id: 1,
+                title: 'بوابة الطالب الإلكترونية',
+                category: 'system',
+                description: 'نظام متكامل لإدارة شؤون الطلاب في الكلية',
+                longDescription: 'تم تطوير هذا النظام باستخدام PHP وMySQL وJavaScript مع واجهة مستخدم متطورة باستخدام Bootstrap.',
+                technologies: ['PHP', 'MySQL', 'JavaScript', 'Bootstrap', 'jQuery'],
+                features: ['إدارة الطلاب', 'نتائج الامتحانات', 'جداول الدروس', 'نظام الحضور'],
+                images: ['project1-1.jpg', 'project1-2.jpg'],
+                demoUrl: '#',
+                githubUrl: '#'
+            },
+            {
+                id: 2,
+                title: 'نظام الأرشيف الرقمي',
+                category: 'system',
+                description: 'نظام متكامل لإدارة وأرشفة الوثائق الرقمية',
+                longDescription: 'نظام أرشفة متكامل تم تطويره لتلبية احتياجات المؤسسات الحكومية والخاصة.',
+                technologies: ['PHP', 'MySQL', 'JavaScript', 'Bootstrap', 'PDF Library'],
+                features: ['تصنيف المستندات', 'بحث متقدم', 'إدارة الصلاحيات', 'نسخ احتياطي'],
+                images: ['project2-1.jpg', 'project2-2.jpg'],
+                demoUrl: '#',
+                githubUrl: '#'
+            },
+            {
+                id: 3,
+                title: 'موقع شخصي تفاعلي',
+                category: 'web',
+                description: 'تصميم وتطوير موقع شخصي متكامل بتقنيات حديثة',
+                longDescription: 'موقع شخصي تفاعلي مع تصميم متجاوب وتقنيات حديثة مثل CSS Grid وFlexbox.',
+                technologies: ['HTML5', 'CSS3', 'JavaScript', 'GSAP', 'AOS'],
+                features: ['تصميم متجاوب', 'حركات تفاعلية', 'نمط داكن/فاتح', 'تحسين SEO'],
+                images: ['project3-1.jpg', 'project3-2.jpg'],
+                demoUrl: '#',
+                githubUrl: '#'
+            },
+            {
+                id: 4,
+                title: 'مساعد ذكي للمناهج الدراسية',
+                category: 'ai',
+                description: 'روبوت محادثة يعتمد على الذكاء الاصطناعي',
+                longDescription: 'روبوت محادثة يستخدم تقنيات معالجة اللغة الطبيعية لفهم أسئلة الطلاب والإجابة عليها.',
+                technologies: ['Python', 'TensorFlow', 'NLP', 'React', 'API'],
+                features: ['فهم اللغة العربية', 'إجابات تفاعلية', 'تعلم آلي', 'واجهة ويب'],
+                images: ['project4-1.jpg', 'project4-2.jpg'],
+                demoUrl: '#',
+                githubUrl: '#'
+            }
+        ];
+        this.init();
+    }
+
+    init() {
+        this.setupFilter();
+        this.setupModal();
+        this.setupProjects();
+    }
+
+    setupFilter() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filter = button.dataset.filter;
+                
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                projectCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeIn 0.5s ease';
+                        setTimeout(() => {
+                            card.style.animation = '';
+                        }, 500);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
+
+    setupModal() {
+        const modal = document.getElementById('projectModal');
+        const modalClose = document.querySelector('.modal-close');
+        const modalOverlay = document.querySelector('.modal-overlay');
+        
+        if (!modal) return;
+        
+        if (modalClose) {
+            modalClose.addEventListener('click', () => {
+                this.closeModal();
+            });
+        }
+        
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', () => {
+                this.closeModal();
+            });
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                this.closeModal();
+            }
+        });
+    }
+
+    setupProjects() {
+        const viewProjectButtons = document.querySelectorAll('.view-project');
+        
+        viewProjectButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const projectId = parseInt(button.dataset.project);
+                this.openProjectModal(projectId);
+            });
+        });
+    }
+
+    openProjectModal(projectId) {
+        const project = this.projects.find(p => p.id === projectId);
+        if (!project) return;
+        
+        const modal = document.getElementById('projectModal');
+        const modalBody = document.querySelector('.modal-body');
+        
+        if (!modal || !modalBody) return;
+        
+        const imagesHTML = project.images.map((img, index) => `
+            <img src="images/projects/${img}" alt="${project.title}" 
+                 onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'"
+                 class="${index === 0 ? 'active' : ''}"
+                 data-index="${index}">
+        `).join('');
+        
+        const featuresHTML = project.features.map(feature => `
+            <li><i class="fas fa-check"></i> ${feature}</li>
+        `).join('');
+        
+        const techHTML = project.technologies.map(tech => `
+            <span class="tech-tag">${tech}</span>
+        `).join('');
+        
+        modalBody.innerHTML = `
+            <div class="project-modal-content">
+                <div class="project-modal-images">
+                    <div class="main-image">
+                        <img src="images/projects/${project.images[0]}" alt="${project.title}"
+                             onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="thumbnail-images">
+                        ${imagesHTML}
+                    </div>
+                </div>
+                
+                <div class="project-modal-details">
+                    <div class="project-category">
+                        <span class="category-tag">${this.getCategoryName(project.category)}</span>
+                    </div>
+                    
+                    <h3>${project.title}</h3>
+                    <p>${project.longDescription}</p>
+                    
+                    <h4>التقنيات المستخدمة</h4>
+                    <div class="tech-tags">
+                        ${techHTML}
+                    </div>
+                    
+                    <h4>المميزات</h4>
+                    <ul>
+                        ${featuresHTML}
+                    </ul>
+                    
+                    <div class="project-links">
+                        ${project.demoUrl !== '#' ? `
+                            <a href="${project.demoUrl}" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> عرض المشروع
+                            </a>
+                        ` : ''}
+                        
+                        ${project.githubUrl !== '#' ? `
+                            <a href="${project.githubUrl}" class="btn btn-outline" target="_blank">
+                                <i class="fab fa-github"></i> الكود المصدري
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('active');
+        }, 10);
+        
+        this.setupGalleryNavigation();
+    }
+
+    getCategoryName(category) {
+        const categories = {
+            'web': 'موقع ويب',
+            'system': 'نظام إداري',
+            'mobile': 'تطبيق جوال',
+            'ai': 'ذكاء اصطناعي'
+        };
+        return categories[category] || category;
+    }
+
+    setupGalleryNavigation() {
+        const thumbnails = document.querySelectorAll('.thumbnail-images img');
+        const mainImage = document.querySelector('.main-image img');
+        
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const src = thumb.src;
+                mainImage.src = src;
+                
+                thumbnails.forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+            });
+        });
+    }
+
+    closeModal() {
+        const modal = document.getElementById('projectModal');
+        if (!modal) return;
+        
+        modal.classList.remove('active');
+        
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+}
+
+// ===== Contact Form Management =====
+class ContactManager {
     constructor() {
         this.init();
     }
@@ -1172,494 +1611,947 @@ class FormManager {
     }
 
     setupContactForm() {
+        const contactForm = document.getElementById('contactForm');
         if (!contactForm) return;
         
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // التحقق من المدخلات
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const subject = document.getElementById('subject').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            if (!name || !email || !subject || !message) {
-                this.showAlert('يرجى ملء جميع الحقول المطلوبة', 'error');
-                return;
-            }
-            
-            if (!this.isValidEmail(email)) {
-                this.showAlert('يرجى إدخال بريد إلكتروني صحيح', 'error');
-                return;
-            }
-            
-            // محاكاة إرسال الرسالة
-            this.showLoading();
-            
-            setTimeout(() => {
-                this.hideLoading();
-                this.showAlert('تم إرسال رسالتك بنجاح! سأرد عليك في أقرب وقت ممكن.', 'success');
-                contactForm.reset();
-                
-                // إرسال إشعار
-                themeManager.showNotification('تم إرسال رسالتك بنجاح', 'success');
-            }, 2000);
+            this.handleContactSubmit();
         });
     }
 
     setupNewsletterForm() {
+        const newsletterForm = document.getElementById('newsletterForm');
         if (!newsletterForm) return;
         
         newsletterForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            const emailInput = newsletterForm.querySelector('input[type="email"]');
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                this.showAlert('يرجى إدخال بريدك الإلكتروني', 'error');
-                return;
-            }
-            
-            if (!this.isValidEmail(email)) {
-                this.showAlert('يرجى إدخال بريد إلكتروني صحيح', 'error');
-                return;
-            }
-            
-            // محاكاة الاشتراك
-            this.showLoading();
-            
-            setTimeout(() => {
-                this.hideLoading();
-                this.showAlert('شكراً لك! تم اشتراكك بنجاح في النشرة البريدية.', 'success');
-                emailInput.value = '';
-                
-                // إرسال إشعار
-                themeManager.showNotification('تم الاشتراك في النشرة البريدية', 'success');
-            }, 1500);
+            this.handleNewsletterSubmit();
         });
+    }
+
+    handleContactSubmit() {
+        const form = document.getElementById('contactForm');
+        const formData = new FormData(form);
+        
+        const formValues = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message')
+        };
+        
+        if (!this.validateContactForm(formValues)) {
+            return;
+        }
+        
+        this.showLoading('جاري إرسال الرسالة...');
+        
+        setTimeout(() => {
+            this.hideLoading();
+            
+            const themeManager = new ThemeManager();
+            themeManager.showNotification('تم إرسال رسالتك بنجاح! سأرد عليك قريباً.', 'success');
+            
+            form.reset();
+        }, 1500);
+    }
+
+    validateContactForm(data) {
+        const themeManager = new ThemeManager();
+        
+        if (!data.name || data.name.trim().length < 2) {
+            themeManager.showNotification('الرجاء إدخال اسم صحيح (على الأقل حرفين)', 'error');
+            return false;
+        }
+        
+        if (!data.email || !this.isValidEmail(data.email)) {
+            themeManager.showNotification('الرجاء إدخال بريد إلكتروني صحيح', 'error');
+            return false;
+        }
+        
+        if (!data.subject || data.subject.trim().length < 5) {
+            themeManager.showNotification('الرجاء إدخال موضوع مناسب للرسالة', 'error');
+            return false;
+        }
+        
+        if (!data.message || data.message.trim().length < 10) {
+            themeManager.showNotification('الرجاء كتابة رسالة مفصلة (على الأقل 10 أحرف)', 'error');
+            return false;
+        }
+        
+        return true;
     }
 
     isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
     }
 
-    showAlert(message, type = 'info') {
-        // إزالة أي إنذار سابق
-        const existingAlert = document.querySelector('.form-alert');
-        if (existingAlert) existingAlert.remove();
+    handleNewsletterSubmit() {
+        const form = document.getElementById('newsletterForm');
+        const email = form.querySelector('input[type="email"]').value;
         
-        // إنشاء الإنذار الجديد
-        const alert = document.createElement('div');
-        alert.className = `form-alert ${type}`;
-        alert.innerHTML = `
-            <div class="alert-content">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                <span>${message}</span>
-            </div>
-            <button class="alert-close">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
+        if (!this.isValidEmail(email)) {
+            const themeManager = new ThemeManager();
+            themeManager.showNotification('الرجاء إدخال بريد إلكتروني صحيح', 'error');
+            return;
+        }
         
-        // إضافة الأنماط
-        const style = document.createElement('style');
-        style.textContent = `
-            .form-alert {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 15px;
-                z-index: 9999;
-                animation: slideInRight 0.3s ease forwards;
-                max-width: 400px;
-            }
-            
-            body.dark-mode .form-alert {
-                background: #1e1e1e;
-                color: white;
-            }
-            
-            .form-alert.success {
-                border-right: 4px solid #10b981;
-            }
-            
-            .form-alert.error {
-                border-right: 4px solid #ef4444;
-            }
-            
-            .alert-content {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                flex: 1;
-            }
-            
-            .alert-close {
-                background: none;
-                border: none;
-                color: #718096;
-                cursor: pointer;
-                font-size: 14px;
-                padding: 5px;
-                border-radius: 5px;
-                transition: all 0.3s ease;
-            }
-            
-            .alert-close:hover {
-                background: rgba(0,0,0,0.1);
-                color: #2d3748;
-            }
-            
-            body.dark-mode .alert-close:hover {
-                background: rgba(255,255,255,0.1);
-                color: white;
-            }
-            
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
+        this.showLoading('جاري الاشتراك...');
         
-        // إضافة الإنذار
-        document.body.appendChild(alert);
-        
-        // إغلاق الإنذار
-        const closeBtn = alert.querySelector('.alert-close');
-        closeBtn.addEventListener('click', () => {
-            alert.style.animation = 'slideOutRight 0.3s ease forwards';
-            setTimeout(() => alert.remove(), 300);
-        });
-        
-        // إغلاق تلقائي بعد 5 ثواني
         setTimeout(() => {
-            if (alert.parentNode) {
-                alert.style.animation = 'slideOutRight 0.3s ease forwards';
-                setTimeout(() => alert.remove(), 300);
-            }
-        }, 5000);
+            this.hideLoading();
+            
+            const themeManager = new ThemeManager();
+            themeManager.showNotification('تم الاشتراك بنجاح! شكراً لاهتمامك.', 'success');
+            
+            form.reset();
+        }, 1000);
     }
 
-    showLoading() {
-        // إزالة أي تحميل سابق
-        const existingLoader = document.querySelector('.form-loader');
-        if (existingLoader) existingLoader.remove();
-        
-        // إنشاء مؤشر التحميل
-        const loader = document.createElement('div');
-        loader.className = 'form-loader';
-        loader.innerHTML = `
-            <div class="loader-spinner"></div>
-            <span>جاري الإرسال...</span>
+    showLoading(message) {
+        const loading = document.createElement('div');
+        loading.className = 'loading-overlay';
+        loading.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>${message}</p>
+            </div>
         `;
         
-        // إضافة الأنماط
-        const style = document.createElement('style');
-        style.textContent = `
-            .form-loader {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                backdrop-filter: blur(5px);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 20px;
-                z-index: 9999;
-            }
-            
-            .loader-spinner {
-                width: 50px;
-                height: 50px;
-                border: 3px solid rgba(255,255,255,0.3);
-                border-radius: 50%;
-                border-top-color: #6c63ff;
-                animation: spin 1s linear infinite;
-            }
-            
-            .form-loader span {
-                color: white;
-                font-size: 16px;
-                font-weight: 600;
-            }
-            
-            @keyframes spin {
-                to { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
+        if (!document.getElementById('loading-styles')) {
+            const style = document.createElement('style');
+            style.id = 'loading-styles';
+            style.textContent = `
+                .loading-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(10px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                    animation: fadeIn 0.3s ease;
+                }
+                
+                .loading-content {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 16px;
+                    text-align: center;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                }
+                
+                body.dark-mode .loading-content {
+                    background: rgba(30, 30, 30, 0.95);
+                    color: white;
+                }
+                
+                .loading-spinner {
+                    width: 50px;
+                    height: 50px;
+                    border: 4px solid #f3f3f3;
+                    border-top: 4px solid #6c63ff;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 1rem;
+                }
+                
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
         
-        document.body.appendChild(loader);
+        document.body.appendChild(loading);
     }
 
     hideLoading() {
-        const loader = document.querySelector('.form-loader');
-        if (loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.remove(), 300);
+        const loading = document.querySelector('.loading-overlay');
+        if (loading) {
+            loading.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                loading.remove();
+            }, 300);
         }
     }
 }
 
-// ===== Game Management =====
+// ===== Game Manager =====
 class GameManager {
     constructor() {
-        this.gameScore = 0;
-        this.gameTime = 60;
-        this.gameTimer = null;
-        this.gameActive = false;
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.timeLeft = 30;
+        this.timer = null;
+        this.questions = this.getAIQuestions();
         this.init();
     }
 
     init() {
-        this.setupGame();
+        this.setupGameEvents();
+        this.setupCodingChallenge();
     }
 
-    setupGame() {
-        const startBtn = document.getElementById('startMemoryGame');
-        const checkCodeBtn = document.getElementById('checkCode');
-        const resetCodeBtn = document.getElementById('resetCode');
-        
-        if (startBtn) {
-            startBtn.addEventListener('click', () => this.startGame());
+    getAIQuestions() {
+        return [
+            {
+                question: 'ما هو الذكاء الاصطناعي؟',
+                options: [
+                    'برنامج يقلد الذكاء البشري',
+                    'روبوتات ذكية فقط',
+                    'ألعاب الفيديو',
+                    'شبكات التواصل الاجتماعي'
+                ],
+                correct: 0,
+                level: 'سهل',
+                category: 'مفاهيم أساسية'
+            },
+            {
+                question: 'ما هي خوارزمية التعلم الآلي؟',
+                options: [
+                    'مجموعة من القواعد لحل مشكلة',
+                    'برنامج للرسم',
+                    'لغة برمجة',
+                    'نظام تشغيل'
+                ],
+                correct: 0,
+                level: 'متوسط',
+                category: 'تعلم الآلة'
+            },
+            {
+                question: 'ما هو TensorFlow؟',
+                options: [
+                    'مكتبة مفتوحة المصدر للتعلم الآلي',
+                    'لغة برمجة',
+                    'نظام تشغيل',
+                    'محرك بحث'
+                ],
+                correct: 0,
+                level: 'متوسط',
+                category: 'أدوات'
+            },
+            {
+                question: 'ما هي الشبكات العصبية؟',
+                options: [
+                    'نماذج تحاكي الدماغ البشري',
+                    'أنظمة تشغيل',
+                    'قواعد بيانات',
+                    'شبكات إنترنت'
+                ],
+                correct: 0,
+                level: 'صعب',
+                category: 'شبكات عصبية'
+            },
+            {
+                question: 'ما هو ChatGPT؟',
+                options: [
+                    'نموذج لغوي من OpenAI',
+                    'لعبة فيديو',
+                    'نظام تشغيل',
+                    'لغة برمجة'
+                ],
+                correct: 0,
+                level: 'سهل',
+                category: 'تطبيقات'
+            }
+        ];
+    }
+
+    setupGameEvents() {
+        const startButton = document.querySelector('.btn-start-quiz');
+        if (startButton) {
+            startButton.addEventListener('click', () => {
+                this.startGame();
+            });
         }
-        
-        if (checkCodeBtn) {
-            checkCodeBtn.addEventListener('click', () => this.checkCode());
+
+        const playAgainButton = document.querySelector('.btn-play-again');
+        if (playAgainButton) {
+            playAgainButton.addEventListener('click', () => {
+                this.restartGame();
+            });
         }
-        
-        if (resetCodeBtn) {
-            resetCodeBtn.addEventListener('click', () => this.resetCode());
+
+        const nextButton = document.getElementById('nextQuestion');
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                this.nextQuestion();
+            });
+        }
+
+        const helpButtons = ['fiftyFifty', 'audienceHelp', 'phoneFriend'];
+        helpButtons.forEach(buttonId => {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.addEventListener('click', () => {
+                    this.useHelp(buttonId);
+                });
+            }
+        });
+    }
+
+    setupCodingChallenge() {
+        const runButton = document.querySelector('.btn-run-code');
+        const resetButton = document.querySelector('.btn-reset-code');
+        const codeEditor = document.getElementById('codeEditor');
+        const codeOutput = document.getElementById('codeOutput');
+
+        if (runButton && codeEditor && codeOutput) {
+            runButton.addEventListener('click', () => {
+                this.runCodeChallenge(codeEditor.value, codeOutput);
+            });
+        }
+
+        if (resetButton && codeEditor) {
+            resetButton.addEventListener('click', () => {
+                codeEditor.value = '';
+                const output = document.getElementById('codeOutput');
+                if (output) {
+                    output.innerHTML = '<p>انتظر نتيجة تنفيذ الكود...</p>';
+                    output.className = '';
+                }
+            });
         }
     }
 
     startGame() {
-        if (this.gameActive) return;
+        document.getElementById('quizStartScreen').style.display = 'none';
+        document.getElementById('quizGameScreen').style.display = 'block';
         
-        this.gameActive = true;
-        this.gameScore = 0;
-        this.gameTime = 60;
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.timeLeft = 30;
         
-        document.getElementById('gameScore').textContent = this.gameScore;
-        document.getElementById('gameTimer').textContent = this.gameTime;
-        
-        this.gameTimer = setInterval(() => {
-            this.gameTime--;
-            document.getElementById('gameTimer').textContent = this.gameTime;
-            
-            if (this.gameTime <= 0) {
-                this.endGame();
-            }
-        }, 1000);
-        
-        themeManager.showNotification('بدأت اللعبة! لديك 60 ثانية', 'success');
+        this.updateScore();
+        this.loadQuestion();
+        this.startTimer();
     }
 
-    checkCode() {
-        if (!this.gameActive) {
-            themeManager.showNotification('يجب بدء اللعبة أولاً!', 'error');
+    loadQuestion() {
+        if (this.currentQuestion >= this.questions.length) {
+            this.endGame();
             return;
         }
+
+        const question = this.questions[this.currentQuestion];
         
-        const codeInput = document.getElementById('codeInput');
-        const userCode = codeInput.value.trim();
+        document.getElementById('questionText').textContent = question.question;
+        document.getElementById('currentQuestion').textContent = this.currentQuestion + 1;
+        document.getElementById('questionLevel').textContent = question.level;
+        document.getElementById('questionCategory').textContent = question.category;
         
-        // الحل الصحيح: جمع الأرقام من 1 إلى 5
-        const correctCode = `for(let i = 1; i <= 5; i++) {
-    sum += i;
-}`;
+        const optionsContainer = document.getElementById('quizOptions');
+        optionsContainer.innerHTML = '';
         
-        // تحقق مبسط (في تطبيق حقيقي سيكون هناك محرك تنفيذ كود)
-        if (userCode.includes('for') && userCode.includes('sum') && 
-            (userCode.includes('5') || userCode.includes('5'))) {
+        const letters = ['أ', 'ب', 'ج', 'د'];
+        
+        question.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.className = 'quiz-option';
+            button.innerHTML = `
+                <span class="option-letter">${letters[index]}</span>
+                <span class="option-text">${option}</span>
+            `;
+            button.dataset.index = index;
             
-            this.gameScore += 10;
-            document.getElementById('gameScore').textContent = this.gameScore;
+            button.addEventListener('click', () => {
+                this.checkAnswer(index, question.correct, button);
+            });
             
-            themeManager.showNotification('أحسنت! الإجابة صحيحة (+10 نقاط)', 'success');
-            
-            // توليد مهمة جديدة
-            this.generateNewTask();
-            
-        } else {
-            themeManager.showNotification('حاول مرة أخرى! تأكد من جمع الأرقام من 1 إلى 5', 'error');
-        }
+            optionsContainer.appendChild(button);
+        });
+        
+        this.updateHelpButtons();
     }
 
-    resetCode() {
-        document.getElementById('codeInput').value = '';
-    }
-
-    generateNewTask() {
-        const tasks = [
-            {
-                description: 'المهمة: اطبع الأرقام الزوجية من 1 إلى 10',
-                hint: 'استخدم حلقة for وتحقق من الباقي بالقسمة على 2'
-            },
-            {
-                description: 'المهمة: ابحث عن أكبر رقم في مصفوفة [5, 8, 2, 10, 3]',
-                hint: 'استخدم Math.max أو حلقة للمقارنة'
-            },
-            {
-                description: 'المهمة: اقلب النص "مرحبا"',
-                hint: 'استخدم split و reverse و join'
+    checkAnswer(selected, correct, button) {
+        const options = document.querySelectorAll('.quiz-option');
+        options.forEach(opt => {
+            opt.disabled = true;
+            const index = parseInt(opt.dataset.index);
+            
+            if (index === correct) {
+                opt.classList.add('correct');
+                if (selected === correct) {
+                    this.score += 100000;
+                    this.updateScore();
+                }
+            } else if (index === selected) {
+                opt.classList.add('wrong');
             }
-        ];
+        });
         
-        const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
-        document.querySelector('.game-task p').textContent = randomTask.description;
+        setTimeout(() => {
+            this.nextQuestion();
+        }, 1500);
+    }
+
+    nextQuestion() {
+        this.currentQuestion++;
         
-        // تحديث التلميح
-        const hintElement = document.querySelector('.game-task .hint');
-        if (!hintElement) {
-            const taskElement = document.querySelector('.game-task');
-            const hint = document.createElement('div');
-            hint.className = 'hint';
-            hint.innerHTML = `<small><i class="fas fa-lightbulb"></i> تلميح: ${randomTask.hint}</small>`;
-            taskElement.appendChild(hint);
+        if (this.currentQuestion < this.questions.length) {
+            this.timeLeft = 30;
+            this.updateTimer();
+            this.loadQuestion();
         } else {
-            hintElement.innerHTML = `<small><i class="fas fa-lightbulb"></i> تلميح: ${randomTask.hint}</small>`;
+            this.endGame();
         }
+    }
+
+    startTimer() {
+        if (this.timer) clearInterval(this.timer);
+        
+        this.timer = setInterval(() => {
+            this.timeLeft--;
+            this.updateTimer();
+            
+            if (this.timeLeft <= 0) {
+                clearInterval(this.timer);
+                this.nextQuestion();
+            }
+        }, 1000);
+    }
+
+    updateTimer() {
+        const timerElement = document.getElementById('quizTimer');
+        if (timerElement) {
+            timerElement.textContent = this.timeLeft;
+            
+            if (this.timeLeft <= 10) {
+                timerElement.style.color = '#ef476f';
+                timerElement.style.fontWeight = 'bold';
+            } else {
+                timerElement.style.color = '';
+                timerElement.style.fontWeight = '';
+            }
+        }
+    }
+
+    updateScore() {
+        const scoreElement = document.getElementById('quizScore');
+        if (scoreElement) {
+            scoreElement.textContent = this.score.toLocaleString();
+        }
+    }
+
+    updateHelpButtons() {
+        const helpButtons = document.querySelectorAll('.helper-btn');
+        helpButtons.forEach(button => {
+            button.disabled = false;
+            button.style.opacity = '1';
+        });
+    }
+
+    useHelp(type) {
+        const button = document.getElementById(type);
+        if (!button || button.disabled) return;
+        
+        button.disabled = true;
+        button.style.opacity = '0.5';
+        
+        const themeManager = new ThemeManager();
+        
+        switch(type) {
+            case 'fiftyFifty':
+                this.useFiftyFifty();
+                themeManager.showNotification('تم استخدام مساعدة 50:50', 'info');
+                break;
+            case 'audienceHelp':
+                this.useAudienceHelp();
+                themeManager.showNotification('تم استخدام مساعدة الجمهور', 'info');
+                break;
+            case 'phoneFriend':
+                this.usePhoneFriend();
+                themeManager.showNotification('تم الاتصال بصديق', 'info');
+                break;
+        }
+    }
+
+    useFiftyFifty() {
+        const question = this.questions[this.currentQuestion];
+        const options = document.querySelectorAll('.quiz-option');
+        let wrongOptions = [];
+        
+        options.forEach((option, index) => {
+            if (index !== question.correct) {
+                wrongOptions.push(option);
+            }
+        });
+        
+        wrongOptions.sort(() => Math.random() - 0.5);
+        wrongOptions.slice(0, 2).forEach(option => {
+            option.style.opacity = '0.3';
+            option.style.pointerEvents = 'none';
+        });
+    }
+
+    useAudienceHelp() {
+        const question = this.questions[this.currentQuestion];
+        const options = document.querySelectorAll('.quiz-option');
+        const percentages = [60, 20, 15, 5];
+        
+        options.forEach((option, index) => {
+            const percentage = index === question.correct ? 60 : percentages[index];
+            const span = document.createElement('span');
+            span.className = 'audience-percentage';
+            span.textContent = `${percentage}%`;
+            span.style.color = '#4ecdc4';
+            span.style.fontWeight = 'bold';
+            span.style.marginRight = '10px';
+            
+            option.appendChild(span);
+        });
+    }
+
+    usePhoneFriend() {
+        const question = this.questions[this.currentQuestion];
+        const correctAnswer = question.options[question.correct];
+        
+        const themeManager = new ThemeManager();
+        themeManager.showNotification(`صديقي يقول: أعتقد أن الإجابة الصحيحة هي "${correctAnswer}"`, 'info');
     }
 
     endGame() {
-        this.gameActive = false;
-        clearInterval(this.gameTimer);
+        clearInterval(this.timer);
+        
+        document.getElementById('quizGameScreen').style.display = 'none';
+        document.getElementById('quizEndScreen').style.display = 'block';
+        
+        document.getElementById('finalScore').textContent = this.score.toLocaleString();
+        document.getElementById('correctAnswers').textContent = Math.floor(this.score / 100000);
+        document.getElementById('wrongAnswers').textContent = this.questions.length - Math.floor(this.score / 100000);
+        document.getElementById('totalTime').textContent = (30 * this.questions.length) - this.timeLeft;
         
         let message = '';
-        if (this.gameScore >= 30) {
-            message = 'ممتاز! أنت مبرمج محترف!';
-        } else if (this.gameScore >= 20) {
-            message = 'جيد جداً! لديك مهارات برمجية جيدة';
+        if (this.score >= 500000) {
+            message = 'ممتاز! أنت خبير في الذكاء الاصطناعي! 🏆';
+        } else if (this.score >= 300000) {
+            message = 'جيد جداً! لديك معرفة قوية بالذكاء الاصطناعي! 👍';
+        } else if (this.score >= 100000) {
+            message = 'ليس سيئاً! يمكنك تحسين معرفتك! 💪';
         } else {
-            message = 'حاول مرة أخرى! التدريب يصنع المحترفين';
+            message = 'حاول مرة أخرى! التعلم مستمر! 📚';
         }
         
-        themeManager.showNotification(`انتهت اللعبة! النقاط: ${this.gameScore}. ${message}`, 'success');
-        
-        // إعادة تعيين اللعبة
-        this.gameScore = 0;
-        this.gameTime = 60;
-        document.getElementById('gameScore').textContent = this.gameScore;
-        document.getElementById('gameTimer').textContent = this.gameTime;
-        this.resetCode();
+        document.getElementById('resultMessage').textContent = message;
+    }
+
+    restartGame() {
+        document.getElementById('quizEndScreen').style.display = 'none';
+        document.getElementById('quizStartScreen').style.display = 'block';
+    }
+
+    runCodeChallenge(code, outputElement) {
+        try {
+            const testCases = [
+                { input: [1, 2, 3, 4, 5], expected: 6 },
+                { input: [10, 21, 32, 43], expected: 42 },
+                { input: [2, 4, 6, 8], expected: 20 },
+                { input: [1, 3, 5, 7], expected: 0 }
+            ];
+            
+            let passed = 0;
+            let results = [];
+            
+            testCases.forEach((testCase, index) => {
+                const userFunction = new Function('arr', `
+                    ${code}
+                    return sumEvenNumbers(arr);
+                `);
+                
+                try {
+                    const result = userFunction(testCase.input);
+                    const isCorrect = result === testCase.expected;
+                    
+                    if (isCorrect) {
+                        passed++;
+                        results.push(`✓ الاختبار ${index + 1}: صحيح (${result})`);
+                    } else {
+                        results.push(`✗ الاختبار ${index + 1}: خطأ (توقع: ${testCase.expected}, حصلت: ${result})`);
+                    }
+                } catch (error) {
+                    results.push(`✗ الاختبار ${index + 1}: خطأ في التنفيذ (${error.message})`);
+                }
+            });
+            
+            const score = Math.floor((passed / testCases.length) * 100);
+            
+            outputElement.innerHTML = `
+                <div class="test-results">
+                    <h4>نتيجة الاختبار: ${score}/100</h4>
+                    <p>${passed}/${testCases.length} اختبارات ناجحة</p>
+                    <div class="test-details">
+                        ${results.map(r => `<p>${r}</p>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            outputElement.className = score === 100 ? 'success' : score >= 50 ? 'warning' : 'error';
+            
+            const themeManager = new ThemeManager();
+            if (score === 100) {
+                themeManager.showNotification('ممتاز! جميع الاختبارات ناجحة! 🎉', 'success');
+            } else if (score >= 50) {
+                themeManager.showNotification('جيد! حاول تحسين الكود للحصول على نتيجة أفضل! 💪', 'warning');
+            } else {
+                themeManager.showNotification('حاول مرة أخرى! راجع الكود جيداً! 📝', 'error');
+            }
+            
+        } catch (error) {
+            outputElement.innerHTML = `
+                <div class="error-message">
+                    <h4>خطأ في التنفيذ!</h4>
+                    <p>${error.message}</p>
+                </div>
+            `;
+            outputElement.className = 'error';
+        }
     }
 }
 
-// ===== Main Application =====
-class PortfolioApp {
-    constructor() {
-        this.themeManager = new ThemeManager();
-        this.languageManager = new LanguageManager();
-        this.navigationManager = new NavigationManager();
-        this.projectsManager = new ProjectsManager();
-        this.animationsManager = new AnimationsManager();
-        this.formManager = new FormManager();
-        this.gameManager = new GameManager();
-        this.init();
-    }
-
-    init() {
-        this.setupPreloader();
-        this.setupEventListeners();
-        this.setupAnalytics();
-        this.setupServiceWorker();
-    }
-
-    setupPreloader() {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                if (preloader) {
-                    preloader.style.opacity = '0';
+// ===== Main Initialization =====
+document.addEventListener('DOMContentLoaded', function() {
+    // إخفاء الرسالة الترحيبية والتحميل
+    setTimeout(() => {
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const preloader = document.getElementById('preloader');
+        const enterBtn = document.querySelector('.enter-btn');
+        
+        if (enterBtn) {
+            enterBtn.addEventListener('click', () => {
+                if (welcomeMessage) {
+                    welcomeMessage.style.opacity = '0';
                     setTimeout(() => {
-                        preloader.style.display = 'none';
+                        welcomeMessage.style.display = 'none';
+                        if (preloader) {
+                            preloader.style.display = 'flex';
+                            setTimeout(() => {
+                                preloader.style.opacity = '0';
+                                setTimeout(() => {
+                                    preloader.style.display = 'none';
+                                }, 500);
+                            }, 2000);
+                        }
                     }, 500);
                 }
-            }, 1500);
-        });
-    }
-
-    setupEventListeners() {
-        // تحديث النصوص عند تغيير اللغة
-        this.languageManager.translations = this.languageManager.translations;
-        
-        // تحديث المشاريع عند تغيير اللغة
-        document.addEventListener('languageChanged', () => {
-            this.projectsManager.filterProjects();
-        });
-        
-        // تحديث النماذج عند تغيير اللغة
-        document.addEventListener('languageChanged', () => {
-            this.updateFormPlaceholders();
-        });
-    }
-
-    updateFormPlaceholders() {
-        const texts = this.languageManager.translations[this.languageManager.currentLang];
-        
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const subjectInput = document.getElementById('subject');
-        const messageInput = document.getElementById('message');
-        
-        if (nameInput) nameInput.placeholder = texts.enter_name;
-        if (emailInput) emailInput.placeholder = texts.enter_email;
-        if (subjectInput) subjectInput.placeholder = texts.enter_subject;
-        if (messageInput) messageInput.placeholder = texts.write_message;
-    }
-
-    setupAnalytics() {
-        // تتبع الزيارات
-        const visitCount = localStorage.getItem('visitCount') || 0;
-        localStorage.setItem('visitCount', parseInt(visitCount) + 1);
-        
-        // تتبع وقت الزيارة
-        const visitTime = new Date().toISOString();
-        localStorage.setItem('lastVisit', visitTime);
-        
-        // إرسال إحصائيات (في تطبيق حقيقي سيتم إرسالها لخادم)
-        console.log(`مرحباً بك! هذه الزيارة رقم: ${parseInt(visitCount) + 1}`);
-    }
-
-    setupServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registered:', registration);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed:', error);
-                    });
             });
         }
+        
+        setTimeout(() => {
+            if (welcomeMessage && welcomeMessage.style.display !== 'none') {
+                welcomeMessage.style.opacity = '0';
+                setTimeout(() => {
+                    welcomeMessage.style.display = 'none';
+                    
+                    if (preloader) {
+                        preloader.style.opacity = '0';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 500);
+                    }
+                }, 500);
+            }
+        }, 3000);
+    }, 1000);
+    
+    // تهيئة جميع المدراء
+    const themeManager = new ThemeManager();
+    const languageManager = new LanguageManager();
+    const navigationManager = new NavigationManager();
+    const imageManager = new ImageManager();
+    const animationManager = new AnimationManager();
+    const projectsManager = new ProjectsManager();
+    const contactManager = new ContactManager();
+    const gameManager = new GameManager();
+    
+    // تهيئة AOS
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    }
+    
+    // تهيئة الجسيمات
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS('heroParticles', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: ["#6c63ff", "#36d1dc", "#ff6b6b"] },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ffffff",
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 3,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            },
+            retina_detect: true
+        });
+    }
+    
+    // زر تحميل السيرة الذاتية
+    const downloadCVBtn = document.getElementById('downloadCVBtn');
+    if (downloadCVBtn) {
+        downloadCVBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = 'graduation.pdf';
+            link.download = 'سيرة_غمدان_عبده.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            themeManager.showNotification('جاري تحميل السيرة الذاتية...', 'info');
+        });
+    }
+    
+    // زر عرض السيرة الكاملة
+    const viewFullCV = document.getElementById('viewFullCV');
+    if (viewFullCV) {
+        viewFullCV.addEventListener('click', () => {
+            window.open('graduation.pdf', '_blank');
+            themeManager.showNotification('تم فتح السيرة الذاتية في نافذة جديدة', 'info');
+        });
+    }
+    
+    // إضافة تأثيرات إضافية
+    setupAdditionalEffects();
+});
+
+function setupAdditionalEffects() {
+    // تأثيرات للأزرار
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('mousedown', () => {
+            button.style.transform = 'scale(0.95)';
+        });
+        
+        button.addEventListener('mouseup', () => {
+            button.style.transform = '';
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = '';
+        });
+    });
+    
+    // تأثيرات للروابط
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            link.style.transform = 'translateY(-2px)';
+        });
+        
+        link.addEventListener('mouseleave', () => {
+            link.style.transform = '';
+        });
+    });
+    
+    // تأثيرات للبطاقات
+    document.querySelectorAll('.card, .project-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateY = (x - centerX) / 25;
+            const rotateX = (centerY - y) / 25;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        });
+    });
+    
+    // تأثيرات للصور
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('load', () => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                img.style.opacity = '1';
+            }, 100);
+        });
+    });
+    
+    // تأثيرات للنماذج
+    document.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('focus', () => {
+            input.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', () => {
+            if (!input.value) {
+                input.parentElement.classList.remove('focused');
+            }
+        });
+    });
+    
+    // تأثيرات للقوائم
+    document.querySelectorAll('.nav-list').forEach(list => {
+        list.addEventListener('mouseenter', () => {
+            list.style.transform = 'translateY(-5px)';
+        });
+        
+        list.addEventListener('mouseleave', () => {
+            list.style.transform = '';
+        });
+    });
+    
+    // تأثيرات للأيقونات
+    document.querySelectorAll('i').forEach(icon => {
+        icon.addEventListener('mouseenter', () => {
+            icon.style.transform = 'scale(1.2)';
+        });
+        
+        icon.addEventListener('mouseleave', () => {
+            icon.style.transform = '';
+        });
+    });
+    
+    // تأثيرات للشعار
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('mouseenter', () => {
+            logo.style.transform = 'scale(1.05)';
+        });
+        
+        logo.addEventListener('mouseleave', () => {
+            logo.style.transform = '';
+        });
+    }
+    
+    // تأثيرات للعناوين
+    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
+        heading.addEventListener('mouseenter', () => {
+            heading.style.transform = 'translateY(-3px)';
+            heading.style.textShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        });
+        
+        heading.addEventListener('mouseleave', () => {
+            heading.style.transform = '';
+            heading.style.textShadow = '';
+        });
+    });
+    
+    // تأثيرات للفقرات
+    document.querySelectorAll('p').forEach(paragraph => {
+        paragraph.addEventListener('mouseenter', () => {
+            paragraph.style.transform = 'translateX(5px)';
+        });
+        
+        paragraph.addEventListener('mouseleave', () => {
+            paragraph.style.transform = '';
+        });
+    });
+    
+    // تأثيرات للأقسام
+    document.querySelectorAll('section').forEach(section => {
+        section.addEventListener('mouseenter', () => {
+            section.style.boxShadow = 'inset 0 0 0 1px rgba(108, 99, 255, 0.1)';
+        });
+        
+        section.addEventListener('mouseleave', () => {
+            section.style.boxShadow = '';
+        });
+    });
+    
+    // تأثيرات للفوتر
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.addEventListener('mouseenter', () => {
+            footer.style.transform = 'translateY(-10px)';
+        });
+        
+        footer.addEventListener('mouseleave', () => {
+            footer.style.transform = '';
+        });
+    }
+    
+    // تأثيرات للهيدر
+    const header = document.querySelector('header');
+    if (header) {
+        header.addEventListener('mouseenter', () => {
+            header.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        });
+        
+        header.addEventListener('mouseleave', () => {
+            if (window.scrollY < 50) {
+                header.style.boxShadow = '';
+            }
+        });
+    }
+    
+    // تأثيرات للشريط الجانبي
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('mouseenter', () => {
+            scrollIndicator.style.transform = 'scale(1.1)';
+        });
+        
+        scrollIndicator.addEventListener('mouseleave', () => {
+            scrollIndicator.style.transform = '';
+        });
+    }
+    
+    // تأثيرات للجسيمات
+    const particles = document.querySelector('.particles-bg');
+    if (particles) {
+        particles.addEventListener('mouseenter', () => {
+            particles.style.opacity = '0.5';
+        });
+        
+        particles.addEventListener('mouseleave', () => {
+            particles.style.opacity = '0.3';
+        });
+    }
+    
+    // تأثيرات للكود العائم
+    const floatingCode = document.querySelector('.floating-code');
+    if (floatingCode) {
+        floatingCode.addEventListener('mouseenter', () => {
+            floatingCode.style.opacity = '0.2';
+        });
+        
+        floatingCode.addEventListener('mouseleave', () => {
+            floatingCode.style.opacity = '0.1';
+        });
     }
 }
-
-// ===== Initialize Application =====
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new PortfolioApp();
-    
-    // جعل الكائنات متاحة عالمياً للتصحيح
-    window.app = app;
-    window.themeManager = app.themeManager;
-    window.languageManager = app.languageManager;
-    window.projectsManager = app.projectsManager;
-    window.gameManager = app.gameManager;
-    
-    console.log('✅ تم تحميل تطبيق Portfolio بنجاح!');
-});
