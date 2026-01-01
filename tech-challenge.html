@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تحدي التقنية - من سيربح المليون</title>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* ========== RESET & BASE STYLES ========== */
         * {
             margin: 0;
             padding: 0;
@@ -15,195 +20,713 @@
         }
 
         :root {
+            /* نظام الألوان المتكامل */
             --primary-color: #6C63FF;
+            --primary-dark: #554FD8;
+            --primary-light: #8A84FF;
+            --primary-50: rgba(108, 99, 255, 0.05);
+            --primary-100: rgba(108, 99, 255, 0.1);
+            --primary-200: rgba(108, 99, 255, 0.2);
+            --primary-300: rgba(108, 99, 255, 0.3);
+            
             --secondary-color: #FF6584;
+            --secondary-dark: #E55A7A;
+            --secondary-light: #FF7A96;
+            --secondary-100: rgba(255, 101, 132, 0.1);
+            --secondary-200: rgba(255, 101, 132, 0.2);
+            
             --accent-color: #36D1DC;
+            --accent-dark: #2AB7C1;
+            --accent-light: #5BDCE6;
+            --accent-100: rgba(54, 209, 220, 0.1);
+            
             --dark-color: #1A1A2E;
+            --dark-light: #2D2D44;
+            --dark-lighter: #3A3A54;
+            
             --light-color: #F8F9FA;
-            --success-color: #4CAF50;
-            --danger-color: #F44336;
-            --warning-color: #FF9800;
-            --gold-color: #FFD700;
-            --silver-color: #C0C0C0;
-            --bronze-color: #CD7F32;
+            --light-dark: #E9ECEF;
+            --light-darker: #DEE2E6;
+            
+            /* نظام التدرجات */
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+            --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-6: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --gradient-7: linear-gradient(135deg, var(--accent-color) 0%, #5B86E5 100%);
+            
+            /* نظام الظلال */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.2);
+            --shadow-primary: 0 10px 30px rgba(108, 99, 255, 0.3);
+            --shadow-secondary: 0 10px 30px rgba(255, 101, 132, 0.3);
+            --shadow-accent: 0 10px 30px rgba(54, 209, 220, 0.3);
+            
+            /* تأثيرات الزجاج */
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --blur-amount: blur(20px);
+            
+            /* التحولات والأنيميشن */
+            --transition-fast: 0.3s ease;
+            --transition-normal: 0.5s ease;
+            --transition-slow: 0.8s ease;
+            --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            /* الأبعاد */
+            --border-radius-sm: 8px;
+            --border-radius-md: 15px;
+            --border-radius-lg: 25px;
+            --border-radius-xl: 50px;
+            --border-radius-full: 9999px;
+            
+            /* المسافات */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            --space-24: 6rem;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
             color: white;
             min-height: 100vh;
             direction: rtl;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .challenge-container {
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========== LOADING SCREEN ========== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: var(--space-6);
+        }
+
+        .loader-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-circle:nth-child(2) {
+            border: 8px solid transparent;
+            border-bottom-color: var(--accent-color);
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            text-align: center;
+            margin-top: var(--space-4);
+            animation: pulse 2s infinite;
+        }
+
+        /* ========== BACKGROUND ANIMATION ========== */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-6);
+            animation: float 20s infinite linear;
+            filter: blur(1px);
+            opacity: 0.1;
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at 20% 50%, 
+                rgba(108, 99, 255, 0.1) 0%, 
+                transparent 50%
+            ),
+            radial-gradient(
+                circle at 80% 20%, 
+                rgba(255, 101, 132, 0.1) 0%, 
+                transparent 50%
+            ),
+            radial-gradient(
+                circle at 40% 80%, 
+                rgba(54, 209, 220, 0.1) 0%, 
+                transparent 50%
+            );
+        }
+
+        /* ========== GAME CONTAINER ========== */
+        .game-container {
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: var(--space-6);
         }
 
         .game-wrapper {
-            background: linear-gradient(135deg, #2a2a44 0%, #1a1a2e 100%);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 900px;
+            background: rgba(42, 42, 68, 0.8);
+            backdrop-filter: var(--blur-amount);
+            -webkit-backdrop-filter: var(--blur-amount);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-8);
+            max-width: 1200px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--glass-border);
+            animation: fadeIn 0.8s ease;
         }
 
+        /* ========== GAME HEADER ========== */
         .game-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: var(--space-8);
             position: relative;
         }
 
-        .game-header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        .game-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+            animation: bounce 2s infinite;
+        }
+
+        .game-logo i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            filter: drop-shadow(0 0 10px rgba(54, 209, 220, 0.5));
+        }
+
+        .game-title {
+            font-family: 'El Messiri', serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: var(--space-2);
             text-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
         }
 
-        .game-header p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            opacity: 0.9;
+            margin-bottom: var(--space-6);
         }
 
+        /* ========== PLAYER STATS ========== */
         .player-stats {
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
             background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            padding: var(--space-6);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--space-6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-item {
             text-align: center;
+            padding: var(--space-4);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(108, 99, 255, 0.2);
+            border: 1px solid rgba(108, 99, 255, 0.3);
         }
 
         .stat-label {
-            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
             font-size: 0.9rem;
-            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: var(--space-2);
         }
 
         .stat-value {
             font-size: 1.8rem;
             font-weight: 800;
             color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(54, 209, 220, 0.5);
         }
 
         .money-value {
-            color: var(--gold-color);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            color: #FFD700;
+            animation: glow 2s infinite alternate;
         }
 
-        .game-stage {
+        /* ========== PRIZE LADDER ========== */
+        .prize-ladder-container {
+            margin: var(--space-8) 0;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
+            border-radius: var(--border-radius-md);
+            padding: var(--space-6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .prize-ladder-title {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .prize-ladder {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            max-height: 300px;
+            overflow-y: auto;
+            padding: var(--space-2);
+        }
+
+        .prize-ladder::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .prize-ladder::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .prize-ladder::-webkit-scrollbar-thumb {
+            background: var(--gradient-6);
+            border-radius: 4px;
+        }
+
+        .prize-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+        }
+
+        .prize-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .prize-item.current {
+            background: linear-gradient(90deg, rgba(108, 99, 255, 0.3), rgba(54, 209, 220, 0.3));
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .prize-item.reached {
+            background: rgba(76, 175, 80, 0.15);
+            border-left: 4px solid #4CAF50;
+        }
+
+        .prize-level {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-weight: 600;
+            color: white;
+        }
+
+        .prize-amount {
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* ========== PROGRESS BAR ========== */
+        .progress-container {
+            margin: var(--space-6) 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-6);
+            border-radius: var(--border-radius-full);
+            width: 0%;
+            transition: width 0.5s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .game-stage::before {
+        .progress-fill::after {
             content: '';
             position: absolute;
             top: 0;
+            left: 0;
             right: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 100%
+            );
+            animation: shimmer 2s infinite;
         }
 
+        /* ========== TIMER ========== */
+        .timer-container {
+            text-align: center;
+            margin: var(--space-6) 0;
+        }
+
+        .timer {
+            display: inline-block;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: rgba(0, 0, 0, 0.4);
+            padding: var(--space-3) var(--space-8);
+            border-radius: var(--border-radius-full);
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(54, 209, 220, 0.2);
+            color: var(--accent-color);
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .timer.warning {
+            color: #FF9800;
+            border-color: #FF9800;
+            box-shadow: 0 0 25px rgba(255, 152, 0, 0.3);
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            color: #F44336;
+            border-color: #F44336;
+            box-shadow: 0 0 30px rgba(244, 67, 54, 0.4);
+            animation: pulse 0.5s infinite;
+        }
+
+        /* ========== QUESTION CONTAINER ========== */
         .question-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 2px solid rgba(108, 99, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            border: 2px solid rgba(108, 99, 255, 0.3);
+            box-shadow: var(--shadow-primary);
+            transition: all var(--transition-normal);
+        }
+
+        .question-container:hover {
+            border-color: rgba(108, 99, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.2);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .question-number {
-            color: var(--accent-color);
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .question-number i {
+            gap: var(--space-3);
             font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.3);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--border-radius-full);
         }
 
-        .prize-amount {
-            color: var(--gold-color);
-            font-size: 2.5rem;
-            font-weight: 800;
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: var(--gradient-6);
+            color: white;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--border-radius-full);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .prize-display {
             text-align: center;
-            margin: 25px 0;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-            animation: glow 2s infinite alternate;
+            margin: var(--space-6) 0;
         }
 
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4); }
+        .prize-amount-large {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: glow 2s infinite alternate;
+            display: inline-block;
+            padding: var(--space-2) var(--space-6);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius-md);
+            border: 2px solid rgba(255, 215, 0, 0.3);
         }
 
         .question-text {
-            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-6);
             font-size: 1.4rem;
-            line-height: 1.6;
+            line-height: 1.8;
             text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            min-height: 120px;
+            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: var(--space-6);
+            animation: fadeIn 0.5s ease;
         }
 
+        /* ========== ANSWERS GRID ========== */
         .answers-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        @media (max-width: 768px) {
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .answer-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: var(--border-radius-md);
+            padding: var(--space-5) var(--space-4);
             color: white;
             font-family: 'Cairo', sans-serif;
             font-size: 1.2rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-fast);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: var(--space-4);
             text-align: right;
             min-height: 80px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .answer-btn:nth-child(1) { animation-delay: 0.1s; }
+        .answer-btn:nth-child(2) { animation-delay: 0.2s; }
+        .answer-btn:nth-child(3) { animation-delay: 0.3s; }
+        .answer-btn:nth-child(4) { animation-delay: 0.4s; }
+
+        .answer-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+            transform: translateX(-100%);
+        }
+
+        .answer-btn:hover::before {
+            animation: shimmer 1s forwards;
         }
 
         .answer-btn:hover:not(:disabled) {
-            background: rgba(108, 99, 255, 0.3);
+            background: rgba(108, 99, 255, 0.2);
             border-color: var(--primary-color);
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(108, 99, 255, 0.2);
         }
 
@@ -214,23 +737,19 @@
 
         .answer-btn.correct {
             background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
-            border-color: var(--success-color);
-            animation: correct-pulse 0.5s;
+            border-color: #4CAF50;
+            animation: pulse 0.5s;
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.3);
         }
 
         .answer-btn.wrong {
             background: linear-gradient(135deg, rgba(244, 67, 54, 0.3), rgba(244, 67, 54, 0.1));
-            border-color: var(--danger-color);
-            animation: wrong-shake 0.5s;
+            border-color: #F44336;
+            animation: shake 0.5s;
+            box-shadow: 0 0 30px rgba(244, 67, 54, 0.2);
         }
 
-        @keyframes correct-pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes wrong-shake {
+        @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
@@ -239,156 +758,239 @@
         .answer-letter {
             width: 50px;
             height: 50px;
-            background: var(--primary-color);
-            border-radius: 50%;
+            background: var(--gradient-6);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
             font-size: 1.3rem;
+            color: white;
             flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all var(--transition-fast);
+        }
+
+        .answer-btn:hover .answer-letter {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .answer-text {
             flex: 1;
-            font-weight: 500;
+            font-weight: 600;
+            line-height: 1.5;
         }
 
-        .lifelines {
+        /* ========== LIFELINES ========== */
+        .lifelines-container {
+            margin-bottom: var(--space-8);
+        }
+
+        .lifelines-title {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: var(--space-4);
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .lifelines-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+        }
+
+        @media (max-width: 768px) {
+            .lifelines-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lifelines-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .lifeline-btn {
             background: linear-gradient(135deg, var(--secondary-color), #ff4d6d);
             border: none;
             color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
+            padding: var(--space-4);
+            border-radius: var(--border-radius-md);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-fast);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-2);
             font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
-            min-width: 180px;
+            font-weight: 700;
+            font-size: 1rem;
+            min-height: 100px;
             justify-content: center;
+            box-shadow: 0 8px 25px rgba(255, 101, 132, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lifeline-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            transform: rotate(45deg);
+            opacity: 0;
+        }
+
+        .lifeline-btn:hover:not(:disabled)::after {
+            animation: lifeline-shine 1.5s forwards;
+        }
+
+        @keyframes lifeline-shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
         }
 
         .lifeline-btn:hover:not(:disabled) {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 101, 132, 0.3);
+            box-shadow: 0 15px 35px rgba(255, 101, 132, 0.4);
         }
 
         .lifeline-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             background: linear-gradient(135deg, #666, #888);
+            box-shadow: none;
         }
 
+        .lifeline-btn i {
+            font-size: 1.8rem;
+            margin-bottom: var(--space-1);
+        }
+
+        .lifeline-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* ========== GAME CONTROLS ========== */
         .game-controls {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: var(--space-4);
             flex-wrap: wrap;
         }
 
         .control-btn {
-            padding: 18px 35px;
-            border-radius: 50px;
+            padding: var(--space-4) var(--space-8);
+            border-radius: var(--border-radius-full);
             font-family: 'Cairo', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-weight: 800;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-fast);
             border: none;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-3);
             min-width: 200px;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+            transform: translateX(-100%);
+            z-index: -1;
+        }
+
+        .control-btn:hover:not(:disabled)::before {
+            animation: shine 1s forwards;
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
         }
 
         .control-btn.primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            background: var(--gradient-6);
             color: white;
+            box-shadow: var(--shadow-primary);
         }
 
         .control-btn.secondary {
             background: transparent;
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .control-btn:hover:not(:disabled) {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
 
         .control-btn.primary:hover:not(:disabled) {
-            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(108, 99, 255, 0.4);
+        }
+
+        .control-btn.secondary:hover:not(:disabled) {
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
         }
 
         .control-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        .timer-container {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .timer {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            font-weight: 800;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: inline-block;
-        }
-
-        .timer.warning {
-            color: var(--warning-color);
-            animation: pulse 1s infinite;
-        }
-
-        .timer.danger {
-            color: var(--danger-color);
-            animation: pulse-fast 0.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        @keyframes pulse-fast {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .notification {
+        /* ========== NOTIFICATIONS ========== */
+        .notifications-container {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            max-width: 400px;
+        }
+
+        .notification {
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--border-radius-md);
             color: white;
             font-weight: 600;
             z-index: 1000;
-            transform: translateX(100%);
+            transform: translateX(120%);
             opacity: 0;
-            transition: all 0.3s;
+            transition: all var(--transition-normal);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--space-3);
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-lg);
+            animation: slideInRight 0.5s ease forwards;
         }
 
         .notification.show {
@@ -397,89 +999,312 @@
         }
 
         .notification.success {
-            background: linear-gradient(135deg, var(--success-color), #2E7D32);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.9), rgba(46, 125, 50, 0.9));
+            border-left: 5px solid rgba(255, 255, 255, 0.5);
         }
 
         .notification.error {
-            background: linear-gradient(135deg, var(--danger-color), #C62828);
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.9), rgba(198, 40, 40, 0.9));
+            border-left: 5px solid rgba(255, 255, 255, 0.5);
         }
 
         .notification.info {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.9), rgba(54, 209, 220, 0.9));
+            border-left: 5px solid rgba(255, 255, 255, 0.5);
         }
 
-        .prize-ladder {
+        .notification.warning {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(245, 124, 0, 0.9));
+            border-left: 5px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+        }
+
+        /* ========== CELEBRATION SCREEN ========== */
+        .celebration-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .celebration-screen.show {
             display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            flex-wrap: wrap;
         }
 
-        .prize-item {
+        .celebration-content {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(42, 42, 68, 0.95));
+            padding: var(--space-10);
+            border-radius: var(--border-radius-lg);
             text-align: center;
-            padding: 10px;
-            flex: 1;
-            min-width: 100px;
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: bounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .prize-item.current {
-            background: rgba(108, 99, 255, 0.2);
-            border-radius: 8px;
-            border: 2px solid var(--primary-color);
+        .celebration-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="50%" cy="50%"><stop offset="0%" stop-color="%23FFD700" stop-opacity="0.1"/><stop offset="100%" stop-color="%23FFD700" stop-opacity="0"/></radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(%23g)"/></svg>');
+            background-size: 200% 200%;
+            animation: confetti-fall 10s infinite linear;
+            z-index: -1;
         }
 
-        .prize-amount-small {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--gold-color);
+        .celebration-title {
+            font-size: 3rem;
+            color: #FFD700;
+            margin-bottom: var(--space-6);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+            animation: glow 2s infinite alternate;
         }
 
-        .prize-level {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
+        .celebration-message {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-8);
+            color: white;
+            line-height: 1.6;
+        }
+
+        .celebration-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+            margin: var(--space-8) 0;
+        }
+
+        .celebration-stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-4);
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .celebration-stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #FFD700;
+            margin-bottom: var(--space-2);
+        }
+
+        .celebration-stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+
+        /* ========== ACHIEVEMENT BADGE ========== */
+        .achievement-badge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #FFD700, var(--secondary-color));
+            padding: var(--space-4) var(--space-8);
+            border-radius: var(--border-radius-md);
+            color: var(--dark-color);
+            font-weight: 900;
+            font-size: 1.5rem;
+            z-index: 2500;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            animation: badge-pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes badge-pop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            70% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* ========== SOUND TOGGLE ========== */
+        .sound-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all var(--transition-fast);
+            backdrop-filter: blur(5px);
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(108, 99, 255, 0.3);
+            border-color: var(--primary-color);
+        }
+
+        .sound-toggle i {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .sound-toggle.muted i.fa-volume-up {
+            display: none;
+        }
+
+        .sound-toggle.muted i.fa-volume-mute {
+            display: block;
+        }
+
+        .sound-toggle i.fa-volume-mute {
+            display: none;
+        }
+
+        /* ========== SCORE ANIMATION ========== */
+        .score-animation {
+            position: fixed;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #FFD700;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            animation: score-float 2s ease-out forwards;
+        }
+
+        @keyframes score-float {
+            0% { 
+                transform: translateY(0) scale(0.5); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(-100px) scale(1.5); 
+                opacity: 0; 
+            }
+        }
+
+        /* ========== CONFETTI ========== */
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        /* ========== RESPONSIVE DESIGN ========== */
+        @media (max-width: 1200px) {
+            .game-wrapper {
+                padding: var(--space-6);
+            }
+            
+            .game-title {
+                font-size: 2.5rem;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .prize-amount-large {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .player-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .celebration-stats {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
-            .answers-grid {
-                grid-template-columns: 1fr;
+            .game-container {
+                padding: var(--space-4);
             }
             
             .game-wrapper {
-                padding: 20px;
+                padding: var(--space-4);
+            }
+            
+            .game-title {
+                font-size: 1.8rem;
+            }
+            
+            .game-subtitle {
+                font-size: 1rem;
             }
             
             .question-text {
                 font-size: 1.2rem;
+                padding: var(--space-4);
+            }
+            
+            .prize-amount-large {
+                font-size: 2rem;
             }
             
             .control-btn {
                 min-width: 150px;
+                padding: var(--space-3) var(--space-6);
             }
             
-            .lifeline-btn {
-                min-width: 150px;
+            .sound-toggle {
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
             }
             
-            .prize-amount {
-                font-size: 2rem;
+            .sound-toggle i {
+                font-size: 1.5rem;
             }
         }
 
         @media (max-width: 480px) {
-            .game-header h1 {
-                font-size: 2rem;
+            .game-title {
+                font-size: 1.5rem;
+            }
+            
+            .player-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
             }
             
             .question-text {
                 font-size: 1.1rem;
-                padding: 15px;
+                min-height: 120px;
             }
             
             .answer-btn {
-                padding: 15px;
+                padding: var(--space-4);
                 font-size: 1.1rem;
             }
             
@@ -488,142 +1313,286 @@
                 height: 40px;
                 font-size: 1.1rem;
             }
+            
+            .lifelines-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-btn {
+                width: 100%;
+            }
+            
+            .game-controls {
+                gap: var(--space-3);
+            }
+            
+            .celebration-title {
+                font-size: 2rem;
+            }
+            
+            .celebration-message {
+                font-size: 1.2rem;
+            }
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease;
+        /* ========== CUSTOM SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
         }
 
-        .celebration {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-6);
+            border-radius: 5px;
         }
 
-        .celebration.show {
-            display: flex;
-            animation: fadeIn 0.5s;
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-primary);
         }
 
-        .celebration-content {
-            background: linear-gradient(135deg, var(--dark-color), #2a2a44);
-            padding: 40px;
-            border-radius: 20px;
+        /* ========== ACCESSIBILITY ========== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ========== PRINT STYLES ========== */
+        @media print {
+            .sound-toggle,
+            .notifications-container,
+            .celebration-screen,
+            .achievement-badge {
+                display: none !important;
+            }
+        }
+
+        /* ========== UTILITY CLASSES ========== */
+        .text-center {
             text-align: center;
-            max-width: 500px;
-            width: 90%;
         }
 
-        .celebration h2 {
-            font-size: 3rem;
-            color: var(--gold-color);
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        .text-gradient {
+            background: var(--gradient-6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .celebration p {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            color: white;
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-amount);
+            -webkit-backdrop-filter: var(--blur-amount);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .animate-slide-in-right {
+            animation: slideInRight 0.5s ease forwards;
+        }
+
+        .animate-slide-in-left {
+            animation: slideInLeft 0.5s ease forwards;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .animate-bounce {
+            animation: bounce 2s infinite;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s infinite alternate;
         }
     </style>
 </head>
 <body>
-    <!-- إشعارات -->
-    <div id="notification" class="notification"></div>
-    
-    <!-- احتفال الفوز -->
-    <div id="celebration" class="celebration">
+    <!-- شاشة التحميل -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loader">
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+        </div>
+        <div class="loading-text" id="loading-text">جاري تحميل اللعبة...</div>
+    </div>
+
+    <!-- الخلفية المتحركة -->
+    <div class="background-animation" id="background-animation"></div>
+
+    <!-- الإشعارات -->
+    <div class="notifications-container" id="notifications-container"></div>
+
+    <!-- شارة الإنجاز -->
+    <div class="achievement-badge" id="achievement-badge"></div>
+
+    <!-- شاشة الاحتفال -->
+    <div class="celebration-screen" id="celebration-screen">
         <div class="celebration-content">
-            <h2>🎉 مبروك! 🎉</h2>
-            <p>فزت بجائزة <span id="final-prize">0</span> ريال!</p>
-            <p>إجمالي نقاطك: <span id="final-score">0</span></p>
-            <button class="control-btn primary" onclick="playAgain()">
-                <i class="fas fa-redo"></i> لعب مرة أخرى
-            </button>
+            <h2 class="celebration-title">🎉 مبروك! 🎉</h2>
+            <p class="celebration-message">لقد أكملت تحدي التقنية بنجاح!</p>
+            
+            <div class="celebration-stats">
+                <div class="celebration-stat">
+                    <div class="celebration-stat-value" id="final-prize">0</div>
+                    <div class="celebration-stat-label">الجائزة النهائية</div>
+                </div>
+                <div class="celebration-stat">
+                    <div class="celebration-stat-value" id="final-score">0</div>
+                    <div class="celebration-stat-label">إجمالي النقاط</div>
+                </div>
+                <div class="celebration-stat">
+                    <div class="celebration-stat-value" id="final-level">1</div>
+                    <div class="celebration-stat-label">المستوى النهائي</div>
+                </div>
+                <div class="celebration-stat">
+                    <div class="celebration-stat-value" id="final-questions">0</div>
+                    <div class="celebration-stat-label">أسئلة صحيحة</div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary" onclick="playAgain()">
+                    <i class="fas fa-redo"></i> لعب مرة أخرى
+                </button>
+                <button class="control-btn secondary" onclick="shareScore()">
+                    <i class="fas fa-share-alt"></i> مشاركة النتيجة
+                </button>
+            </div>
         </div>
     </div>
 
-    <div class="challenge-container">
+    <!-- زر التحكم بالصوت -->
+    <div class="sound-toggle" id="sound-toggle">
+        <i class="fas fa-volume-up"></i>
+        <i class="fas fa-volume-mute"></i>
+    </div>
+
+    <!-- المحتوى الرئيسي للعبة -->
+    <div class="game-container">
         <div class="game-wrapper">
-            <div class="game-header">
-                <h1><i class="fas fa-trophy"></i> تحدي التقنية</h1>
-                <p>لعبة "من سيربح المليون" في مجال التقنية والمعلوماتية</p>
-                
-                <!-- سلم الجوائز -->
-                <div class="prize-ladder" id="prize-ladder">
-                    <!-- سيتم ملؤه ديناميكياً -->
+            <!-- رأس اللعبة -->
+            <header class="game-header">
+                <div class="game-logo">
+                    <i class="fas fa-trophy"></i>
+                    <h1 class="game-title">تحدي التقنية</h1>
                 </div>
+                <p class="game-subtitle">من سيربح المليون في عالم التقنية</p>
                 
                 <!-- إحصائيات اللاعب -->
                 <div class="player-stats">
                     <div class="stat-item">
-                        <div class="stat-label">المستوى</div>
+                        <div class="stat-label"><i class="fas fa-chart-line"></i> المستوى</div>
                         <div class="stat-value" id="current-level">1</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">الجائزة الحالية</div>
+                        <div class="stat-label"><i class="fas fa-coins"></i> الجائزة</div>
                         <div class="stat-value money-value" id="current-money">1,000 ريال</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">النقاط</div>
+                        <div class="stat-label"><i class="fas fa-star"></i> النقاط</div>
                         <div class="stat-value" id="score-display">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">المساعدات</div>
+                        <div class="stat-label"><i class="fas fa-life-ring"></i> المساعدات</div>
                         <div class="stat-value" id="lifelines-count">3</div>
                     </div>
                 </div>
-            </div>
-            
+                
+                <!-- سلم الجوائز -->
+                <div class="prize-ladder-container">
+                    <h3 class="prize-ladder-title">
+                        <i class="fas fa-trophy"></i> سلم الجوائز
+                    </h3>
+                    <div class="prize-ladder" id="prize-ladder">
+                        <!-- سيتم ملؤه ديناميكياً -->
+                    </div>
+                </div>
+                
+                <!-- شريط التقدم -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </header>
+
             <!-- المؤقت -->
             <div class="timer-container">
                 <div class="timer" id="timer">30</div>
             </div>
-            
-            <div class="game-stage">
+
+            <!-- السؤال والإجابات -->
+            <main class="game-main">
                 <div class="question-container">
-                    <div class="question-number">
-                        <i class="fas fa-question-circle"></i>
-                        السؤال <span id="question-number">1</span> من 15
+                    <div class="question-header">
+                        <div class="question-number">
+                            <i class="fas fa-question-circle"></i>
+                            السؤال <span id="question-number">1</span> من 15
+                        </div>
+                        <div class="category-badge" id="category-badge">
+                            <i class="fas fa-tag"></i> <span id="category-name">جاري التحميل...</span>
+                        </div>
                     </div>
-                    <div class="prize-amount" id="prize-amount">1,000 ريال</div>
+                    
+                    <div class="prize-display">
+                        <div class="prize-amount-large" id="prize-amount">1,000 ريال</div>
+                    </div>
+                    
                     <div class="question-text" id="question-text">
-                        جاري تحميل السؤال...
+                        جاري تحميل السؤال... يستخدم التحدي أسئلة متنوعة في مجال التقنية!
+                    </div>
+                    
+                    <div class="answers-grid" id="answers-grid">
+                        <!-- ستضاف الإجابات ديناميكياً -->
                     </div>
                 </div>
-                
-                <div class="answers-grid" id="answers-grid">
-                    <!-- الإجابات ستضاف ديناميكياً -->
+
+                <!-- المساعدات -->
+                <div class="lifelines-container">
+                    <h3 class="lifelines-title">
+                        <i class="fas fa-magic"></i> مساعدات اللعبة
+                    </h3>
+                    <div class="lifelines-grid">
+                        <button class="lifeline-btn" id="fifty-fifty">
+                            <i class="fas fa-adjust"></i>
+                            <span class="lifeline-text">50:50</span>
+                        </button>
+                        <button class="lifeline-btn" id="ask-audience">
+                            <i class="fas fa-users"></i>
+                            <span class="lifeline-text">سؤال الجمهور</span>
+                        </button>
+                        <button class="lifeline-btn" id="phone-friend">
+                            <i class="fas fa-phone"></i>
+                            <span class="lifeline-text">اتصال بصديق</span>
+                        </button>
+                        <button class="lifeline-btn" id="hint">
+                            <i class="fas fa-lightbulb"></i>
+                            <span class="lifeline-text">تلميح</span>
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="lifelines">
-                    <button class="lifeline-btn" id="fifty-fifty">
-                        <i class="fas fa-adjust"></i> 50:50
-                    </button>
-                    <button class="lifeline-btn" id="ask-audience">
-                        <i class="fas fa-users"></i> سؤال الجمهور
-                    </button>
-                    <button class="lifeline-btn" id="phone-friend">
-                        <i class="fas fa-phone"></i> اتصال بصديق
-                    </button>
-                    <button class="lifeline-btn" id="hint">
-                        <i class="fas fa-lightbulb"></i> تلميح
-                    </button>
-                </div>
-                
+
+                <!-- أزرار التحكم -->
                 <div class="game-controls">
                     <button class="control-btn primary" id="start-game">
                         <i class="fas fa-play"></i> بدء اللعبة
@@ -635,48 +1604,82 @@
                         <i class="fas fa-forward"></i> السؤال التالي
                     </button>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 
     <script>
-        // ========== قاعدة بيانات الأسئلة ==========
-        const questionsDatabase = {
+        // ========== إعدادات اللعبة ==========
+        const CONFIG = {
+            totalQuestions: 15,
+            timePerQuestion: 30,
+            initialLifelines: 3,
+            basePoints: 100,
+            apiEndpoint: 'https://opentdb.com/api.php',
+            apiCategory: 18, // علوم الكمبيوتر
+            soundEnabled: true,
+            maxOnlineQuestions: 50
+        };
+
+        // ========== جوائز المستويات ==========
+        const PRIZES = [
+            "1,000 ريال", "2,000 ريال", "5,000 ريال", "10,000 ريال", "20,000 ريال",
+            "50,000 ريال", "100,000 ريال", "250,000 ريال", "500,000 ريال", "1,000,000 ريال",
+            "2,000,000 ريال", "3,000,000 ريال", "5,000,000 ريال", "7,500,000 ريال", "10,000,000 ريال"
+        ];
+
+        const LEVEL_POINTS = [100, 200, 300, 400, 500, 750, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000, 15000];
+
+        // ========== قاعدة بيانات الأسئلة المحلية ==========
+        const localQuestions = {
             "برمجة": [
                 {
                     question: "ما هي لغة البرمجة التي طورتها شركة مايكروسوفت وتستخدم في تطبيقات .NET؟",
                     answers: ["Java", "C#", "Python", "PHP"],
                     correct: 1,
-                    difficulty: "سهل",
-                    category: "لغات البرمجة"
+                    difficulty: "easy"
                 },
                 {
                     question: "أي من هذه ليست لغة برمجة؟",
                     answers: ["HTML", "Python", "Java", "C++"],
                     correct: 0,
-                    difficulty: "سهل",
-                    category: "مفاهيم أساسية"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هي لغة البرمجة المستخدمة لتطوير تطبيقات iOS؟",
                     answers: ["Java", "Kotlin", "Swift", "Objective-C"],
                     correct: 2,
-                    difficulty: "متوسط",
-                    category: "تطوير الهواتف"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هي لغة البرمجة التي تعمل على المتصفح فقط؟",
                     answers: ["JavaScript", "Python", "Java", "C#"],
                     correct: 0,
-                    difficulty: "متوسط",
-                    category: "تطوير الويب"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هي لغة البرمجة الأكثر استخداماً في الذكاء الاصطناعي؟",
                     answers: ["Java", "Python", "C++", "Ruby"],
                     correct: 1,
-                    difficulty: "صعب",
-                    category: "الذكاء الاصطناعي"
+                    difficulty: "hard"
+                },
+                {
+                    question: "ما هي مكتبة JavaScript الأكثر شهرة لبناء واجهات المستخدم؟",
+                    answers: ["jQuery", "React", "Vue", "Angular"],
+                    correct: 1,
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هي لغة البرمجة المستخدمة في تطوير تطبيقات Android؟",
+                    answers: ["Swift", "Kotlin", "C#", "JavaScript"],
+                    correct: 1,
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هي لغة البرمجة التي تستخدم في تعلم الآلة والبيانات؟",
+                    answers: ["R", "PHP", "Go", "Rust"],
+                    correct: 0,
+                    difficulty: "hard"
                 }
             ],
             "قواعد البيانات": [
@@ -684,29 +1687,31 @@
                     question: "أي من هذه أنظمة إدارة قواعد بيانات علائقية؟",
                     answers: ["MongoDB", "MySQL", "Redis", "Cassandra"],
                     correct: 1,
-                    difficulty: "سهل",
-                    category: "قواعد البيانات"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هي لغة الاستعلام المستخدمة في قواعد البيانات العلائقية؟",
                     answers: ["SQL", "NoSQL", "JSON", "XML"],
                     correct: 0,
-                    difficulty: "سهل",
-                    category: "قواعد البيانات"
+                    difficulty: "easy"
                 },
                 {
                     question: "أي من هذه قواعد بيانات NoSQL؟",
                     answers: ["MySQL", "PostgreSQL", "MongoDB", "Oracle"],
                     correct: 2,
-                    difficulty: "متوسط",
-                    category: "قواعد البيانات"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هو نظام قواعد البيانات المفتوح المصدر الأكثر شهرة؟",
                     answers: ["Oracle", "MySQL", "SQL Server", "DB2"],
                     correct: 1,
-                    difficulty: "متوسط",
-                    category: "قواعد البيانات"
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هي قاعدة البيانات المستخدمة في تطبيقات الويب الكبيرة؟",
+                    answers: ["SQLite", "MySQL", "PostgreSQL", "MongoDB"],
+                    correct: 3,
+                    difficulty: "hard"
                 }
             ],
             "الشبكات": [
@@ -714,29 +1719,31 @@
                     question: "ما هو بروتوكول نقل النص التشعبي؟",
                     answers: ["FTP", "HTTP", "SMTP", "TCP"],
                     correct: 1,
-                    difficulty: "سهل",
-                    category: "الشبكات"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هو عنوان IP المحجوز للرجوع المحلي (localhost)؟",
                     answers: ["192.168.1.1", "127.0.0.1", "10.0.0.1", "172.16.0.1"],
                     correct: 1,
-                    difficulty: "سهل",
-                    category: "الشبكات"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هي منفذ HTTP الافتراضي؟",
                     answers: ["21", "80", "443", "25"],
                     correct: 1,
-                    difficulty: "متوسط",
-                    category: "الشبكات"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هو بروتوكول نقل الملفات؟",
                     answers: ["HTTP", "FTP", "SMTP", "SSH"],
                     correct: 1,
-                    difficulty: "متوسط",
-                    category: "الشبكات"
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هو بروتوكول التشفير الآمن للويب؟",
+                    answers: ["HTTP", "FTP", "HTTPS", "SMTP"],
+                    correct: 2,
+                    difficulty: "hard"
                 }
             ],
             "الذكاء الاصطناعي": [
@@ -744,22 +1751,25 @@
                     question: "ما هي مكتبة Python الأكثر شهرة للذكاء الاصطناعي؟",
                     answers: ["NumPy", "Pandas", "TensorFlow", "Scikit-learn"],
                     correct: 2,
-                    difficulty: "متوسط",
-                    category: "الذكاء الاصطناعي"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هي تقنية الذكاء الاصطناعي الخاصة بالتعرف على الصور؟",
                     answers: ["NLP", "Computer Vision", "Reinforcement Learning", "Robotics"],
                     correct: 1,
-                    difficulty: "متوسط",
-                    category: "الذكاء الاصطناعي"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هي اللغة الأكثر استخداماً في تعلم الآلة؟",
                     answers: ["Java", "Python", "C++", "JavaScript"],
                     correct: 1,
-                    difficulty: "صعب",
-                    category: "الذكاء الاصطناعي"
+                    difficulty: "hard"
+                },
+                {
+                    question: "ما هي خوارزمية التعلم الآلي للتصنيف؟",
+                    answers: ["K-Means", "SVM", "Apriori", "DBSCAN"],
+                    correct: 1,
+                    difficulty: "hard"
                 }
             ],
             "أنظمة التشغيل": [
@@ -767,22 +1777,25 @@
                     question: "ما هو نظام التشغيل مفتوح المصدر؟",
                     answers: ["Windows", "macOS", "Linux", "iOS"],
                     correct: 2,
-                    difficulty: "سهل",
-                    category: "أنظمة التشغيل"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هو نظام التشغيل الذي طورته شركة Apple؟",
                     answers: ["Windows", "macOS", "Linux", "Android"],
                     correct: 1,
-                    difficulty: "سهل",
-                    category: "أنظمة التشغيل"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هو نواة نظام Linux؟",
                     answers: ["Kernel", "Shell", "GUI", "Bootloader"],
                     correct: 0,
-                    difficulty: "متوسط",
-                    category: "أنظمة التشغيل"
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هو نظام التشغيل للهواتف الذكية من Google؟",
+                    answers: ["iOS", "Windows Phone", "Android", "BlackBerry OS"],
+                    correct: 2,
+                    difficulty: "easy"
                 }
             ],
             "الأمن السيبراني": [
@@ -790,33 +1803,60 @@
                     question: "ما هو هجوم حقن SQL؟",
                     answers: ["هجوم على الخادم", "هجوم على قاعدة البيانات", "هجوم على الشبكة", "هجوم على التطبيق"],
                     correct: 1,
-                    difficulty: "متوسط",
-                    category: "الأمن السيبراني"
+                    difficulty: "medium"
                 },
                 {
                     question: "ما هو بروتوكول التشفير الآمن؟",
                     answers: ["HTTP", "FTP", "HTTPS", "SMTP"],
                     correct: 2,
-                    difficulty: "سهل",
-                    category: "الأمن السيبراني"
+                    difficulty: "easy"
                 },
                 {
                     question: "ما هي أداة اختبار الاختراق الشهيرة؟",
                     answers: ["Wireshark", "Nmap", "Kali Linux", "Metasploit"],
                     correct: 2,
-                    difficulty: "صعب",
-                    category: "الأمن السيبراني"
+                    difficulty: "hard"
+                },
+                {
+                    question: "ما هو نوع الهجوم الذي يغرق الخادم بالطلبات؟",
+                    answers: ["Phishing", "DDoS", "Malware", "SQL Injection"],
+                    correct: 1,
+                    difficulty: "medium"
+                }
+            ],
+            "تطوير الويب": [
+                {
+                    question: "ما هي لغة ترميز الصفحات على الويب؟",
+                    answers: ["CSS", "JavaScript", "HTML", "PHP"],
+                    correct: 2,
+                    difficulty: "easy"
+                },
+                {
+                    question: "ما هي لغة تصميم وتنسيق صفحات الويب؟",
+                    answers: ["HTML", "CSS", "JavaScript", "Python"],
+                    correct: 1,
+                    difficulty: "easy"
+                },
+                {
+                    question: "ما هي إطار عمل JavaScript الأكثر شهرة؟",
+                    answers: ["Django", "Laravel", "React", "Spring"],
+                    correct: 2,
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هو بروتوكول نقل البيانات في تطبيقات الويب الحديثة؟",
+                    answers: ["SOAP", "REST", "FTP", "SMTP"],
+                    correct: 1,
+                    difficulty: "medium"
+                },
+                {
+                    question: "ما هي أداة التحكم في الإصدارات الأكثر شهرة؟",
+                    answers: ["SVN", "Git", "Mercurial", "CVS"],
+                    correct: 1,
+                    difficulty: "hard"
                 }
             ]
         };
-
-        // ========== إعدادات اللعبة ==========
-        const PRIZES = [
-            "1,000 ريال", "2,000 ريال", "5,000 ريال", "10,000 ريال", "20,000 ريال",
-            "50,000 ريال", "100,000 ريال", "250,000 ريال", "500,000 ريال", "1,000,000 ريال"
-        ];
-
-        const LEVEL_POINTS = [100, 200, 500, 1000, 2000, 5000, 10000, 25000, 50000, 100000];
 
         // ========== حالة اللعبة ==========
         let gameState = {
@@ -824,153 +1864,621 @@
             currentQuestionIndex: 0,
             score: 0,
             money: 0,
-            lifelines: 3,
-            usedLifelines: [],
+            lifelines: CONFIG.initialLifelines,
+            usedLifelines: new Set(),
             gameActive: false,
-            timer: 30,
+            timer: CONFIG.timePerQuestion,
             timerInterval: null,
-            usedQuestions: new Set(),
+            usedQuestionIds: new Set(),
             questions: [],
-            currentQuestion: null
+            currentQuestion: null,
+            correctAnswers: 0,
+            soundEnabled: CONFIG.soundEnabled,
+            sessionId: generateSessionId(),
+            loadedQuestionsCount: 0,
+            isOnline: true
         };
 
         // ========== عناصر DOM ==========
         const elements = {
-            questionText: document.getElementById('question-text'),
+            // شاشة التحميل
+            loadingScreen: document.getElementById('loading-screen'),
+            loadingText: document.getElementById('loading-text'),
+            
+            // الخلفية المتحركة
+            backgroundAnimation: document.getElementById('background-animation'),
+            
+            // الإحصائيات
+            currentLevel: document.getElementById('current-level'),
+            currentMoney: document.getElementById('current-money'),
+            scoreDisplay: document.getElementById('score-display'),
+            lifelinesCount: document.getElementById('lifelines-count'),
+            
+            // سلم الجوائز
+            prizeLadder: document.getElementById('prize-ladder'),
+            
+            // شريط التقدم
+            progressFill: document.getElementById('progress-fill'),
+            
+            // المؤقت
+            timer: document.getElementById('timer'),
+            
+            // السؤال
             questionNumber: document.getElementById('question-number'),
+            categoryName: document.getElementById('category-name'),
             prizeAmount: document.getElementById('prize-amount'),
+            questionText: document.getElementById('question-text'),
             answersGrid: document.getElementById('answers-grid'),
-            startBtn: document.getElementById('start-game'),
-            quitBtn: document.getElementById('quit-game'),
-            nextBtn: document.getElementById('next-question'),
+            
+            // المساعدات
             fiftyFiftyBtn: document.getElementById('fifty-fifty'),
             askAudienceBtn: document.getElementById('ask-audience'),
             phoneFriendBtn: document.getElementById('phone-friend'),
             hintBtn: document.getElementById('hint'),
-            scoreDisplay: document.getElementById('score-display'),
-            currentMoney: document.getElementById('current-money'),
-            currentLevel: document.getElementById('current-level'),
-            lifelinesCount: document.getElementById('lifelines-count'),
-            timer: document.getElementById('timer'),
-            notification: document.getElementById('notification'),
-            prizeLadder: document.getElementById('prize-ladder'),
-            celebration: document.getElementById('celebration'),
+            
+            // أزرار التحكم
+            startBtn: document.getElementById('start-game'),
+            quitBtn: document.getElementById('quit-game'),
+            nextBtn: document.getElementById('next-question'),
+            
+            // الصوت
+            soundToggle: document.getElementById('sound-toggle'),
+            
+            // شاشة الاحتفال
+            celebrationScreen: document.getElementById('celebration-screen'),
             finalPrize: document.getElementById('final-prize'),
-            finalScore: document.getElementById('final-score')
+            finalScore: document.getElementById('final-score'),
+            finalLevel: document.getElementById('final-level'),
+            finalQuestions: document.getElementById('final-questions'),
+            
+            // شارة الإنجاز
+            achievementBadge: document.getElementById('achievement-badge')
         };
 
-        // ========== تهيئة اللعبة ==========
-        function initGame() {
-            resetGameState();
-            generateQuestions();
-            updateDisplay();
-            createPrizeLadder();
-            showNotification("لعبة تحدي التقنية جاهزة! اضغط على 'بدء اللعبة' للبدء.", "info");
-        }
+        // ========== مكتبة الأصوات المحسنة ==========
+        const soundUrls = {
+            correct: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
+            wrong: 'https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3',
+            click: 'https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3',
+            timer: 'https://assets.mixkit.co/sfx/preview/mixkit-fast-clock-ticking-1067.mp3',
+            lifeline: 'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
+            win: 'https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3',
+            lose: 'https://assets.mixkit.co/sfx/preview/mixkit-sad-game-over-trombone-471.mp3',
+            applause: 'https://assets.mixkit.co/sfx/preview/mixkit-audience-applause-strong-476.mp3',
+            achievement: 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3',
+            hover: 'https://assets.mixkit.co/sfx/preview/mixkit-plastic-bubble-click-1124.mp3'
+        };
 
-        function resetGameState() {
-            gameState = {
-                currentLevel: 1,
-                currentQuestionIndex: 0,
-                score: 0,
-                money: 0,
-                lifelines: 3,
-                usedLifelines: [],
-                gameActive: false,
-                timer: 30,
-                timerInterval: null,
-                usedQuestions: new Set(),
-                questions: [],
-                currentQuestion: null
-            };
-        }
+        // كائن الأصوات
+        let sounds = {};
 
-        function generateQuestions() {
-            gameState.questions = [];
-            const categories = Object.keys(questionsDatabase);
-            
-            for (let i = 0; i < 15; i++) {
-                let question = null;
-                let attempts = 0;
+        // ========== الدوال الأساسية ==========
+
+        // إنشاء عناصر صوتية مع معالجة الأخطاء
+        function createSoundElements() {
+            Object.keys(soundUrls).forEach(key => {
+                const audio = new Audio();
+                audio.volume = 0.4;
+                audio.preload = 'auto';
                 
-                while (!question && attempts < 100) {
-                    const category = categories[Math.floor(Math.random() * categories.length)];
-                    const categoryQuestions = questionsDatabase[category];
-                    const randomQuestion = categoryQuestions[Math.floor(Math.random() * categoryQuestions.length)];
-                    
-                    const questionKey = `${category}-${randomQuestion.question}`;
-                    if (!gameState.usedQuestions.has(questionKey)) {
-                        question = { ...randomQuestion, category };
-                        gameState.usedQuestions.add(questionKey);
+                // إضافة مستمع للأخطاء
+                audio.addEventListener('error', (e) => {
+                    console.warn(`خطأ في تحميل الصوت ${key}:`, e.message);
+                    // استخدام أصوات افتراضية في حالة الخطأ
+                    createFallbackSound(key);
+                });
+                
+                audio.src = soundUrls[key];
+                sounds[key] = audio;
+            });
+        }
+
+        // إنشاء أصوات افتراضية في حالة فشل التحميل
+        function createFallbackSound(key) {
+            const audio = new Audio();
+            audio.volume = 0.4;
+            
+            // إنشاء صوت بسيط باستخدام Web Audio API
+            try {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = context.createOscillator();
+                const gainNode = context.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(context.destination);
+                
+                // إعدادات مختلفة لكل نوع صوت
+                switch(key) {
+                    case 'correct':
+                        oscillator.frequency.value = 800;
+                        break;
+                    case 'wrong':
+                        oscillator.frequency.value = 300;
+                        break;
+                    case 'click':
+                        oscillator.frequency.value = 600;
+                        break;
+                    case 'timer':
+                        oscillator.frequency.value = 1000;
+                        break;
+                    default:
+                        oscillator.frequency.value = 500;
+                }
+                
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(context.currentTime + 0.1);
+                
+                // حفظ المرجع
+                audio._oscillator = oscillator;
+                audio._context = context;
+                audio._gainNode = gainNode;
+                
+            } catch (error) {
+                console.warn('لا يمكن إنشاء أصوات افتراضية:', error);
+            }
+            
+            sounds[key] = audio;
+        }
+
+        // تشغيل الصوت مع معالجة الأخطاء
+        function playSound(soundName) {
+            if (!gameState.soundEnabled) return;
+            
+            const sound = sounds[soundName];
+            if (!sound) {
+                console.warn(`الصوت ${soundName} غير موجود`);
+                return;
+            }
+            
+            try {
+                sound.currentTime = 0;
+                const playPromise = sound.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        // تجاهل أخطاء التشغيل الشائعة
+                        if (error.name !== 'NotAllowedError' && error.name !== 'AbortError') {
+                            console.warn(`خطأ في تشغيل الصوت ${soundName}:`, error.message);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.warn(`خطأ في معالجة الصوت ${soundName}:`, error.message);
+            }
+        }
+
+        // توليد معرف جلسة فريد
+        function generateSessionId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // فك تشفير HTML
+        function decodeHTML(html) {
+            if (!html) return '';
+            
+            const txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            
+            let decoded = txt.value
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#039;/g, "'")
+                .replace(/&#39;/g, "'");
+            
+            // إزالة أي علامات HTML متبقية
+            decoded = decoded.replace(/<[^>]*>/g, '');
+            
+            return decoded.trim();
+        }
+
+        // خلط المصفوفة
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // توليد معرف فريد
+        function generateUniqueId(prefix = '') {
+            return `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        }
+
+        // ========== إدارة الأسئلة ==========
+
+        // جلب الأسئلة من الإنترنت
+        async function fetchOnlineQuestions() {
+            const allQuestions = [];
+            const difficulties = ['easy', 'medium', 'hard'];
+            
+            try {
+                for (const difficulty of difficulties) {
+                    try {
+                        // إضافة تأخير لتجنب rate limiting
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        
+                        const url = `${CONFIG.apiEndpoint}?amount=5&category=${CONFIG.apiCategory}&difficulty=${difficulty}&type=multiple`;
+                        
+                        const response = await fetch(url, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'User-Agent': 'TechChallengeGame/1.0'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            console.warn(`خطأ في جلب الأسئلة (${difficulty}): ${response.status}`);
+                            continue;
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.response_code === 0 && data.results && data.results.length > 0) {
+                            const formattedQuestions = data.results.map((item, index) => ({
+                                id: `online-${difficulty}-${index}-${Date.now()}`,
+                                question: decodeHTML(item.question),
+                                answers: shuffleArray([
+                                    ...item.incorrect_answers.map(decodeHTML), 
+                                    decodeHTML(item.correct_answer)
+                                ]),
+                                correct: [...item.incorrect_answers, item.correct_answer]
+                                    .sort(() => Math.random() - 0.5)
+                                    .indexOf(item.correct_answer),
+                                difficulty: difficulty,
+                                category: "علوم الكمبيوتر",
+                                source: "online"
+                            }));
+                            
+                            allQuestions.push(...formattedQuestions);
+                            console.log(`تم تحميل ${formattedQuestions.length} سؤالاً من مستوى ${difficulty}`);
+                        }
+                        
+                    } catch (error) {
+                        console.warn(`خطأ في جلب أسئلة مستوى ${difficulty}:`, error.message);
+                        continue;
                     }
-                    attempts++;
                 }
                 
-                if (question) {
-                    gameState.questions.push(question);
-                }
-            }
-            
-            // إذا لم نحصل على أسئلة كافية، أضف بعض الأسئلة المكررة مع تعديل طفيف
-            while (gameState.questions.length < 15) {
-                const category = categories[Math.floor(Math.random() * categories.length)];
-                const categoryQuestions = questionsDatabase[category];
-                const randomQuestion = { ...categoryQuestions[Math.floor(Math.random() * categoryQuestions.length)] };
+                return allQuestions;
                 
-                // تعديل السؤال لجعله فريداً
-                randomQuestion.question = randomQuestion.question + " (نسخة " + (gameState.questions.length + 1) + ")";
-                randomQuestion.category = category;
-                
-                gameState.questions.push(randomQuestion);
+            } catch (error) {
+                console.error('خطأ عام في جلب الأسئلة من الإنترنت:', error);
+                return [];
             }
         }
 
+        // الحصول على الأسئلة المحلية
+        function getLocalQuestions() {
+            const allLocalQuestions = [];
+            let questionIndex = 0;
+            
+            Object.keys(localQuestions).forEach(category => {
+                localQuestions[category].forEach(q => {
+                    const questionId = `local-${category}-${questionIndex++}`;
+                    
+                    allLocalQuestions.push({
+                        id: questionId,
+                        question: q.question,
+                        answers: [...q.answers],
+                        correct: q.correct,
+                        difficulty: q.difficulty,
+                        category: category,
+                        source: "local"
+                    });
+                });
+            });
+            
+            return shuffleArray(allLocalQuestions);
+        }
+
+        // إضافة أسئلة افتراضية
+        function addFallbackQuestions() {
+            const fallbackQuestions = [
+                {
+                    id: generateUniqueId('fallback'),
+                    question: "ما هي لغة البرمجة التي تستخدم لتطوير تطبيقات الويب؟",
+                    answers: ["Java", "Python", "JavaScript", "C++"],
+                    correct: 2,
+                    difficulty: "easy",
+                    category: "برمجة",
+                    source: "fallback"
+                },
+                {
+                    id: generateUniqueId('fallback'),
+                    question: "ما هي قاعدة البيانات العلائقية مفتوحة المصدر الأشهر؟",
+                    answers: ["Oracle", "MySQL", "SQL Server", "DB2"],
+                    correct: 1,
+                    difficulty: "easy",
+                    category: "قواعد البيانات",
+                    source: "fallback"
+                },
+                {
+                    id: generateUniqueId('fallback'),
+                    question: "ما هو بروتوكول الإنترنت الذي يحدد عنوان الأجهزة؟",
+                    answers: ["HTTP", "FTP", "IP", "TCP"],
+                    correct: 2,
+                    difficulty: "medium",
+                    category: "شبكات",
+                    source: "fallback"
+                },
+                {
+                    id: generateUniqueId('fallback'),
+                    question: "ما هي مكتبة Python المستخدمة للذكاء الاصطناعي؟",
+                    answers: ["Django", "TensorFlow", "Flask", "NumPy"],
+                    correct: 1,
+                    difficulty: "medium",
+                    category: "ذكاء اصطناعي",
+                    source: "fallback"
+                },
+                {
+                    id: generateUniqueId('fallback'),
+                    question: "ما هو نظام التشغيل مفتوح المصدر؟",
+                    answers: ["Windows", "macOS", "Linux", "iOS"],
+                    correct: 2,
+                    difficulty: "easy",
+                    category: "أنظمة التشغيل",
+                    source: "fallback"
+                }
+            ];
+            
+            gameState.questions.push(...fallbackQuestions);
+            gameState.loadedQuestionsCount += fallbackQuestions.length;
+            console.log(`تم إضافة ${fallbackQuestions.length} سؤالاً افتراضياً`);
+        }
+
+        // تحميل الأسئلة
+        async function loadQuestions() {
+            updateLoadingText("جاري تحميل الأسئلة...");
+            
+            try {
+                // جلب الأسئلة من الإنترنت
+                console.log('بدء تحميل الأسئلة من الإنترنت...');
+                const onlineQuestions = await fetchOnlineQuestions();
+                
+                if (onlineQuestions.length > 0) {
+                    gameState.questions.push(...onlineQuestions);
+                    gameState.loadedQuestionsCount += onlineQuestions.length;
+                    console.log(`تم تحميل ${onlineQuestions.length} سؤالاً من الإنترنت`);
+                    gameState.isOnline = true;
+                } else {
+                    console.log('لم يتم تحميل أي أسئلة من الإنترنت');
+                    gameState.isOnline = false;
+                }
+                
+                // إضافة الأسئلة المحلية
+                const localQuestionsArray = getLocalQuestions();
+                const targetQuestions = CONFIG.totalQuestions * 3;
+                
+                if (gameState.loadedQuestionsCount < targetQuestions) {
+                    const neededQuestions = targetQuestions - gameState.loadedQuestionsCount;
+                    const questionsToAdd = localQuestionsArray.slice(0, neededQuestions);
+                    
+                    gameState.questions.push(...questionsToAdd);
+                    gameState.loadedQuestionsCount += questionsToAdd.length;
+                    console.log(`تم إضافة ${questionsToAdd.length} سؤالاً محلياً`);
+                }
+                
+                // خلط الأسئلة
+                shuffleArray(gameState.questions);
+                
+                console.log(`إجمالي الأسئلة المتاحة: ${gameState.questions.length}`);
+                
+                if (gameState.questions.length < CONFIG.totalQuestions) {
+                    console.warn(`عدد الأسئلة المتاحة أقل من المطلوب`);
+                    addFallbackQuestions();
+                }
+                
+            } catch (error) {
+                console.error('خطأ في تحميل الأسئلة:', error);
+                // استخدام الأسئلة المحلية فقط
+                const localQuestionsArray = getLocalQuestions();
+                gameState.questions = localQuestionsArray;
+                gameState.loadedQuestionsCount = localQuestionsArray.length;
+                gameState.isOnline = false;
+                
+                if (gameState.questions.length < CONFIG.totalQuestions) {
+                    addFallbackQuestions();
+                }
+            }
+        }
+
+        // ========== واجهة المستخدم ==========
+
+        // تحديث نص التحميل
+        function updateLoadingText(text) {
+            if (elements.loadingText) {
+                elements.loadingText.textContent = text;
+            }
+        }
+
+        // إنشاء خلفية متحركة
+        function createBackgroundAnimation() {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.className = 'particles';
+            
+            // إنشاء جزيئات
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 100 + 50;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random() * 0.1 + 0.05;
+                particle.style.animationDuration = `${Math.random() * 30 + 20}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            const gradientOverlay = document.createElement('div');
+            gradientOverlay.className = 'gradient-overlay';
+            
+            elements.backgroundAnimation.appendChild(particlesContainer);
+            elements.backgroundAnimation.appendChild(gradientOverlay);
+        }
+
+        // إنشاء سلم الجوائز
         function createPrizeLadder() {
             elements.prizeLadder.innerHTML = '';
             
             PRIZES.forEach((prize, index) => {
                 const prizeItem = document.createElement('div');
                 prizeItem.className = 'prize-item';
+                prizeItem.id = `prize-${index + 1}`;
+                
                 if (index + 1 === gameState.currentLevel) {
                     prizeItem.classList.add('current');
                 }
                 
+                const levelIcon = index < 5 ? 'fas fa-star' : 
+                                 index < 10 ? 'fas fa-gem' : 
+                                 'fas fa-crown';
+                
                 prizeItem.innerHTML = `
-                    <div class="prize-level">${index + 1}</div>
-                    <div class="prize-amount-small">${prize}</div>
+                    <div class="prize-level">
+                        <i class="${levelIcon}"></i> ${index + 1}
+                    </div>
+                    <div class="prize-amount">${prize}</div>
                 `;
                 
                 elements.prizeLadder.appendChild(prizeItem);
             });
         }
 
-        // ========== التحكم في اللعبة ==========
-        function startGame() {
-            if (gameState.gameActive) return;
+        // تحديث سلم الجوائز
+        function updatePrizeLadder() {
+            const prizeItems = elements.prizeLadder.querySelectorAll('.prize-item');
+            prizeItems.forEach((item, index) => {
+                item.classList.remove('current', 'reached');
+                
+                if (index + 1 === gameState.currentLevel) {
+                    item.classList.add('current');
+                } else if (index + 1 < gameState.currentLevel) {
+                    item.classList.add('reached');
+                }
+            });
             
-            gameState.gameActive = true;
-            gameState.currentQuestionIndex = 0;
-            loadQuestion(gameState.currentQuestionIndex);
-            
-            elements.startBtn.disabled = true;
-            elements.startBtn.innerHTML = '<i class="fas fa-play"></i> اللعبة جارية';
-            elements.nextBtn.style.display = 'none';
-            
-            enableLifelines();
-            startTimer();
-            
-            showNotification("ابدأ اللعب! اختر الإجابة الصحيحة لترتقي إلى المستوى التالي.", "success");
+            // التمرير إلى العنصر الحالي
+            setTimeout(() => {
+                const currentPrize = document.getElementById(`prize-${gameState.currentLevel}`);
+                if (currentPrize) {
+                    currentPrize.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
         }
 
+        // تحديث العرض
+        function updateDisplay() {
+            elements.currentLevel.textContent = gameState.currentLevel;
+            elements.currentMoney.textContent = PRIZES[Math.min(gameState.currentQuestionIndex, PRIZES.length - 1)];
+            elements.scoreDisplay.textContent = gameState.score.toLocaleString();
+            elements.lifelinesCount.textContent = gameState.lifelines;
+        }
+
+        // تحديث شريط التقدم
+        function updateProgressBar() {
+            const progress = (gameState.currentQuestionIndex / CONFIG.totalQuestions) * 100;
+            elements.progressFill.style.width = `${progress}%`;
+        }
+
+        // عرض الإشعارات
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let icon = '';
+            switch(type) {
+                case 'success':
+                    icon = '<i class="fas fa-check-circle"></i>';
+                    break;
+                case 'error':
+                    icon = '<i class="fas fa-exclamation-circle"></i>';
+                    break;
+                case 'warning':
+                    icon = '<i class="fas fa-exclamation-triangle"></i>';
+                    break;
+                default:
+                    icon = '<i class="fas fa-info-circle"></i>';
+            }
+            
+            notification.innerHTML = `
+                ${icon}
+                <span>${message}</span>
+            `;
+            
+            document.getElementById('notifications-container').appendChild(notification);
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }, duration);
+        }
+
+        // ========== إدارة الأسئلة ==========
+
+        // الحصول على سؤال فريد
+        function getUniqueQuestion() {
+            if (gameState.questions.length === 0) return null;
+            
+            let attempts = 0;
+            let question = null;
+            
+            while (attempts < 50 && gameState.questions.length > 0) {
+                const randomIndex = Math.floor(Math.random() * gameState.questions.length);
+                const candidate = gameState.questions[randomIndex];
+                
+                if (!gameState.usedQuestionIds.has(candidate.id)) {
+                    question = candidate;
+                    gameState.usedQuestionIds.add(candidate.id);
+                    break;
+                }
+                
+                attempts++;
+            }
+            
+            // إذا لم نجد سؤالاً فريداً، نستخدم أي سؤال
+            if (!question && gameState.questions.length > 0) {
+                question = gameState.questions[0];
+                gameState.usedQuestionIds.add(question.id);
+            }
+            
+            return question;
+        }
+
+        // تحميل السؤال
         function loadQuestion(index) {
-            if (index >= gameState.questions.length) {
+            if (index >= CONFIG.totalQuestions || index >= gameState.questions.length) {
                 endGame(true);
                 return;
             }
             
-            gameState.currentQuestion = gameState.questions[index];
+            clearInterval(gameState.timerInterval);
+            gameState.currentQuestion = getUniqueQuestion();
+            
+            if (!gameState.currentQuestion) {
+                showNotification("لا توجد أسئلة متاحة جديدة", "error");
+                endGame(false);
+                return;
+            }
+            
             gameState.currentLevel = index + 1;
-            gameState.timer = 30;
+            gameState.timer = CONFIG.timePerQuestion;
+            elements.timer.textContent = gameState.timer;
+            elements.timer.className = 'timer';
             
             // تحديث العرض
             elements.questionText.textContent = gameState.currentQuestion.question;
@@ -978,18 +2486,21 @@
             elements.prizeAmount.textContent = PRIZES[Math.min(index, PRIZES.length - 1)];
             elements.currentLevel.textContent = gameState.currentLevel;
             elements.currentMoney.textContent = PRIZES[Math.min(index, PRIZES.length - 1)];
+            elements.categoryName.textContent = gameState.currentQuestion.category;
             
             // عرض الإجابات
             displayAnswers();
             
-            // تحديث سلم الجوائز
+            // تحديث السلم والتقدم
             updatePrizeLadder();
+            updateProgressBar();
             
-            // إضافة تأثير ظهور
-            elements.questionText.classList.add('fade-in');
-            setTimeout(() => elements.questionText.classList.remove('fade-in'), 500);
+            // إضافة تأثير الظهور
+            elements.questionText.classList.add('animate-fade-in');
+            setTimeout(() => elements.questionText.classList.remove('animate-fade-in'), 500);
         }
 
+        // عرض الإجابات
         function displayAnswers() {
             elements.answersGrid.innerHTML = '';
             const letters = ['أ', 'ب', 'ج', 'د'];
@@ -997,19 +2508,25 @@
             gameState.currentQuestion.answers.forEach((answer, i) => {
                 const button = document.createElement('button');
                 button.className = 'answer-btn';
+                button.dataset.index = i;
                 button.innerHTML = `
                     <span class="answer-letter">${letters[i]}</span>
                     <span class="answer-text">${answer}</span>
                 `;
                 
+                button.addEventListener('mouseenter', () => playSound('hover'));
                 button.addEventListener('click', () => checkAnswer(i));
+                
                 elements.answersGrid.appendChild(button);
             });
         }
 
+        // ========== التحقق من الإجابة ==========
+
         function checkAnswer(selectedIndex) {
             if (!gameState.gameActive) return;
             
+            playSound('click');
             gameState.gameActive = false;
             clearInterval(gameState.timerInterval);
             
@@ -1020,80 +2537,103 @@
             buttons.forEach(btn => btn.disabled = true);
             
             // عرض الإجابة الصحيحة والخاطئة
-            buttons.forEach((btn, i) => {
-                if (i === correctIndex) {
-                    btn.classList.add('correct');
-                } else if (i === selectedIndex && i !== correctIndex) {
-                    btn.classList.add('wrong');
-                }
-            });
-            
-            // التحقق من الإجابة
-            if (selectedIndex === correctIndex) {
-                // الإجابة صحيحة
-                const points = LEVEL_POINTS[Math.min(gameState.currentQuestionIndex, LEVEL_POINTS.length - 1)];
-                gameState.score += points;
-                gameState.money = parseInt(PRIZES[Math.min(gameState.currentQuestionIndex, PRIZES.length - 1)].replace(/[^0-9]/g, ''));
-                
-                updateDisplay();
-                
-                showNotification(`إجابة صحيحة! +${points} نقطة`, "success");
-                playSound('correct');
-                
-                // الانتقال للسؤال التالي بعد تأخير
-                setTimeout(() => {
-                    gameState.currentQuestionIndex++;
-                    if (gameState.currentQuestionIndex < 15) {
-                        elements.nextBtn.style.display = 'flex';
-                        gameState.gameActive = true;
-                    } else {
-                        endGame(true);
+            setTimeout(() => {
+                buttons.forEach((btn, i) => {
+                    if (i === correctIndex) {
+                        btn.classList.add('correct');
+                        createConfetti();
+                    } else if (i === selectedIndex && i !== correctIndex) {
+                        btn.classList.add('wrong');
                     }
-                }, 2000);
-            } else {
-                // الإجابة خاطئة
-                showNotification("إجابة خاطئة! اللعبة انتهت.", "error");
-                playSound('wrong');
+                });
                 
-                setTimeout(() => endGame(false), 2000);
-            }
+                // التحقق من الإجابة
+                if (selectedIndex === correctIndex) {
+                    handleCorrectAnswer();
+                } else {
+                    handleWrongAnswer();
+                }
+            }, 500);
         }
 
-        function nextQuestion() {
-            elements.nextBtn.style.display = 'none';
-            loadQuestion(gameState.currentQuestionIndex);
-            startTimer();
-            gameState.gameActive = true;
+        function handleCorrectAnswer() {
+            const points = LEVEL_POINTS[Math.min(gameState.currentQuestionIndex, LEVEL_POINTS.length - 1)];
+            gameState.score += points;
+            gameState.correctAnswers++;
+            gameState.money = parseInt(PRIZES[Math.min(gameState.currentQuestionIndex, PRIZES.length - 1)].replace(/[^0-9]/g, ''));
+            
+            // عرض رسوميات النقاط
+            createScoreAnimation(points);
+            
+            // تشغيل الأصوات
+            playSound('correct');
+            playSound('applause');
+            
+            updateDisplay();
+            showNotification(`إجابة صحيحة! +${points} نقطة`, "success");
+            
+            // التحقق من الإنجازات
+            checkAchievements();
+            
+            // الانتقال للسؤال التالي
+            setTimeout(() => {
+                gameState.currentQuestionIndex++;
+                if (gameState.currentQuestionIndex < CONFIG.totalQuestions) {
+                    elements.nextBtn.style.display = 'flex';
+                    gameState.gameActive = true;
+                } else {
+                    endGame(true);
+                }
+            }, 2500);
         }
 
-        function endGame(win) {
+        function handleWrongAnswer() {
+            playSound('wrong');
+            playSound('lose');
+            
+            showNotification("إجابة خاطئة! اللعبة انتهت.", "error");
+            
+            setTimeout(() => endGame(false), 2000);
+        }
+
+        // ========== المؤقت ==========
+
+        function startTimer() {
             clearInterval(gameState.timerInterval);
-            gameState.gameActive = false;
-            disableLifelines();
+            gameState.timer = CONFIG.timePerQuestion;
+            elements.timer.textContent = gameState.timer;
+            elements.timer.className = 'timer';
             
-            elements.startBtn.disabled = false;
-            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i> لعب مرة أخرى';
-            elements.nextBtn.style.display = 'none';
-            
-            if (win) {
-                elements.finalPrize.textContent = formatMoney(gameState.money);
-                elements.finalScore.textContent = gameState.score;
-                elements.celebration.classList.add('show');
-                playSound('win');
-            } else {
-                showNotification(`انتهت اللعبة! مجموع نقاطك: ${gameState.score}`, "error");
-                playSound('lose');
-            }
-        }
-
-        function playAgain() {
-            elements.celebration.classList.remove('show');
-            initGame();
+            gameState.timerInterval = setInterval(() => {
+                gameState.timer--;
+                elements.timer.textContent = gameState.timer;
+                
+                if (gameState.timer <= 10) {
+                    elements.timer.classList.add('warning');
+                    if (gameState.timer <= 5) {
+                        playSound('timer');
+                    }
+                }
+                
+                if (gameState.timer <= 5) {
+                    elements.timer.classList.remove('warning');
+                    elements.timer.classList.add('danger');
+                }
+                
+                if (gameState.timer <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    showNotification("انتهى الوقت! الإجابة خاطئة.", "error");
+                    setTimeout(() => endGame(false), 1000);
+                }
+            }, 1000);
         }
 
         // ========== المساعدات ==========
+
         function useFiftyFifty() {
-            if (gameState.lifelines < 1 || !gameState.gameActive || gameState.usedLifelines.includes('fiftyFifty')) return;
+            if (gameState.lifelines < 1 || !gameState.gameActive || gameState.usedLifelines.has('fiftyFifty')) return;
+            
+            playSound('lifeline');
             
             const buttons = elements.answersGrid.querySelectorAll('.answer-btn');
             const correctIndex = gameState.currentQuestion.correct;
@@ -1105,49 +2645,66 @@
             });
             
             // اختيار إجابتين خاطئتين عشوائياً
-            wrongAnswers.sort(() => Math.random() - 0.5);
+            shuffleArray(wrongAnswers);
             wrongAnswers.slice(0, 2).forEach(i => {
                 buttons[i].style.opacity = '0.3';
-                buttons[i].disabled = true;
+                buttons[i].style.pointerEvents = 'none';
+                buttons[i].innerHTML += ' <i class="fas fa-times" style="color: #F44336; margin-right: 10px;"></i>';
             });
             
             gameState.lifelines--;
-            gameState.usedLifelines.push('fiftyFifty');
+            gameState.usedLifelines.add('fiftyFifty');
             elements.fiftyFiftyBtn.disabled = true;
             updateDisplay();
             
             showNotification("تم استخدام مساعدة 50:50، تم إزالة إجابتين خاطئتين", "info");
-            playSound('lifeline');
         }
 
         function useAskAudience() {
-            if (gameState.lifelines < 1 || !gameState.gameActive || gameState.usedLifelines.includes('askAudience')) return;
+            if (gameState.lifelines < 1 || !gameState.gameActive || gameState.usedLifelines.has('askAudience')) return;
+            
+            playSound('lifeline');
             
             const correctIndex = gameState.currentQuestion.correct;
-            const percentages = [20, 30, 40, 10];
+            let percentages = [10, 20, 30, 40];
             
             // إعادة توزيع النسب لصالح الإجابة الصحيحة
             percentages[correctIndex] = 65;
             
-            let message = "الجمهور يصوت:\n";
+            // توزيع النسب المتبقية
+            let remaining = 35;
+            for (let i = 0; i < 4; i++) {
+                if (i !== correctIndex) {
+                    const percent = Math.floor(Math.random() * remaining);
+                    percentages[i] = percent;
+                    remaining -= percent;
+                }
+            }
+            
+            // ضمان أن المجموع 100
+            const sum = percentages.reduce((a, b) => a + b, 0);
+            if (sum < 100) percentages[correctIndex] += (100 - sum);
+            
+            let message = "تصويت الجمهور:\n\n";
             const letters = ['أ', 'ب', 'ج', 'د'];
             
             gameState.currentQuestion.answers.forEach((answer, i) => {
-                message += `${letters[i]}) ${answer}: ${percentages[i]}%\n`;
+                const bars = '█'.repeat(Math.floor(percentages[i] / 5));
+                message += `${letters[i]}) ${bars} ${percentages[i]}%\n`;
             });
             
-            showNotification(message, "info");
+            showNotification(message, "info", 5000);
             
             gameState.lifelines--;
-            gameState.usedLifelines.push('askAudience');
+            gameState.usedLifelines.add('askAudience');
             elements.askAudienceBtn.disabled = true;
             updateDisplay();
-            
-            playSound('lifeline');
         }
 
         function usePhoneFriend() {
-            if (gameState.lifelines < 1 || !gameState.gameActive || gameState.usedLifelines.includes('phoneFriend')) return;
+            if (gameState.lifelines < 1 || !gameState.gameActive || gameState.usedLifelines.has('phoneFriend')) return;
+            
+            playSound('lifeline');
             
             const correctIndex = gameState.currentQuestion.correct;
             const letters = ['أ', 'ب', 'ج', 'د'];
@@ -1156,186 +2713,751 @@
                 `"أعتقد أن الإجابة هي ${letters[correctIndex]}"`,
                 `"بعد تفكير، أقول ${letters[correctIndex]}"`,
                 `"أنا متأكد 80% أنها ${letters[correctIndex]}"`,
-                `"لقد درست هذا، الإجابة ${letters[correctIndex]}"`
+                `"لقد درست هذا، الإجابة ${letters[correctIndex]}"`,
+                `"هذا سؤال صعب، لكن أظن أنها ${letters[correctIndex]}"`
             ];
             
             const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            showNotification(`صديقك يقول: ${randomResponse}`, "info");
+            showNotification(`📞 صديقك يقول:\n${randomResponse}`, "info", 4000);
             
             gameState.lifelines--;
-            gameState.usedLifelines.push('phoneFriend');
+            gameState.usedLifelines.add('phoneFriend');
             elements.phoneFriendBtn.disabled = true;
             updateDisplay();
-            
-            playSound('lifeline');
         }
 
         function useHint() {
             if (gameState.lifelines < 1 || !gameState.gameActive) return;
             
+            playSound('lifeline');
+            
             const category = gameState.currentQuestion.category;
             const difficulty = gameState.currentQuestion.difficulty;
+            const difficultyArabic = difficulty === 'easy' ? 'سهل' : difficulty === 'medium' ? 'متوسط' : 'صعب';
             
-            showNotification(`تلميح: هذا السؤال في مجال ${category} (مستوى صعوبة: ${difficulty})`, "info");
+            const hints = [
+                `تلميح: مجال السؤال هو ${category}`,
+                `مستوى الصعوبة: ${difficultyArabic}`,
+                `هذا السؤال من فئة ${category}`,
+                `انتبه جيداً للتفاصيل في السؤال`
+            ];
+            
+            const randomHint = hints[Math.floor(Math.random() * hints.length)];
+            showNotification(randomHint, "info", 4000);
             
             gameState.lifelines--;
             elements.hintBtn.disabled = true;
             updateDisplay();
+        }
+
+        // ========== التأثيرات البصرية ==========
+
+        function createConfetti(count = 50) {
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                const colors = ['#6C63FF', '#FF6584', '#36D1DC', '#FFD700', '#4CAF50'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        function createScoreAnimation(points) {
+            const scoreEl = document.createElement('div');
+            scoreEl.className = 'score-animation';
+            scoreEl.textContent = `+${points}`;
+            scoreEl.style.left = `${50 + Math.random() * 20 - 10}%`;
+            scoreEl.style.top = '50%';
             
-            playSound('lifeline');
-        }
-
-        // ========== المؤقت ==========
-        function startTimer() {
-            clearInterval(gameState.timerInterval);
-            gameState.timer = 30;
-            elements.timer.textContent = gameState.timer;
-            elements.timer.className = 'timer';
+            document.body.appendChild(scoreEl);
             
-            gameState.timerInterval = setInterval(() => {
-                gameState.timer--;
-                elements.timer.textContent = gameState.timer;
-                
-                if (gameState.timer <= 10) {
-                    elements.timer.classList.add('warning');
-                }
-                
-                if (gameState.timer <= 5) {
-                    elements.timer.classList.remove('warning');
-                    elements.timer.classList.add('danger');
-                    playSound('tick');
-                }
-                
-                if (gameState.timer <= 0) {
-                    clearInterval(gameState.timerInterval);
-                    showNotification("انتهى الوقت! الإجابة خاطئة.", "error");
-                    setTimeout(() => endGame(false), 1000);
-                }
-            }, 1000);
+            setTimeout(() => scoreEl.remove(), 2000);
         }
 
-        // ========== تحديث العرض ==========
-        function updateDisplay() {
-            elements.scoreDisplay.textContent = gameState.score;
-            elements.currentMoney.textContent = PRIZES[Math.min(gameState.currentQuestionIndex, PRIZES.length - 1)];
-            elements.currentLevel.textContent = gameState.currentLevel;
-            elements.lifelinesCount.textContent = gameState.lifelines;
-        }
+        // ========== الإنجازات ==========
 
-        function updatePrizeLadder() {
-            const prizeItems = elements.prizeLadder.querySelectorAll('.prize-item');
-            prizeItems.forEach((item, index) => {
-                item.classList.remove('current');
-                if (index + 1 === gameState.currentLevel) {
-                    item.classList.add('current');
+        function checkAchievements() {
+            const achievements = [
+                { level: 5, message: '🎯 رائع! وصلت للمستوى 5' },
+                { level: 10, message: '🚀 مذهل! وصلت للمستوى 10' },
+                { correct: 5, message: '🏆 5 إجابات صحيحة متتالية!' },
+                { correct: 10, message: '👑 10 إجابات صحيحة متتالية!' },
+                { score: 5000, message: '💎 5000 نقطة! أنت محترف!' }
+            ];
+            
+            achievements.forEach(achievement => {
+                if (achievement.level && gameState.currentLevel === achievement.level) {
+                    showAchievement(achievement.message);
+                } else if (achievement.correct && gameState.correctAnswers === achievement.correct) {
+                    showAchievement(achievement.message);
+                } else if (achievement.score && gameState.score >= achievement.score) {
+                    showAchievement(achievement.message);
                 }
             });
         }
 
-        function showNotification(message, type) {
-            elements.notification.textContent = message;
-            elements.notification.className = `notification ${type}`;
-            elements.notification.classList.add('show');
+        function showAchievement(message) {
+            elements.achievementBadge.textContent = message;
+            elements.achievementBadge.classList.add('show');
+            playSound('achievement');
             
             setTimeout(() => {
-                elements.notification.classList.remove('show');
+                elements.achievementBadge.classList.remove('show');
             }, 3000);
         }
+
+        // ========== إدارة اللعبة ==========
+
+        function startGame() {
+            if (gameState.gameActive || gameState.questions.length < CONFIG.totalQuestions) {
+                showNotification("جاري تحميل الأسئلة...", "info");
+                return;
+            }
+            
+            playSound('click');
+            gameState.gameActive = true;
+            gameState.currentQuestionIndex = 0;
+            
+            elements.startBtn.disabled = true;
+            elements.startBtn.innerHTML = '<i class="fas fa-play"></i> اللعبة جارية';
+            elements.nextBtn.style.display = 'none';
+            elements.quitBtn.style.display = 'flex';
+            
+            // تفعيل المساعدات
+            elements.fiftyFiftyBtn.disabled = false;
+            elements.askAudienceBtn.disabled = false;
+            elements.phoneFriendBtn.disabled = false;
+            elements.hintBtn.disabled = false;
+            
+            loadQuestion(gameState.currentQuestionIndex);
+            startTimer();
+            
+            showNotification("ابدأ اللعب! اختر الإجابة الصحيحة لترتقي إلى المستوى التالي.", "success");
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            elements.nextBtn.style.display = 'none';
+            loadQuestion(gameState.currentQuestionIndex);
+            startTimer();
+            gameState.gameActive = true;
+        }
+
+        function endGame(win) {
+            clearInterval(gameState.timerInterval);
+            gameState.gameActive = false;
+            
+            // تعطيل المساعدات
+            elements.fiftyFiftyBtn.disabled = true;
+            elements.askAudienceBtn.disabled = true;
+            elements.phoneFriendBtn.disabled = true;
+            elements.hintBtn.disabled = true;
+            
+            elements.startBtn.disabled = false;
+            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i> لعب مرة أخرى';
+            elements.nextBtn.style.display = 'none';
+            elements.quitBtn.style.display = 'flex';
+            
+            if (win) {
+                // إظهار شاشة الاحتفال
+                elements.finalPrize.textContent = formatMoney(gameState.money);
+                elements.finalScore.textContent = gameState.score;
+                elements.finalLevel.textContent = gameState.currentLevel;
+                elements.finalQuestions.textContent = gameState.correctAnswers;
+                
+                playSound('win');
+                playSound('applause');
+                createConfetti(100);
+                
+                setTimeout(() => {
+                    elements.celebrationScreen.classList.add('show');
+                }, 1000);
+                
+                // حفظ النتيجة
+                saveHighScore();
+            } else {
+                showNotification(`انتهت اللعبة! مجموع نقاطك: ${gameState.score} - الإجابات الصحيحة: ${gameState.correctAnswers}`, "error", 5000);
+                playSound('lose');
+            }
+        }
+
+        function playAgain() {
+            playSound('click');
+            elements.celebrationScreen.classList.remove('show');
+            resetGameState();
+            loadQuestion(0);
+            updateDisplay();
+            createPrizeLadder();
+            updateProgressBar();
+            
+            showNotification("تم إعادة تشغيل اللعبة! حظاً موفقاً.", "info");
+        }
+
+        function resetGameState() {
+            gameState = {
+                currentLevel: 1,
+                currentQuestionIndex: 0,
+                score: 0,
+                money: 0,
+                lifelines: CONFIG.initialLifelines,
+                usedLifelines: new Set(),
+                gameActive: false,
+                timer: CONFIG.timePerQuestion,
+                timerInterval: null,
+                usedQuestionIds: new Set(),
+                questions: [...gameState.questions], // الاحتفاظ بالأسئلة المحملة
+                currentQuestion: null,
+                correctAnswers: 0,
+                soundEnabled: gameState.soundEnabled,
+                sessionId: generateSessionId(),
+                loadedQuestionsCount: gameState.loadedQuestionsCount,
+                isOnline: gameState.isOnline
+            };
+        }
+
+        // ========== أدوات مساعدة ==========
 
         function formatMoney(amount) {
             return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ريال";
         }
 
-        // ========== الأصوات ==========
-        function playSound(sound) {
-            // يمكن إضافة مكتبة أصوات هنا
-            const sounds = {
-                'correct': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3'),
-                'wrong': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3'),
-                'lifeline': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3'),
-                'win': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3'),
-                'lose': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sad-game-over-trombone-471.mp3'),
-                'tick': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-fast-clock-ticking-1067.mp3')
-            };
-            
-            if (sounds[sound]) {
-                sounds[sound].volume = 0.3;
-                sounds[sound].play().catch(e => console.log('Error playing sound:', e));
+        function saveHighScore() {
+            try {
+                const highScores = JSON.parse(localStorage.getItem('techChallengeHighScores') || '[]');
+                highScores.push({
+                    score: gameState.score,
+                    level: gameState.currentLevel,
+                    correct: gameState.correctAnswers,
+                    date: new Date().toISOString(),
+                    sessionId: gameState.sessionId
+                });
+                
+                highScores.sort((a, b) => b.score - a.score);
+                const topScores = highScores.slice(0, 10);
+                
+                localStorage.setItem('techChallengeHighScores', JSON.stringify(topScores));
+            } catch (error) {
+                console.warn('خطأ في حفظ النتيجة:', error);
             }
         }
 
-        // ========== تفعيل/تعطيل المساعدات ==========
-        function enableLifelines() {
-            elements.fiftyFiftyBtn.disabled = false;
-            elements.askAudienceBtn.disabled = false;
-            elements.phoneFriendBtn.disabled = false;
-            elements.hintBtn.disabled = false;
-        }
-
-        function disableLifelines() {
-            elements.fiftyFiftyBtn.disabled = true;
-            elements.askAudienceBtn.disabled = true;
-            elements.phoneFriendBtn.disabled = true;
-            elements.hintBtn.disabled = true;
+        function shareScore() {
+            const text = `🏆 حصلت على ${gameState.score} نقطة في تحدي التقنية!\n` +
+                        `📊 المستوى: ${gameState.currentLevel}\n` +
+                        `✅ الإجابات الصحيحة: ${gameState.correctAnswers}\n` +
+                        `💰 الجائزة: ${formatMoney(gameState.money)}\n\n` +
+                        `جرب التحدي بنفسك!`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'نتيجتي في تحدي التقنية',
+                    text: text,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('تم نسخ النتيجة إلى الحافظة!', 'success');
+                });
+            }
         }
 
         // ========== مستمعي الأحداث ==========
-        elements.startBtn.addEventListener('click', startGame);
-        elements.quitBtn.addEventListener('click', () => endGame(false));
-        elements.nextBtn.addEventListener('click', nextQuestion);
-        elements.fiftyFiftyBtn.addEventListener('click', useFiftyFifty);
-        elements.askAudienceBtn.addEventListener('click', useAskAudience);
-        elements.phoneFriendBtn.addEventListener('click', usePhoneFriend);
-        elements.hintBtn.addEventListener('click', useHint);
 
-        // ========== تهيئة اللعبة عند التحميل ==========
-        window.addEventListener('load', initGame);
-
-        // ========== إضافة أسئلة أكثر (حقيقية من الإنترنت) ==========
-        // يمكن إضافة المزيد من الأسئلة هنا من خلال API أو قاعدة بيانات
-        async function loadMoreQuestionsFromAPI() {
-            try {
-                // مثال لاستدعاء API للحصول على أسئلة (يمكن تعديل الرابط)
-                const response = await fetch('https://opentdb.com/api.php?amount=50&category=18&type=multiple');
-                const data = await response.json();
-                
-                if (data.results) {
-                    data.results.forEach(item => {
-                        const category = "معلومات عامة";
-                        const question = {
-                            question: decodeHTML(item.question),
-                            answers: [...item.incorrect_answers, item.correct_answer]
-                                .sort(() => Math.random() - 0.5)
-                                .map(decodeHTML),
-                            correct: [...item.incorrect_answers, item.correct_answer]
-                                .sort(() => Math.random() - 0.5)
-                                .indexOf(item.correct_answer),
-                            difficulty: item.difficulty,
-                            category: category
-                        };
-                        
-                        // إضافة السؤال للقاعدة
-                        if (!questionsDatabase[category]) {
-                            questionsDatabase[category] = [];
+        function setupEventListeners() {
+            // أزرار التحكم
+            elements.startBtn.addEventListener('click', startGame);
+            elements.quitBtn.addEventListener('click', () => endGame(false));
+            elements.nextBtn.addEventListener('click', nextQuestion);
+            
+            // المساعدات
+            elements.fiftyFiftyBtn.addEventListener('click', useFiftyFifty);
+            elements.askAudienceBtn.addEventListener('click', useAskAudience);
+            elements.phoneFriendBtn.addEventListener('click', usePhoneFriend);
+            elements.hintBtn.addEventListener('click', useHint);
+            
+            // التحكم بالصوت
+            elements.soundToggle.addEventListener('click', toggleSound);
+            
+            // تأثيرات hover للأزرار
+            document.querySelectorAll('.btn, .control-btn, .answer-btn, .lifeline-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    if (!btn.disabled && gameState.soundEnabled) {
+                        try {
+                            sounds.hover.currentTime = 0;
+                            sounds.hover.play().catch(() => {});
+                        } catch (error) {
+                            // تجاهل الأخطاء الصامتة
                         }
-                        questionsDatabase[category].push(question);
-                    });
-                    
-                    console.log("تم تحميل أسئلة إضافية من الإنترنت");
-                }
+                    }
+                });
+            });
+        }
+
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            elements.soundToggle.classList.toggle('muted', !gameState.soundEnabled);
+            playSound('click');
+            
+            showNotification(gameState.soundEnabled ? '🔊 الصوت مفعل' : '🔇 الصوت معطل', 'info', 2000);
+        }
+
+                // ========== تهيئة اللعبة ==========
+        async function initializeGame() {
+            // إعداد الخلفية المتحركة
+            createBackgroundAnimation();
+            
+            // إنشاء عناصر الصوت
+            createSoundElements();
+            
+            // إنشاء سلم الجوائز
+            createPrizeLadder();
+            
+            // تحديث العرض
+            updateDisplay();
+            updateProgressBar();
+            
+            // إعداد مستمعي الأحداث
+            setupEventListeners();
+            
+            // تحميل الأسئلة
+            await loadQuestions();
+            
+            // إخفاء شاشة التحميل
+            setTimeout(() => {
+                elements.loadingScreen.classList.add('hidden');
+                showNotification("مرحباً بك في تحدي التقنية! هل أنت مستعد لربح المليون؟", "info", 4000);
+            }, 1500);
+        }
+
+        // ========== دالة البدء الرئيسية ==========
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('بدء تهيئة اللعبة...');
+            
+            try {
+                await initializeGame();
+                console.log('تم تهيئة اللعبة بنجاح');
             } catch (error) {
-                console.log("تعذر تحميل أسئلة إضافية:", error);
+                console.error('خطأ في تهيئة اللعبة:', error);
+                elements.loadingText.textContent = "حدث خطأ في تحميل اللعبة. جاري إعادة المحاولة...";
+                
+                // محاولة إعادة التحميل بعد 5 ثوان
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+            }
+        });
+
+        // ========== دالة الخروج من اللعبة ==========
+        function confirmQuit() {
+            if (gameState.gameActive) {
+                if (confirm("هل أنت متأكد من إنهاء اللعبة؟ ستفقد جميع نقاطك الحالية.")) {
+                    endGame(false);
+                }
+            } else {
+                endGame(false);
             }
         }
 
-        function decodeHTML(html) {
-            const txt = document.createElement("textarea");
-            txt.innerHTML = html;
-            return txt.value;
+        // ========== إضافة دعم اللمس ==========
+        document.addEventListener('touchstart', function() {}, {passive: true});
+
+        // ========== تحسين الأداء ==========
+        window.addEventListener('load', () => {
+            // تحسين أداء الصوت
+            Object.values(sounds).forEach(sound => {
+                if (sound.pause) sound.pause();
+                if (sound.load) sound.load();
+            });
+            
+            // تنظيف الذاكرة
+            window.addEventListener('beforeunload', () => {
+                clearInterval(gameState.timerInterval);
+                Object.values(sounds).forEach(sound => {
+                    sound.pause();
+                    sound.src = '';
+                });
+            });
+        });
+
+        // ========== دعم لوحة المفاتيح ==========
+        document.addEventListener('keydown', (e) => {
+            if (!gameState.gameActive) return;
+            
+            // مفاتيح 1-4 للإجابات
+            if (e.key >= '1' && e.key <= '4') {
+                const index = parseInt(e.key) - 1;
+                const buttons = elements.answersGrid.querySelectorAll('.answer-btn');
+                if (buttons[index] && !buttons[index].disabled) {
+                    buttons[index].click();
+                }
+            }
+            
+            // مفاتيح الاختصارات للمساعدات
+            if (e.key === 'a' || e.key === 'A') useFiftyFifty();      // A لـ 50:50
+            if (e.key === 's' || e.key === 'S') useAskAudience();      // S لسؤال الجمهور
+            if (e.key === 'd' || e.key === 'D') usePhoneFriend();      // D لاتصال بصديق
+            if (e.key === 'f' || e.key === 'F') useHint();             // F للتلميح
+            if (e.key === ' ') nextQuestion();                         // Space للسؤال التالي
+            if (e.key === 'Escape') confirmQuit();                     // Esc للخروج
+        });
+
+        // ========== تعزيز إمكانية الوصول ==========
+        document.addEventListener('focus', (e) => {
+            if (e.target.classList.contains('answer-btn')) {
+                playSound('hover');
+            }
+        }, true);
+
+        // ========== تحسين تجربة الأجهزة المحمولة ==========
+        function handleTouchEvents() {
+            let startX, startY;
+            
+            document.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, {passive: true});
+            
+            document.addEventListener('touchend', (e) => {
+                if (!startX || !startY) return;
+                
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                const diffX = startX - endX;
+                const diffY = startY - endY;
+                
+                // Swipe left for next question
+                if (Math.abs(diffX) > Math.abs(diffY) && diffX > 50) {
+                    if (elements.nextBtn.style.display !== 'none') {
+                        elements.nextBtn.click();
+                    }
+                }
+                
+                startX = null;
+                startY = null;
+            }, {passive: true});
         }
 
-        // تحميل أسئلة إضافية عند التمهيد
-        setTimeout(loadMoreQuestionsFromAPI, 1000);
+        // استدعاء دالة تحسين تجربة المحمول
+        handleTouchEvents();
+
+        // ========== تحسين الأداء للرسوم المتحركة ==========
+        let lastAnimationFrame = 0;
+        function optimizeAnimation() {
+            const now = Date.now();
+            if (now - lastAnimationFrame >= 16) { // ~60fps
+                lastAnimationFrame = now;
+                // تحديث الرسوم المتحركة هنا إذا لزم الأمر
+            }
+            requestAnimationFrame(optimizeAnimation);
+        }
+
+        // بدء تحسين الرسوم المتحركة
+        optimizeAnimation();
+
+        // ========== معالجة اتصال الإنترنت ==========
+        window.addEventListener('online', () => {
+            if (!gameState.isOnline && gameState.questions.length < CONFIG.totalQuestions * 2) {
+                showNotification("تم استعادة الاتصال بالإنترنت، جاري تحميل المزيد من الأسئلة...", "info");
+                loadQuestions().then(() => {
+                    if (gameState.questions.length > gameState.loadedQuestionsCount) {
+                        showNotification("تم تحميل المزيد من الأسئلة من الإنترنت!", "success");
+                    }
+                });
+            }
+        });
+
+        window.addEventListener('offline', () => {
+            showNotification("تم فقد الاتصال بالإنترنت، سيتم استخدام الأسئلة المحلية فقط", "warning");
+            gameState.isOnline = false;
+        });
+
+        // ========== إضافة مؤثرات إضافية ==========
+        function addParticleEffect(x, y, color = '#6C63FF', count = 10) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = '10px';
+                particle.style.height = '10px';
+                particle.style.position = 'absolute';
+                particle.style.borderRadius = '50%';
+                particle.style.backgroundColor = color;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '1000';
+                particle.style.opacity = '0.8';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 3;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                
+                document.body.appendChild(particle);
+                
+                let posX = x, posY = y;
+                const animate = () => {
+                    posX += vx;
+                    posY += vy;
+                    particle.style.left = `${posX}px`;
+                    particle.style.top = `${posY}px`;
+                    particle.style.opacity = parseFloat(particle.style.opacity) - 0.02;
+                    
+                    if (parseFloat(particle.style.opacity) > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                animate();
+            }
+        }
+
+        // ========== تحسينات الواجهة ==========
+        function enhanceUI() {
+            // إضافة تأثيرات hover للمساعدات
+            const lifelines = document.querySelectorAll('.lifeline-btn');
+            lifelines.forEach(lifeline => {
+                lifeline.addEventListener('mouseenter', () => {
+                    if (!lifeline.disabled) {
+                        lifeline.style.transform = 'scale(1.05)';
+                        lifeline.style.transition = 'transform 0.2s ease';
+                    }
+                });
+                
+                lifeline.addEventListener('mouseleave', () => {
+                    lifeline.style.transform = 'scale(1)';
+                });
+                
+                lifeline.addEventListener('click', () => {
+                    if (!lifeline.disabled) {
+                        addParticleEffect(
+                            lifeline.getBoundingClientRect().left + lifeline.offsetWidth / 2,
+                            lifeline.getBoundingClientRect().top + lifeline.offsetHeight / 2,
+                            '#FF6584',
+                            15
+                        );
+                    }
+                });
+            });
+            
+            // تحسين تجربة النقر على الإجابات
+            const answerButtons = document.querySelectorAll('.answer-btn');
+            answerButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!this.disabled) {
+                        const rect = this.getBoundingClientRect();
+                        addParticleEffect(
+                            rect.left + rect.width / 2,
+                            rect.top + rect.height / 2,
+                            this.classList.contains('correct') ? '#4CAF50' : '#F44336',
+                            20
+                        );
+                    }
+                });
+            });
+        }
+
+        // استدعاء تحسينات الواجهة بعد التحميل
+        setTimeout(enhanceUI, 2000);
+
+        // ========== نظام النقاط المحسن ==========
+        function calculateBonusPoints() {
+            const basePoints = LEVEL_POINTS[Math.min(gameState.currentQuestionIndex, LEVEL_POINTS.length - 1)];
+            let bonus = 0;
+            
+            // مكافأة السرعة
+            if (gameState.timer > 20) bonus += 50;
+            else if (gameState.timer > 10) bonus += 25;
+            
+            // مكافأة التسلسل
+            if (gameState.correctAnswers >= 5) bonus += 100;
+            if (gameState.correctAnswers >= 10) bonus += 250;
+            
+            // مكافأة عدم استخدام المساعدات
+            if (gameState.usedLifelines.size === 0) bonus += 50;
+            
+            return basePoints + bonus;
+        }
+
+        // ========== تحديث دالة التحقق من الإجابة ==========
+        function checkAnswer(selectedIndex) {
+            if (!gameState.gameActive) return;
+            
+            playSound('click');
+            gameState.gameActive = false;
+            clearInterval(gameState.timerInterval);
+            
+            const buttons = elements.answersGrid.querySelectorAll('.answer-btn');
+            const correctIndex = gameState.currentQuestion.correct;
+            
+            // تعطيل جميع الأزرار
+            buttons.forEach(btn => btn.disabled = true);
+            
+            // عرض الإجابة الصحيحة والخاطئة مع تأثيرات
+            setTimeout(() => {
+                buttons.forEach((btn, i) => {
+                    if (i === correctIndex) {
+                        btn.classList.add('correct');
+                        createConfetti();
+                        
+                        // تأثير خاص للإجابة الصحيحة
+                        const rect = btn.getBoundingClientRect();
+                        addParticleEffect(
+                            rect.left + rect.width / 2,
+                            rect.top + rect.height / 2,
+                            '#4CAF50',
+                            30
+                        );
+                    } else if (i === selectedIndex && i !== correctIndex) {
+                        btn.classList.add('wrong');
+                        
+                        // تأثير خاص للإجابة الخاطئة
+                        const rect = btn.getBoundingClientRect();
+                        addParticleEffect(
+                            rect.left + rect.width / 2,
+                            rect.top + rect.height / 2,
+                            '#F44336',
+                            20
+                        );
+                    }
+                });
+                
+                // التحقق من الإجابة
+                if (selectedIndex === correctIndex) {
+                    const points = calculateBonusPoints();
+                    handleCorrectAnswer(points);
+                } else {
+                    handleWrongAnswer();
+                }
+            }, 500);
+        }
+
+        // ========== نظام التحديات اليومية ==========
+        const dailyChallenges = {
+            challenge1: {
+                description: "أجب على 5 أسئلة بدون أخطاء",
+                reward: 500,
+                completed: false
+            },
+            challenge2: {
+                description: "استخدم جميع المساعدات",
+                reward: 300,
+                completed: false
+            },
+            challenge3: {
+                description: "وصل للمستوى 10",
+                reward: 1000,
+                completed: false
+            }
+        };
+
+        function checkDailyChallenges() {
+            const today = new Date().toDateString();
+            const lastPlayed = localStorage.getItem('lastPlayedDate');
+            
+            if (lastPlayed !== today) {
+                // إعادة تعيين التحديات اليومية
+                Object.keys(dailyChallenges).forEach(key => {
+                    dailyChallenges[key].completed = false;
+                });
+                localStorage.setItem('dailyChallenges', JSON.stringify(dailyChallenges));
+                localStorage.setItem('lastPlayedDate', today);
+            } else {
+                // تحميل التحديات الحالية
+                const savedChallenges = localStorage.getItem('dailyChallenges');
+                if (savedChallenges) {
+                    Object.assign(dailyChallenges, JSON.parse(savedChallenges));
+                }
+            }
+            
+            // تحديث التحديات
+            if (gameState.correctAnswers >= 5) {
+                dailyChallenges.challenge1.completed = true;
+            }
+            if (gameState.usedLifelines.size >= 3) {
+                dailyChallenges.challenge2.completed = true;
+            }
+            if (gameState.currentLevel >= 10) {
+                dailyChallenges.challenge3.completed = true;
+            }
+            
+            // حفظ التحديات
+            localStorage.setItem('dailyChallenges', JSON.stringify(dailyChallenges));
+            
+            // منح المكافآت
+            Object.values(dailyChallenges).forEach(challenge => {
+                if (challenge.completed && !challenge.rewardGranted) {
+                    gameState.score += challenge.reward;
+                    showNotification(`🎯 تحدي مكتمل: ${challenge.description}! +${challenge.reward} نقطة`, "success");
+                    challenge.rewardGranted = true;
+                }
+            });
+        }
+
+        // ========== الإحصائيات المتقدمة ==========
+        function showAdvancedStats() {
+            const stats = {
+                totalQuestionsAnswered: gameState.currentQuestionIndex,
+                correctPercentage: gameState.correctAnswers / (gameState.currentQuestionIndex || 1) * 100,
+                averageTime: ((CONFIG.timePerQuestion * gameState.currentQuestionIndex) - gameState.timer) / (gameState.currentQuestionIndex || 1),
+                lifelinesUsed: gameState.usedLifelines.size,
+                streak: gameState.correctAnswers
+            };
+            
+            return stats;
+        }
+
+        // ========== التحسين النهائي والتشغيل ==========
+        console.log('اللعبة جاهزة للتشغيل!');
     </script>
+
+    <!-- إضافة تحليلات بسيطة -->
+    <script>
+        // متابعة إحصائيات اللعبة
+        window.gameAnalytics = {
+            startTime: Date.now(),
+            totalClicks: 0,
+            correctAnswers: 0,
+            lifelinesUsed: 0,
+            
+            trackClick: function() {
+                this.totalClicks++;
+            },
+            
+            trackCorrectAnswer: function() {
+                this.correctAnswers++;
+            },
+            
+            getSessionDuration: function() {
+                return Math.floor((Date.now() - this.startTime) / 1000);
+            },
+            
+            getAccuracy: function() {
+                return this.totalClicks > 0 ? (this.correctAnswers / this.totalClicks * 100).toFixed(1) : 0;
+            }
+        };
+
+        // تتبع النقرات
+        document.addEventListener('click', () => {
+            window.gameAnalytics.trackClick();
+        });
+
+        // تتبع الإجابات الصحيحة
+        const originalHandleCorrectAnswer = window.handleCorrectAnswer;
+        window.handleCorrectAnswer = function(points) {
+            window.gameAnalytics.trackCorrectAnswer();
+            return originalHandleCorrectAnswer(points);
+        };
+    </script>
+
 </body>
 </html>
