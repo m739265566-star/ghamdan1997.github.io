@@ -1,291 +1,156 @@
+// ==========================================================================
+// غمدان عبده - الموقع الشخصي
+// JavaScript الرئيسي - نسخة محسنة
+// ==========================================================================
+
 /**
- * Ghamdan Abdu - Personal Portfolio Website
- * Main JavaScript File
- * Version 2.0.0 - Optimized and Enhanced
+ * إعدادات التطبيق الرئيسية
  */
-
-// ==========================================================================
-// Configuration & State Management
-// ==========================================================================
-
 const Portfolio = {
-    // Configuration
+    // إعدادات التطبيق
     config: {
-        isArabic: true, // تم تثبيت اللغة العربية فقط
         isDarkMode: false,
         currentSection: 'home',
         particlesEnabled: true,
         animationsEnabled: true,
-        reducedMotion: false,
         isMobile: false,
         isTablet: false,
-        isTouchDevice: false,
-        networkStatus: 'online',
-        performanceMode: false
+        isTouchDevice: false
     },
     
-    // State
+    // حالة التطبيق
     state: {
         isScrolling: false,
         scrollTimeout: null,
         lastScrollY: 0,
         scrollDirection: 'down',
-        activeModal: null,
-        loadingQueue: [],
-        loadedAssets: new Set(),
-        pendingRequests: new Map(),
-        cache: new Map(),
-        observers: new Map(),
-        animations: new Map(),
-        timers: new Set()
+        activeModal: null
     },
     
-    // Constants
-    constants: {
-        BREAKPOINTS: {
-            MOBILE: 768,
-            TABLET: 1024,
-            DESKTOP: 1200
+    // البيانات
+    data: {
+        // معلومات شخصية
+        personalInfo: {
+            fullName: 'غمدان عبده علي صالح',
+            birthDate: '2 أغسطس 1997',
+            address: 'محافظة مارب - اليمن',
+            maritalStatus: 'متزوج',
+            email: 'ghamdan@gmail.com',
+            phone: '774038475'
         },
-        SCROLL_THRESHOLD: 100,
-        DEBOUNCE_DELAY: 50,
-        THROTTLE_DELAY: 16,
-        LAZY_LOAD_OFFSET: 200,
-        CACHE_TTL: 300000, // 5 minutes
-        PERFORMANCE_THRESHOLD: 1000, // 1 second
-        ASSET_PRIORITIES: {
-            CRITICAL: 0,
-            HIGH: 1,
-            MEDIUM: 2,
-            LOW: 3
+        
+        // المشاريع
+        projects: [
+            {
+                id: 1,
+                title: 'بوابة الطالب الإلكترونية',
+                category: 'نظام إلكتروني',
+                description: 'نظام إلكتروني لإدارة وعض الخدمات الطلابية',
+                technologies: ['PHP', 'JavaScript', 'MySQL', 'Bootstrap'],
+                image: 'images/col.png'
+            },
+            {
+                id: 2,
+                title: 'لعبة البالون',
+                category: 'لعبة',
+                description: 'لعبة تفجير البالونات بلغة C#',
+                technologies: ['C#', '.NET', 'WinForms'],
+                image: 'images/pal.png'
+            }
+        ],
+        
+        // المهارات
+        skills: {
+            programming: [
+                { name: 'PHP', percentage: 95 },
+                { name: 'JavaScript', percentage: 90 },
+                { name: 'Python', percentage: 85 },
+                { name: 'C#', percentage: 80 }
+            ],
+            web: [
+                { name: 'HTML5/CSS3', percentage: 98 },
+                { name: 'Bootstrap', percentage: 95 },
+                { name: 'jQuery', percentage: 90 },
+                { name: 'React.js', percentage: 80 }
+            ],
+            databases: [
+                { name: 'MySQL', percentage: 95 },
+                { name: 'SQL Server', percentage: 85 },
+                { name: 'Flutter', percentage: 75 }
+            ],
+            tools: [
+                { name: 'Git', percentage: 90 },
+                { name: 'Docker', percentage: 75 },
+                { name: 'AWS', percentage: 70 }
+            ]
         }
     }
 };
 
-// ترجمات اللغة العربية فقط
-Portfolio.translations = {
-    ar: {
-        // Navigation
-        home: 'الرئيسية',
-        about: 'نبذة عني',
-        education: 'التعليم',
-        experience: 'الخبرات',
-        skills: 'المهارات',
-        projects: 'المشاريع',
-        services: 'الخدمات',
-        contact: 'اتصل بي',
-        
-        // Hero Section
-        heroTitle: 'مرحباً، أنا',
-        typedStrings: [
-            'حاصل على درجة البكالوريوس في قسم علوم الحاسوب بتقدير جيد جدا',
-            'استخدام الحاسوب بكافاءة',
-            'اجاد حزمة office',
-            'مبرمج ومحلل نظم',
-            'الطباعة السريعة باللغة العربية والانجليزي',
-            'إدارة قواعد البيانات ',
-            'تصمم وبرمجة تطبيقات الويب',
-            'مطور حلول رقمية',
-            'خبير في الأرشفة الإلكترونية',
-            'متخصص في الأنظمة الإدارية'
-        ],
-        heroDescription: 'مبرمج ومحلل نظم بخبرة إدارية، متخصص في تطوير الحلول الرقمية والأرشفة الإلكترونية. أمتلك خبرة واسعة في تصميم وتنفيذ الأنظمة الإدارية المتكاملة.',
-        contactMe: 'تواصل معي',
-        viewProjects: 'عرض المشاريع',
-        intro: 'مقدمة',
-        followMe: 'تابعني على:',
-        
-        // About Section
-        aboutTitle: 'تعرف عليّ بشكل أفضل',
-        aboutSubtitle: 'نبذة عني',
-        aboutTab: 'عنّي',
-        experienceTab: 'خبرتي',
-        missionTab: 'رسالتي',
-        fullName: 'الاسم الكامل:',
-        birthDate: 'تاريخ الميلاد:',
-        address: 'العنوان:',
-        maritalStatus: 'الحالة الاجتماعية:',
-        email: 'البريد الإلكتروني:',
-        phone: 'الهاتف:',
-        viewMyWork: 'عرض أعمالي',
-        
-        // Education Section
-        educationTitle: 'رحلة التعلم والتعليم',
-        educationSubtitle: 'التعليم والمؤهلات',
-        academicEducation: 'التعليم الأكاديمي',
-        bachelor: 'بكالوريوس علوم الحاسوب',
-        highSchool: 'الثانوية العامة',
-        veryGood: 'جيد جداً',
-        completed: 'مكتمل',
-        certifications: 'الشهادات والدورات',
-        cybersecurity: 'الأمن السيبراني',
-        icdl: 'الرخصة الدولية لقيادة الحاسوب',
-        endpointProtection: 'حماية الطرفيات والأجهزة',
-        languages: 'اللغات',
-        arabic: 'العربية',
-        english: 'الإنجليزية',
-        native: 'اللغة الأم',
-        intermediate: 'متوسط',
-        learningPath: 'مسار التعلم المستمر',
-        
-        // Experience Section
-        experienceTitle: 'رحلتي المهنية والمشاريع',
-        experienceSubtitle: 'الخبرات العملية',
-        featuredProject: 'مشروع رئيسي',
-        studentPortal: 'بوابة الطالب الإلكترونية',
-        objectives: 'الأهداف',
-        keyFeatures: 'الميزات الرئيسية',
-        technologiesUsed: 'التقنيات المستخدمة',
-        clientSatisfaction: 'رضا العملاء',
-        monthsDevelopment: 'أشهر تطوير',
-        studentUsers: 'طالب مستخدم',
-        experienceTimeline: 'الخط الزمني للخبرات',
-        
-        // Skills Section
-        skillsTitle: 'مجالات التميز والخبرة',
-        skillsSubtitle: 'المهارات والقدرات',
-        technicalSkills: 'المهارات التقنية',
-        programmingLanguages: 'لغات البرمجة',
-        databases: 'قواعد البيانات',
-        webDevelopment: 'تطوير الويب',
-        toolsPlatforms: 'الأدوات والمنصات',
-        professionalSkills: 'المهارات المهنية',
-        computerSkills: 'استخدام الحاسوب',
-        webDesign: 'تصميم المواقع',
-        databaseManagement: 'إدارة قواعد البيانات',
-        problemSolving: 'حل المشكلات',
-        fastTyping: 'الطباعة السريعة',
-        officeSuite: 'حزمة Office',
-        archiving: 'الأرشفة',
-        teamwork: 'العمل الجماعي',
-        skillsDistribution: 'توزيع المهارات',
-        
-        // Projects Section
-        projectsTitle: 'معرض الأعمال والمشاريع',
-        projectsSubtitle: 'المشاريع والأعمال',
-        allProjects: 'الكل',
-        webDevelopmentProjects: 'تطوير الويب',
-        systemProjects: 'الأنظمة',
-        gameProjects: 'الألعاب',
-        viewMoreProjects: 'عرض المزيد من المشاريع',
-        
-        // Services Section
-        servicesTitle: 'ما أقدمه من خدمات احترافية',
-        servicesSubtitle: 'الخدمات المقدمة',
-        webDevService: 'تطوير الويب',
-        systemAnalysis: 'تحليل النظم',
-        digitalArchiving: 'الأرشفة الرقمية',
-        databaseManagementService: 'إدارة قواعد البيانات',
-        technicalConsultation: 'الاستشارات التقنية',
-        trainingSupport: 'التدريب والدعم',
-        orderService: 'اطلب الخدمة',
-        serviceProcess: 'عملية تقديم الخدمة',
-        consultation: 'الاستشارة',
-        analysis: 'التحليل',
-        design: 'التصميم',
-        implementation: 'التنفيذ',
-        deliverySupport: 'التسليم والدعم',
-        
-        // Contact Section
-        contactTitle: 'لنعمل معاً على مشروعك القادم',
-        contactSubtitle: 'اتصل بي',
-        fullNameField: 'الاسم الكامل',
-        emailField: 'البريد الإلكتروني',
-        messageSubject: 'موضوع الرسالة',
-        messageField: 'الرسالة',
-        serviceType: 'نوع الخدمة المطلوبة',
-        selectService: 'اختر الخدمة',
-        webDevOption: 'تطوير الويب',
-        systemAnalysisOption: 'تحليل النظم',
-        digitalArchivingOption: 'الأرشفة الرقمية',
-        technicalConsultationOption: 'استشارات تقنية',
-        newsletter: 'أرغب في تلقي النشرات الإخبارية والعروض',
-        sendMessage: 'إرسال الرسالة',
-        workingHours: 'أوقات العمل',
-        followMeFooter: 'تابعني على',
-        
-        // Footer
-        quickLinks: 'روابط سريعة',
-        myServices: 'خدماتي',
-        newsletterFooter: 'النشرة الإخبارية',
-        subscribeUpdates: 'اشترك للحصول على آخر التحديثات',
-        allRightsReserved: 'جميع الحقوق محفوظة',
-        privacyPolicy: 'سياسة الخصوصية',
-        termsOfUse: 'شروط الاستخدام',
-        sitemap: 'خريطة الموقع',
-        
-        // Common
-        downloadCV: 'تحميل السيرة الذاتية',
-        viewLive: 'عرض المشروع الحي',
-        viewSource: 'عرض الكود المصدري',
-        downloadDemo: 'تحميل العرض التوضيحي',
-        
-        // Notifications
-        success: 'تم بنجاح',
-        error: 'حدث خطأ',
-        loading: 'جاري التحميل...',
-        sending: 'جاري الإرسال...',
-        subscribed: 'تم الاشتراك بنجاح',
-        sent: 'تم الإرسال بنجاح',
-        downloaded: 'تم التنزيل بنجاح',
-        offline: 'أنت غير متصل بالإنترنت',
-        online: 'أنت متصل بالإنترنت الآن'
-    }
-};
-
 // ==========================================================================
-// Utility Functions
+// وظائف مساعدة
 // ==========================================================================
 
-Portfolio.utils = {
-    // Debounce function
-    debounce(func, wait = Portfolio.constants.DEBOUNCE_DELAY) {
+/**
+ * وظائف مساعدة للتطبيق
+ */
+const Utils = {
+    // البحث عن عنصر
+    $(selector) {
+        return document.querySelector(selector);
+    },
+    
+    // البحث عن مجموعة عناصر
+    $$(selector) {
+        return document.querySelectorAll(selector);
+    },
+    
+    // إضافة حدث
+    on(element, event, handler) {
+        element.addEventListener(event, handler);
+    },
+    
+    // إزالة حدث
+    off(element, event, handler) {
+        element.removeEventListener(event, handler);
+    },
+    
+    // إضافة فئة
+    addClass(element, className) {
+        element.classList.add(className);
+    },
+    
+    // إزالة فئة
+    removeClass(element, className) {
+        element.classList.remove(className);
+    },
+    
+    // التحقق من وجود فئة
+    hasClass(element, className) {
+        return element.classList.contains(className);
+    },
+    
+    // إظهار عنصر
+    show(element) {
+        element.style.display = 'block';
+    },
+    
+    // إخفاء عنصر
+    hide(element) {
+        element.style.display = 'none';
+    },
+    
+    // تتبع التمرير
+    debounce(func, wait = 50) {
         let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    },
-    
-    // Throttle function
-    throttle(func, limit = Portfolio.constants.THROTTLE_DELAY) {
-        let inThrottle;
         return function(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
         };
     },
     
-    // Detect device type
-    detectDevice() {
-        const width = window.innerWidth;
-        const ua = navigator.userAgent;
-        
-        Portfolio.config.isMobile = width <= Portfolio.constants.BREAKPOINTS.MOBILE;
-        Portfolio.config.isTablet = width > Portfolio.constants.BREAKPOINTS.MOBILE && 
-                                   width <= Portfolio.constants.BREAKPOINTS.TABLET;
-        Portfolio.config.isTouchDevice = 'ontouchstart' in window || 
-                                        navigator.maxTouchPoints > 0;
-        
-        return {
-            isMobile: Portfolio.config.isMobile,
-            isTablet: Portfolio.config.isTablet,
-            isDesktop: !Portfolio.config.isMobile && !Portfolio.config.isTablet,
-            isTouchDevice: Portfolio.config.isTouchDevice
-        };
-    },
-    
-    // Check if element is in viewport
+    // التحقق من رؤية العنصر
     isInViewport(element, offset = 0) {
-        if (!element) return false;
-        
         const rect = element.getBoundingClientRect();
         return (
             rect.top <= (window.innerHeight || document.documentElement.clientHeight) - offset &&
@@ -293,472 +158,73 @@ Portfolio.utils = {
             rect.left <= (window.innerWidth || document.documentElement.clientWidth) - offset &&
             rect.right >= offset
         );
-    },
-    
-    // Load asset with priority
-    loadAsset(src, type = 'script', priority = Portfolio.constants.ASSET_PRIORITIES.MEDIUM) {
-        return new Promise((resolve, reject) => {
-            if (Portfolio.state.loadedAssets.has(src)) {
-                resolve();
-                return;
-            }
-            
-            const assetId = `${type}-${src}`;
-            
-            // Check if already loading
-            if (Portfolio.state.pendingRequests.has(assetId)) {
-                Portfolio.state.pendingRequests.get(assetId).push({ resolve, reject });
-                return;
-            }
-            
-            Portfolio.state.pendingRequests.set(assetId, [{ resolve, reject }]);
-            
-            const onLoad = () => {
-                Portfolio.state.loadedAssets.add(src);
-                const callbacks = Portfolio.state.pendingRequests.get(assetId);
-                Portfolio.state.pendingRequests.delete(assetId);
-                callbacks.forEach(cb => cb.resolve());
-            };
-            
-            const onError = (error) => {
-                const callbacks = Portfolio.state.pendingRequests.get(assetId);
-                Portfolio.state.pendingRequests.delete(assetId);
-                callbacks.forEach(cb => cb.reject(error));
-            };
-            
-            switch (type) {
-                case 'script':
-                    const script = document.createElement('script');
-                    script.src = src;
-                    script.async = true;
-                    script.onload = onLoad;
-                    script.onerror = onError;
-                    
-                    // Set priority
-                    if (priority === Portfolio.constants.ASSET_PRIORITIES.CRITICAL) {
-                        script.setAttribute('async', 'false');
-                    }
-                    
-                    document.head.appendChild(script);
-                    break;
-                    
-                case 'style':
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = src;
-                    link.onload = onLoad;
-                    link.onerror = onError;
-                    document.head.appendChild(link);
-                    break;
-                    
-                case 'image':
-                    const img = new Image();
-                    img.src = src;
-                    img.onload = onLoad;
-                    img.onerror = onError;
-                    break;
-            }
-        });
-    },
-    
-    // Create and show notification
-    showNotification(message, type = 'info', duration = 3000) {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <i class="notification-icon fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                <span class="notification-message">${message}</span>
-            </div>
-            <button class="notification-close">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Animate in
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-        
-        // Close button
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.addEventListener('click', () => {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        });
-        
-        // Auto remove
-        if (duration > 0) {
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.classList.remove('show');
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }
-            }, duration);
-        }
-    },
-    
-    // Measure performance
-    measurePerformance(label, fn) {
-        if (!Portfolio.config.performanceMode) {
-            return fn();
-        }
-        
-        const startTime = performance.now();
-        const result = fn();
-        const endTime = performance.now();
-        const duration = endTime - startTime;
-        
-        if (duration > Portfolio.constants.PERFORMANCE_THRESHOLD) {
-            console.warn(`Performance warning: ${label} took ${duration.toFixed(2)}ms`);
-        }
-        
-        return result;
-    },
-    
-    // Safe query selector
-    $(selector, parent = document) {
-        return parent.querySelector(selector);
-    },
-    
-    // Safe query selector all
-    $$(selector, parent = document) {
-        return Array.from(parent.querySelectorAll(selector));
-    },
-    
-    // Add event listener with cleanup
-    addEvent(element, event, handler, options = {}) {
-        element.addEventListener(event, handler, options);
-        
-        // Store for cleanup
-        if (!Portfolio.state.eventListeners) {
-            Portfolio.state.eventListeners = new Map();
-        }
-        
-        const elementId = element.id || Math.random().toString(36).substr(2, 9);
-        const eventId = `${elementId}-${event}`;
-        
-        if (!Portfolio.state.eventListeners.has(eventId)) {
-            Portfolio.state.eventListeners.set(eventId, []);
-        }
-        
-        Portfolio.state.eventListeners.get(eventId).push({ handler, options });
-        
-        return () => {
-            element.removeEventListener(event, handler, options);
-            const listeners = Portfolio.state.eventListeners.get(eventId);
-            if (listeners) {
-                const index = listeners.findIndex(l => l.handler === handler);
-                if (index > -1) {
-                    listeners.splice(index, 1);
-                }
-                if (listeners.length === 0) {
-                    Portfolio.state.eventListeners.delete(eventId);
-                }
-            }
-        };
-    },
-    
-    // Create element
-    createElement(tag, attributes = {}, children = []) {
-        const element = document.createElement(tag);
-        
-        // Set attributes
-        Object.entries(attributes).forEach(([key, value]) => {
-            if (key === 'className') {
-                element.className = value;
-            } else if (key === 'textContent') {
-                element.textContent = value;
-            } else if (key === 'innerHTML') {
-                element.innerHTML = value;
-            } else {
-                element.setAttribute(key, value);
-            }
-        });
-        
-        // Append children
-        children.forEach(child => {
-            if (typeof child === 'string') {
-                element.appendChild(document.createTextNode(child));
-            } else if (child instanceof Node) {
-                element.appendChild(child);
-            }
-        });
-        
-        return element;
     }
 };
 
 // ==========================================================================
-// Performance Optimization Functions
+// Preloader (شاشة التحميل)
 // ==========================================================================
 
-Portfolio.performance = {
-    // Initialize performance optimizations
-    init() {
-        this.detectReducedMotion();
-        this.setupIdleCallback();
-        this.setupIntersectionObserver();
-        this.optimizeImages();
-        this.optimizeAnimations();
-        this.setupServiceWorker();
-    },
-    
-    // Detect reduced motion preference
-    detectReducedMotion() {
-        Portfolio.config.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
-        if (Portfolio.config.reducedMotion) {
-            document.documentElement.classList.add('reduced-motion');
-            Portfolio.config.animationsEnabled = false;
-        }
-    },
-    
-    // Setup idle callback for non-critical tasks
-    setupIdleCallback() {
-        if ('requestIdleCallback' in window) {
-            Portfolio.state.idleCallback = window.requestIdleCallback((deadline) => {
-                while (deadline.timeRemaining() > 0 && Portfolio.state.loadingQueue.length > 0) {
-                    const task = Portfolio.state.loadingQueue.shift();
-                    if (task) task();
-                }
-                
-                if (Portfolio.state.loadingQueue.length > 0) {
-                    Portfolio.state.idleCallback = window.requestIdleCallback(arguments.callee);
-                }
-            });
-        }
-    },
-    
-    // Setup intersection observer for lazy loading
-    setupIntersectionObserver() {
-        Portfolio.state.intersectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const element = entry.target;
-                    
-                    // Lazy load images
-                    if (element.tagName === 'IMG' && element.dataset.src) {
-                        this.lazyLoadImage(element);
-                    }
-                    
-                    // Lazy load iframes
-                    if (element.tagName === 'IFRAME' && element.dataset.src) {
-                        this.lazyLoadIframe(element);
-                    }
-                    
-                    // Lazy load background images
-                    if (element.dataset.bg) {
-                        this.lazyLoadBackground(element);
-                    }
-                    
-                    // Stop observing
-                    Portfolio.state.intersectionObserver.unobserve(element);
-                }
-            });
-        }, {
-            rootMargin: `${Portfolio.constants.LAZY_LOAD_OFFSET}px`,
-            threshold: 0.01
-        });
-    },
-    
-    // Lazy load image
-    lazyLoadImage(img) {
-        if (img.dataset.src) {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-            
-            // Add loaded class
-            img.onload = () => {
-                img.classList.add('loaded');
-            };
-        }
-    },
-    
-    // Lazy load iframe
-    lazyLoadIframe(iframe) {
-        if (iframe.dataset.src) {
-            iframe.src = iframe.dataset.src;
-            iframe.removeAttribute('data-src');
-        }
-    },
-    
-    // Lazy load background image
-    lazyLoadBackground(element) {
-        if (element.dataset.bg) {
-            element.style.backgroundImage = `url(${element.dataset.bg})`;
-            element.removeAttribute('data-bg');
-            element.classList.add('bg-loaded');
-        }
-    },
-    
-    // Optimize images
-    optimizeImages() {
-        // Set up lazy loading for all images
-        Portfolio.utils.$$('img[data-src]').forEach(img => {
-            Portfolio.state.intersectionObserver.observe(img);
-        });
-        
-        // Optimize background images
-        Portfolio.utils.$$('[data-bg]').forEach(element => {
-            Portfolio.state.intersectionObserver.observe(element);
-        });
-        
-        // Add responsive image support
-        Portfolio.utils.$$('img').forEach(img => {
-            if (!img.hasAttribute('loading')) {
-                img.setAttribute('loading', 'lazy');
-            }
-        });
-    },
-    
-    // Optimize animations
-    optimizeAnimations() {
-        if (Portfolio.config.reducedMotion || Portfolio.config.isMobile) {
-            // Disable complex animations on mobile or reduced motion
-            document.documentElement.classList.add('optimized-animations');
-        }
-        
-        // Throttle scroll animations
-        window.addEventListener('scroll', Portfolio.utils.throttle(() => {
-            Portfolio.performance.updateScrollAnimations();
-        }, Portfolio.constants.THROTTLE_DELAY));
-    },
-    
-    // Update scroll-based animations
-    updateScrollAnimations() {
-        if (Portfolio.config.reducedMotion) return;
-        
-        Portfolio.utils.$$('[data-animate-on-scroll]').forEach(element => {
-            if (Portfolio.utils.isInViewport(element, 100)) {
-                const animationClass = element.dataset.animateOnScroll;
-                element.classList.add(animationClass);
-            }
-        });
-    },
-    
-    // Setup service worker for offline support
-    async setupServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            try {
-                const registration = await navigator.serviceWorker.register('/service-worker.js', {
-                    scope: '/'
-                });
-                
-                console.log('ServiceWorker registration successful with scope:', registration.scope);
-                
-                // Check for updates
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            Portfolio.utils.showNotification('تحديث جديد متاح!', 'info');
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error('ServiceWorker registration failed:', error);
-            }
-        }
-    },
-    
-    // Preload critical assets
-    preloadAssets() {
-        const criticalAssets = [
-            { href: 'https://fonts.googleapis.com/css2?family=Cairo:wght@200..900&display=swap', type: 'style' },
-            { href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', type: 'style' }
-        ];
-        
-        criticalAssets.forEach(asset => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.href = asset.href;
-            link.as = asset.type === 'style' ? 'style' : 'script';
-            link.crossOrigin = 'anonymous';
-            document.head.appendChild(link);
-        });
-    },
-    
-    // Defer non-critical JavaScript
-    deferScripts() {
-        const scripts = Portfolio.utils.$$('script[src]');
-        scripts.forEach(script => {
-            if (!script.hasAttribute('async') && !script.hasAttribute('defer')) {
-                script.setAttribute('defer', '');
-            }
-        });
+class Preloader {
+    constructor() {
+        this.preloader = Utils.$('#preloader');
+        this.preloaderBar = Utils.$('#preloaderBar');
+        this.preloaderPercentage = Utils.$('#preloaderPercentage');
+        this.floatingElements = Utils.$('#floatingElements');
     }
-};
-
-// ==========================================================================
-// Preloader Functions
-// ==========================================================================
-
-Portfolio.preloader = {
-    // Initialize preloader
+    
     init() {
-        this.createPreloader();
+        this.createFloatingElements();
         this.animatePreloader();
-        this.loadCriticalAssets();
-    },
+    }
     
-    // Create preloader elements
-    createPreloader() {
-        const preloader = Portfolio.utils.$('#preloader');
-        if (!preloader) return;
+    createFloatingElements() {
+        if (!this.floatingElements) return;
         
-        // Create floating elements
-        const floatingElements = Portfolio.utils.$('#floatingElements');
-        if (floatingElements) {
-            for (let i = 0; i < 15; i++) {
-                const element = Portfolio.utils.createElement('div', {
-                    className: 'floating-element'
-                });
-                
-                // Random size and position
-                const size = Math.random() * 60 + 20;
-                element.style.width = `${size}px`;
-                element.style.height = `${size}px`;
-                element.style.top = `${Math.random() * 100}%`;
-                element.style.left = `${Math.random() * 100}%`;
-                element.style.animationDelay = `${Math.random() * 10}s`;
-                element.style.animationDuration = `${Math.random() * 20 + 15}s`;
-                
-                floatingElements.appendChild(element);
-            }
+        for (let i = 0; i < 15; i++) {
+            const element = document.createElement('div');
+            element.className = 'floating-element';
+            
+            // أحجام وألوان عشوائية
+            const size = Math.random() * 60 + 20;
+            const color = this.getRandomColor();
+            
+            element.style.width = `${size}px`;
+            element.style.height = `${size}px`;
+            element.style.background = color;
+            element.style.top = `${Math.random() * 100}%`;
+            element.style.left = `${Math.random() * 100}%`;
+            element.style.animationDelay = `${Math.random() * 10}s`;
+            element.style.animationDuration = `${Math.random() * 20 + 15}s`;
+            
+            this.floatingElements.appendChild(element);
         }
-    },
+    }
     
-    // Animate preloader
+    getRandomColor() {
+        const colors = [
+            'linear-gradient(45deg, rgba(106, 17, 203, 0.3), rgba(37, 117, 252, 0.3))',
+            'linear-gradient(45deg, rgba(255, 0, 128, 0.3), rgba(255, 140, 0, 0.3))',
+            'linear-gradient(45deg, rgba(56, 239, 125, 0.3), rgba(247, 151, 30, 0.3))'
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
     animatePreloader() {
-        const preloader = Portfolio.utils.$('#preloader');
-        const preloaderBar = Portfolio.utils.$('#preloaderBar');
-        const preloaderPercentage = Portfolio.utils.$('#preloaderPercentage');
-        
-        if (!preloader || !preloaderBar) return;
+        if (!this.preloader || !this.preloaderBar) return;
         
         let progress = 0;
         const targetProgress = 100;
-        const animationDuration = 1500; // Faster loading
+        const animationDuration = 2000;
         const startTime = performance.now();
         
         const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
             progress = Math.min((elapsed / animationDuration) * targetProgress, targetProgress);
             
-            preloaderBar.style.width = `${progress}%`;
-            if (preloaderPercentage) {
-                preloaderPercentage.textContent = `${Math.round(progress)}%`;
+            this.preloaderBar.style.width = `${progress}%`;
+            if (this.preloaderPercentage) {
+                this.preloaderPercentage.textContent = `${Math.round(progress)}%`;
             }
             
             if (progress < targetProgress) {
@@ -769,245 +235,298 @@ Portfolio.preloader = {
         };
         
         requestAnimationFrame(animate);
-    },
+    }
     
-    // Load critical assets first
-    loadCriticalAssets() {
-        // Preload critical CSS
-        Portfolio.performance.preloadAssets();
-        
-        // Load fonts
-        this.loadFonts();
-    },
-    
-    // Load fonts
-    loadFonts() {
-        if ('fonts' in document) {
-            const fontFamilies = [
-                'Cairo:200,300,400,500,600,700,800,900',
-                'Poppins:100,200,300,400,500,600,700,800,900',
-                'Tajawal:200,300,400,500,700,800,900'
-            ];
-            
-            fontFamilies.forEach(font => {
-                document.fonts.load(`16px ${font}`);
-            });
-        }
-    },
-    
-    // Hide preloader
     hidePreloader() {
-        const preloader = Portfolio.utils.$('#preloader');
-        if (!preloader) return;
+        if (!this.preloader) return;
         
-        // Add fade out class
-        preloader.classList.add('fade-out');
+        // تأثير الاختفاء
+        this.preloader.style.opacity = '0';
+        this.preloader.style.visibility = 'hidden';
         
-        // Remove from DOM after animation
         setTimeout(() => {
-            preloader.style.display = 'none';
-            
-            // Initialize main features
-            Portfolio.main.init();
-            
-            // Show notification
-            Portfolio.utils.showNotification('مرحباً بك في موقعي!', 'success', 2000);
+            this.preloader.style.display = 'none';
+            this.onPreloaderHidden();
         }, 500);
     }
-};
+    
+    onPreloaderHidden() {
+        // تهيئة التطبيق بعد إخفاء الشاشة الأولية
+        App.init();
+    }
+}
 
 // ==========================================================================
-// Language & Theme Management
+// تأثيرات الاسم المتحرك
 // ==========================================================================
 
-Portfolio.language = {
-    // Initialize language settings (اللغة العربية فقط)
+class NameAnimation {
+    constructor() {
+        this.logoName = Utils.$('#logoName');
+        this.typedName = Utils.$('#typedName');
+        this.typedElement = Utils.$('#typed');
+    }
+    
     init() {
-        this.applyLanguageSettings();
-    },
+        this.animateLogoName();
+        this.animateTypedName();
+        this.setupTypedText();
+    }
     
-    // Apply language settings
-    applyLanguageSettings() {
-        document.documentElement.lang = 'ar';
-        document.documentElement.dir = 'rtl';
-        document.body.classList.add('ar');
-        document.body.classList.remove('en');
+    animateLogoName() {
+        if (!this.logoName) return;
         
-        // تحديث جميع النصوص باللغة العربية فقط
-        this.updatePageLanguage();
-    },
-    
-    // Update all text on page (باللغة العربية فقط)
-    updatePageLanguage() {
-        const texts = Portfolio.translations.ar;
+        // تأثير التوهج للاسم في الشريط العلوي
+        setInterval(() => {
+            Utils.addClass(this.logoName, 'glowing');
+            setTimeout(() => {
+                Utils.removeClass(this.logoName, 'glowing');
+            }, 1000);
+        }, 3000);
         
-        // Update elements with data-lang attribute
-        Portfolio.utils.$$('[data-lang]').forEach(element => {
-            const key = element.dataset.lang;
-            if (texts[key]) {
-                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    element.placeholder = texts[key];
-                } else if (element.tagName === 'OPTION') {
-                    element.textContent = texts[key];
-                } else {
-                    element.textContent = texts[key];
-                }
+        // تأثير التموج عند التمرير
+        Utils.on(window, 'scroll', Utils.debounce(() => {
+            if (window.scrollY > 100) {
+                Utils.addClass(this.logoName, 'pulse');
+                setTimeout(() => {
+                    Utils.removeClass(this.logoName, 'pulse');
+                }, 300);
             }
+        }));
+    }
+    
+    animateTypedName() {
+        if (!this.typedName) return;
+        
+        // تأثير النيون للاسم في القسم الرئيسي
+        const colors = ['#6a11cb', '#2575fc', '#ff0080', '#ff8c00', '#11998e'];
+        let currentColor = 0;
+        
+        // تغيير لون الاسم
+        setInterval(() => {
+            this.typedName.style.color = colors[currentColor];
+            this.typedName.style.textShadow = `0 0 10px ${colors[currentColor]}, 0 0 20px ${colors[currentColor]}, 0 0 30px ${colors[currentColor]}`;
+            
+            currentColor = (currentColor + 1) % colors.length;
+        }, 2000);
+        
+        // تأثير الطفو
+        let floatDirection = 1;
+        let floatAmount = 0;
+        
+        const floatAnimation = () => {
+            floatAmount += 0.1 * floatDirection;
+            
+            if (Math.abs(floatAmount) > 5) {
+                floatDirection *= -1;
+            }
+            
+            this.typedName.style.transform = `translateY(${floatAmount}px)`;
+            requestAnimationFrame(floatAnimation);
+        };
+        
+        floatAnimation();
+        
+        // تأثير الاهتزاز عند المرور بالفأرة
+        Utils.on(this.typedName, 'mouseenter', () => {
+            this.typedName.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                this.typedName.style.animation = '';
+            }, 500);
         });
+    }
+    
+    setupTypedText() {
+        if (!this.typedElement || typeof Typed === 'undefined') return;
         
-        // Update typed.js if exists
-        if (Portfolio.typed) {
-            Portfolio.typed.updateStrings(texts.typedStrings);
-        }
+        const strings = [
+            'محلل ومبرمج نظم',
+            'مطور تطبيقات ويب',
+            'خبير قواعد بيانات',
+            'مصمم واجهات مستخدم',
+            'متخصص في الأرشفة الرقمية',
+            'حاصل على بكالوريوس علوم الحاسوب',
+            'خبرة 5+ سنوات في البرمجة',
+            'مطور حلول رقمية متكاملة'
+        ];
         
-        // Update logo
-        const logoName = Portfolio.utils.$('#logoName');
-        if (logoName) {
-            logoName.textContent = 'غمدان معوضة';
-        }
-        
-        // Update hero name
-        const typedName = Portfolio.utils.$('#typedName');
-        if (typedName) {
-            typedName.textContent = 'غمدان معوضة';
-        }
-        
-        // Update skills chart if exists
-        if (Portfolio.skillsChart) {
-            Portfolio.skillsChart.updateLanguage();
+        try {
+            new Typed('#typed', {
+                strings: strings,
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 1500,
+                startDelay: 500,
+                loop: true,
+                showCursor: true,
+                cursorChar: '|',
+                contentType: 'html',
+                onStringTyped: (arrayPos, self) => {
+                    // تأثير عند اكتمال كتابة كل سطر
+                    this.typedElement.style.textShadow = '0 0 10px rgba(106, 17, 203, 0.5)';
+                    setTimeout(() => {
+                        this.typedElement.style.textShadow = '';
+                    }, 500);
+                }
+            });
+        } catch (error) {
+            console.error('حدث خطأ في تهيئة Typed.js:', error);
         }
     }
-};
+}
 
-Portfolio.theme = {
-    // Initialize theme switcher
-    init() {
-        this.loadSavedTheme();
-        this.setupThemeSwitcher();
-        this.applyTheme();
-    },
+// ==========================================================================
+// إدارة الثيم (الوضع المظلم/الفاتح)
+// ==========================================================================
+
+class ThemeManager {
+    constructor() {
+        this.themeToggle = Utils.$('#themeToggle');
+        this.body = document.body;
+    }
     
-    // Load saved theme from localStorage
-    loadSavedTheme() {
+    init() {
+        this.loadTheme();
+        this.setupThemeToggle();
+        this.applyTheme();
+    }
+    
+    loadTheme() {
         const savedTheme = localStorage.getItem('portfolio-theme') || 'light';
         Portfolio.config.isDarkMode = savedTheme === 'dark';
-    },
+    }
     
-    // Setup theme switcher UI
-    setupThemeSwitcher() {
-        const themeToggle = Portfolio.utils.$('#themeToggle');
-        if (!themeToggle) return;
+    setupThemeToggle() {
+        if (!this.themeToggle) return;
         
-        // Set initial state
-        themeToggle.checked = Portfolio.config.isDarkMode;
+        // تعيين الحالة الأولية
+        this.themeToggle.checked = Portfolio.config.isDarkMode;
         
-        // Toggle theme
-        Portfolio.utils.addEvent(themeToggle, 'change', () => {
-            Portfolio.config.isDarkMode = themeToggle.checked;
-            localStorage.setItem('portfolio-theme', Portfolio.config.isDarkMode ? 'dark' : 'light');
+        // تغيير الثيم
+        Utils.on(this.themeToggle, 'change', () => {
+            Portfolio.config.isDarkMode = this.themeToggle.checked;
+            this.saveTheme();
             this.applyTheme();
             
-            // Show notification
-            Portfolio.utils.showNotification(
-                `تم التغيير إلى الوضع ${Portfolio.config.isDarkMode ? 'المظلم' : 'الفاتح'}`,
-                'success'
-            );
+            // إظهار إشعار
+            this.showThemeNotification();
         });
-    },
+    }
     
-    // Apply theme to document
+    saveTheme() {
+        localStorage.setItem('portfolio-theme', Portfolio.config.isDarkMode ? 'dark' : 'light');
+    }
+    
     applyTheme() {
         if (Portfolio.config.isDarkMode) {
-            document.body.setAttribute('data-theme', 'dark');
-            document.documentElement.style.setProperty('color-scheme', 'dark');
+            Utils.addClass(this.body, 'dark-mode');
+            this.body.setAttribute('data-theme', 'dark');
         } else {
-            document.body.removeAttribute('data-theme');
-            document.documentElement.style.setProperty('color-scheme', 'light');
+            Utils.removeClass(this.body, 'dark-mode');
+            this.body.removeAttribute('data-theme');
         }
         
-        // Update particle colors if enabled
-        if (Portfolio.particles && Portfolio.config.particlesEnabled) {
-            Portfolio.particles.updateColors();
-        }
-        
-        // Update chart colors if exists
-        if (Portfolio.skillsChart) {
-            Portfolio.skillsChart.updateTheme();
+        // تحديث ألوان الجسيمات
+        this.updateParticlesColors();
+    }
+    
+    updateParticlesColors() {
+        if (window.pJSDom && window.pJSDom.length > 0) {
+            const pJS = window.pJSDom[0].pJS;
+            if (pJS) {
+                pJS.particles.color.value = Portfolio.config.isDarkMode ? '#ffffff' : '#6a11cb';
+                pJS.particles.line_linked.color = Portfolio.config.isDarkMode ? '#ffffff' : '#2575fc';
+                pJS.fn.particlesRefresh();
+            }
         }
     }
-};
+    
+    showThemeNotification() {
+        // إنشاء إشعار مؤقت
+        const notification = document.createElement('div');
+        notification.className = 'theme-notification';
+        notification.innerHTML = `
+            <i class="fas fa-${Portfolio.config.isDarkMode ? 'moon' : 'sun'}"></i>
+            <span>تم التغيير إلى الوضع ${Portfolio.config.isDarkMode ? 'المظلم' : 'الفاتح'}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // إظهار الإشعار
+        setTimeout(() => {
+            Utils.addClass(notification, 'show');
+        }, 10);
+        
+        // إخفاء الإشعار تلقائياً
+        setTimeout(() => {
+            Utils.removeClass(notification, 'show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 2000);
+    }
+}
 
 // ==========================================================================
-// Navigation Management
+// التنقل والتمرير
 // ==========================================================================
 
-Portfolio.navigation = {
-    // Initialize navigation
+// ==========================================================================
+// NavigationManager - Simple & Effective
+// ==========================================================================
+
+class NavigationManager {
+    constructor() {
+        this.navbar = document.getElementById('mainNav');
+        this.navLinks = document.querySelectorAll('.nav-link');
+        this.navProgressBar = document.querySelector('.nav-progress-bar');
+        this.menuOverlay = null;
+        this.mobileCloseBtn = null;
+        this.lastScrollY = 0;
+    }
+    
     init() {
-        this.setupNavbar();
+        this.setupNavbarScroll();
         this.setupScrollSpy();
+        this.createMobileElements();
         this.setupMobileMenu();
         this.setupSmoothScroll();
-    },
+    }
     
-    // Setup navbar scroll effects
-    setupNavbar() {
-        const navbar = Portfolio.utils.$('#mainNav');
-        const navProgressBar = Portfolio.utils.$('.nav-progress-bar');
+    setupNavbarScroll() {
+        if (!this.navbar) return;
         
-        if (!navbar || !navProgressBar) return;
-        
-        const updateNavbar = Portfolio.utils.throttle(() => {
-            // Update scroll state
-            Portfolio.state.scrollDirection = window.scrollY > Portfolio.state.lastScrollY ? 'down' : 'up';
-            Portfolio.state.lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
             
-            // Add/remove scrolled class
-            if (window.scrollY > Portfolio.constants.SCROLL_THRESHOLD) {
-                navbar.classList.add('scrolled');
-                
-                // Hide navbar on scroll down (mobile only)
-                if (Portfolio.config.isMobile && Portfolio.state.scrollDirection === 'down') {
-                    navbar.style.transform = 'translateY(-100%)';
-                } else {
-                    navbar.style.transform = 'translateY(0)';
-                }
+            if (currentScrollY > 100) {
+                this.navbar.classList.add('scrolled');
             } else {
-                navbar.classList.remove('scrolled');
-                navbar.style.transform = 'translateY(0)';
+                this.navbar.classList.remove('scrolled');
             }
             
-            // Update progress bar
-            const windowHeight = window.innerHeight;
-            const documentHeight = document.documentElement.scrollHeight - windowHeight;
-            const scrolled = (window.scrollY / documentHeight) * 100;
-            navProgressBar.style.width = `${scrolled}%`;
-        }, Portfolio.constants.THROTTLE_DELAY);
-        
-        window.addEventListener('scroll', updateNavbar);
-        updateNavbar(); // Initial call
-    },
+            if (this.navProgressBar) {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrolled = (currentScrollY / documentHeight) * 100;
+                this.navProgressBar.style.width = `${scrolled}%`;
+            }
+            
+            this.lastScrollY = currentScrollY;
+        });
+    }
     
-    // Setup scroll spy for active navigation
     setupScrollSpy() {
-        const sections = Portfolio.utils.$$('section[id]');
-        const navLinks = Portfolio.utils.$$('.nav-link');
-        
-        if (sections.length === 0 || navLinks.length === 0) return;
+        const sections = document.querySelectorAll('section[id]');
+        if (!sections.length) return;
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    Portfolio.config.currentSection = id;
-                    
-                    // Update active nav link
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('active');
-                        }
-                    });
+                    const sectionId = entry.target.id;
+                    this.setActiveNavLink(sectionId);
                 }
             });
         }, {
@@ -1016,66 +535,95 @@ Portfolio.navigation = {
         });
         
         sections.forEach(section => observer.observe(section));
-    },
+    }
     
-    // Setup mobile menu
+    setActiveNavLink(sectionId) {
+        this.navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${sectionId}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    createMobileElements() {
+        // زر إغلاق القائمة
+        this.mobileCloseBtn = document.createElement('button');
+        this.mobileCloseBtn.className = 'mobile-close-btn';
+        this.mobileCloseBtn.innerHTML = '✕';
+        this.mobileCloseBtn.setAttribute('aria-label', 'إغلاق القائمة');
+        
+        // طبقة الغطاء
+        this.menuOverlay = document.createElement('div');
+        this.menuOverlay.className = 'mobile-menu-overlay';
+        
+        // إضافة العناصر للصفحة
+        document.body.appendChild(this.menuOverlay);
+        const navbarContent = document.getElementById('navbarContent');
+        if (navbarContent) {
+            navbarContent.appendChild(this.mobileCloseBtn);
+        }
+    }
+    
     setupMobileMenu() {
-        const navbarToggler = Portfolio.utils.$('.navbar-toggler');
-        const navbarContent = Portfolio.utils.$('#navbarContent');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        if (!navbarToggler) return;
         
-        if (!navbarToggler || !navbarContent) return;
-        
-        Portfolio.utils.addEvent(navbarToggler, 'click', () => {
-            const isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
-            navbarToggler.setAttribute('aria-expanded', !isExpanded);
-            navbarContent.classList.toggle('show');
-            
-            // Prevent body scroll when menu is open
-            document.body.style.overflow = isExpanded ? '' : 'hidden';
+        // فتح/إغلاق القائمة
+        navbarToggler.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMobileMenu();
         });
         
-        // Close menu when clicking on a link
-        Portfolio.utils.$$('#navbarContent .nav-link').forEach(link => {
-            Portfolio.utils.addEvent(link, 'click', () => {
-                navbarToggler.setAttribute('aria-expanded', 'false');
-                navbarContent.classList.remove('show');
-                document.body.style.overflow = '';
+        // زر الإغلاق
+        if (this.mobileCloseBtn) {
+            this.mobileCloseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.closeMobileMenu();
+            });
+        }
+        
+        // الغطاء
+        if (this.menuOverlay) {
+            this.menuOverlay.addEventListener('click', () => {
+                this.closeMobileMenu();
+            });
+        }
+        
+        // إغلاق القائمة عند النقر على رابط
+        const navLinks = document.querySelectorAll('#navbarContent .nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                setTimeout(() => {
+                    this.closeMobileMenu();
+                }, 300);
             });
         });
         
-        // Close menu when clicking outside
-        Portfolio.utils.addEvent(document, 'click', (e) => {
-            if (!e.target.closest('.navbar') && navbarContent.classList.contains('show')) {
-                navbarToggler.setAttribute('aria-expanded', 'false');
-                navbarContent.classList.remove('show');
-                document.body.style.overflow = '';
+        // إغلاق بمفتاح Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isMenuOpen()) {
+                this.closeMobileMenu();
             }
         });
-    },
+    }
     
-    // Setup smooth scrolling
     setupSmoothScroll() {
-        Portfolio.utils.$$('a[href^="#"]').forEach(anchor => {
-            Portfolio.utils.addEvent(anchor, 'click', function(e) {
+        // روابط التنقل الداخلية
+        const navLinks = document.querySelectorAll('a[href^="#"]');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
                 
-                const targetId = this.getAttribute('href');
+                const targetId = link.getAttribute('href');
                 if (targetId === '#') return;
                 
-                const targetElement = Portfolio.utils.$(targetId);
+                const targetElement = document.querySelector(targetId);
                 if (!targetElement) return;
                 
-                // Close mobile menu if open
-                const navbarContent = Portfolio.utils.$('#navbarContent');
-                if (navbarContent && navbarContent.classList.contains('show')) {
-                    const navbarToggler = Portfolio.utils.$('.navbar-toggler');
-                    navbarToggler.setAttribute('aria-expanded', 'false');
-                    navbarContent.classList.remove('show');
-                    document.body.style.overflow = '';
-                }
-                
-                // Scroll to target
-                const navbarHeight = Portfolio.utils.$('#mainNav').offsetHeight || 80;
+                // التمرير السلس
+                const navbarHeight = this.navbar ? this.navbar.offsetHeight : 0;
                 const targetPosition = targetElement.offsetTop - navbarHeight;
                 
                 window.scrollTo({
@@ -1083,71 +631,120 @@ Portfolio.navigation = {
                     behavior: 'smooth'
                 });
                 
-                // Update URL without page reload
-                history.pushState(null, null, targetId);
+                // تحديث الرابط
+                history.pushState(null, '', targetId);
+                
+                // تحديث الرابط النشط
+                this.setActiveNavLink(targetId.substring(1));
             });
         });
+        
+        // روابط الأقسام الأخرى
+        const sectionLinks = document.querySelectorAll('a[href*="#"]:not([href="#"])');
+        sectionLinks.forEach(link => {
+            if (link.getAttribute('href').startsWith('#')) {
+                link.addEventListener('click', (e) => {
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        e.preventDefault();
+                        
+                        const navbarHeight = this.navbar ? this.navbar.offsetHeight : 0;
+                        const targetPosition = targetElement.offsetTop - navbarHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        history.pushState(null, '', targetId);
+                        this.setActiveNavLink(targetId.substring(1));
+                    }
+                });
+            }
+        });
     }
-};
-
-// ==========================================================================
-// Hero Section
-// ==========================================================================
-
-Portfolio.hero = {
-    // Initialize hero section
-    init() {
-        this.setupTypedJS();
-        this.setupParticles();
-        this.setupTechBadges();
-        this.setupIntroButton();
-        this.setupSocialIcons();
-    },
     
-    // Setup typed.js animation
-    setupTypedJS() {
-        const typedElement = Portfolio.utils.$('#typed');
-        if (!typedElement || typeof Typed === 'undefined') return;
+    toggleMobileMenu() {
+        const navbarContent = document.getElementById('navbarContent');
+        if (!navbarContent) return;
         
-        const strings = Portfolio.translations.ar.typedStrings;
-        
-        try {
-            Portfolio.typed = new Typed('#typed', {
-                strings: strings,
-                typeSpeed: 40,
-                backSpeed: 25,
-                backDelay: 1200,
-                startDelay: 300,
-                loop: true,
-                showCursor: true,
-                cursorChar: '|',
-                smartBackspace: true,
-                contentType: 'html'
-            });
-            
-            // Add method to update strings
-            Portfolio.typed.updateStrings = function(newStrings) {
-                this.strings = newStrings;
-                this.reset();
-            };
-        } catch (error) {
-            console.error('Typed.js initialization error:', error);
-            typedElement.textContent = strings[0];
+        if (navbarContent.classList.contains('show')) {
+            this.closeMobileMenu();
+        } else {
+            this.openMobileMenu();
         }
-    },
+    }
     
-    // Setup particles.js
+    openMobileMenu() {
+        const navbarContent = document.getElementById('navbarContent');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        
+        if (!navbarContent || !navbarToggler) return;
+        
+        navbarContent.classList.add('show');
+        navbarToggler.setAttribute('aria-expanded', 'true');
+        
+        if (this.menuOverlay) {
+            this.menuOverlay.classList.add('show');
+        }
+        
+        document.body.classList.add('menu-open');
+    }
+    
+    closeMobileMenu() {
+        const navbarContent = document.getElementById('navbarContent');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        
+        if (!navbarContent || !navbarToggler) return;
+        
+        navbarContent.classList.remove('show');
+        navbarToggler.setAttribute('aria-expanded', 'false');
+        
+        if (this.menuOverlay) {
+            this.menuOverlay.classList.remove('show');
+        }
+        
+        document.body.classList.remove('menu-open');
+    }
+    
+    isMenuOpen() {
+        const navbarContent = document.getElementById('navbarContent');
+        return navbarContent && navbarContent.classList.contains('show');
+    }
+}
+
+// ==========================================================================
+// القسم الرئيسي (Hero Section)
+// ==========================================================================
+
+class HeroSection {
+    constructor() {
+        this.heroSection = Utils.$('#home');
+        this.techBadges = Utils.$$('.tech-badge');
+        this.particlesContainer = Utils.$('#particles-js');
+        this.socialIcons = Utils.$$('.social-icon');
+        this.playIntroButton = Utils.$('#playIntro');
+    }
+    
+    init() {
+        this.setupParticles();
+        this.animateTechBadges();
+        this.setupSocialIcons();
+        this.setupIntroButton();
+        this.setupScrollIndicator();
+    }
+    
     setupParticles() {
-        const particlesContainer = Portfolio.utils.$('#particles-js');
-        if (!particlesContainer || typeof particlesJS === 'undefined') {
+        if (!this.particlesContainer || typeof particlesJS === 'undefined') {
             Portfolio.config.particlesEnabled = false;
             return;
         }
         
-        // Check if we should enable particles
-        if (Portfolio.config.isMobile || Portfolio.config.reducedMotion) {
+        if (Portfolio.config.isMobile) {
             Portfolio.config.particlesEnabled = false;
-            particlesContainer.style.display = 'none';
+            this.particlesContainer.style.display = 'none';
             return;
         }
         
@@ -1155,10 +752,10 @@ Portfolio.hero = {
             particlesJS('particles-js', {
                 particles: {
                     number: {
-                        value: 60,
+                        value: 70,
                         density: {
                             enable: true,
-                            value_area: 600
+                            value_area: 800
                         }
                     },
                     color: {
@@ -1172,35 +769,35 @@ Portfolio.hero = {
                         }
                     },
                     opacity: {
-                        value: 0.4,
+                        value: 0.5,
                         random: true,
                         anim: {
                             enable: true,
-                            speed: 0.8,
+                            speed: 1,
                             opacity_min: 0.1,
                             sync: false
                         }
                     },
                     size: {
-                        value: 2.5,
+                        value: 3,
                         random: true,
                         anim: {
                             enable: true,
-                            speed: 1.5,
-                            size_min: 0.1,
+                            speed: 2,
+                            size_min: 0.5,
                             sync: false
                         }
                     },
                     line_linked: {
                         enable: true,
-                        distance: 120,
+                        distance: 150,
                         color: Portfolio.config.isDarkMode ? '#ffffff' : '#2575fc',
-                        opacity: 0.3,
-                        width: 1
+                        opacity: 0.4,
+                        width: 1.5
                     },
                     move: {
                         enable: true,
-                        speed: 1.5,
+                        speed: 2,
                         direction: 'none',
                         random: true,
                         straight: false,
@@ -1228,24 +825,24 @@ Portfolio.hero = {
                     },
                     modes: {
                         grab: {
-                            distance: 120,
+                            distance: 140,
                             line_linked: {
-                                opacity: 0.8
+                                opacity: 1
                             }
                         },
                         bubble: {
-                            distance: 300,
-                            size: 30,
-                            duration: 1.5,
-                            opacity: 6,
-                            speed: 2
+                            distance: 400,
+                            size: 40,
+                            duration: 2,
+                            opacity: 8,
+                            speed: 3
                         },
                         repulse: {
-                            distance: 150,
-                            duration: 0.3
+                            distance: 200,
+                            duration: 0.4
                         },
                         push: {
-                            particles_nb: 3
+                            particles_nb: 4
                         },
                         remove: {
                             particles_nb: 2
@@ -1256,199 +853,341 @@ Portfolio.hero = {
             });
             
             Portfolio.config.particlesEnabled = true;
-            
-            // Add method to update colors
-            Portfolio.particles = {
-                updateColors: function() {
-                    if (window.pJSDom && window.pJSDom.length > 0) {
-                        const pJS = window.pJSDom[0].pJS;
-                        pJS.particles.color.value = Portfolio.config.isDarkMode ? '#ffffff' : '#6a11cb';
-                        pJS.particles.line_linked.color = Portfolio.config.isDarkMode ? '#ffffff' : '#2575fc';
-                        pJS.fn.particlesRefresh();
-                    }
-                }
-            };
         } catch (error) {
-            console.error('Particles.js initialization error:', error);
+            console.error('حدث خطأ في تهيئة الجسيمات:', error);
             Portfolio.config.particlesEnabled = false;
-            particlesContainer.style.display = 'none';
         }
-    },
+    }
     
-    // Setup tech badges animation
-    setupTechBadges() {
-        const techBadges = Portfolio.utils.$$('.tech-badge');
-        techBadges.forEach((badge, index) => {
-            // Add animation delay
-            badge.style.animationDelay = `${index * 0.3}s`;
+    animateTechBadges() {
+        this.techBadges.forEach((badge, index) => {
+            // تأخير الحركة لكل شارة
+            badge.style.animationDelay = `${index * 0.2}s`;
             
-            // Add hover effect
-            Portfolio.utils.addEvent(badge, 'mouseenter', () => {
-                badge.style.transform = 'translateY(-10px) scale(1.1)';
-                badge.style.boxShadow = '0 15px 30px rgba(106, 17, 203, 0.4)';
+            // تأثير عند المرور بالفأرة
+            Utils.on(badge, 'mouseenter', () => {
+                badge.style.transform = 'translateY(-15px) scale(1.2) rotate(5deg)';
+                badge.style.boxShadow = '0 20px 40px rgba(106, 17, 203, 0.5)';
+                badge.style.zIndex = '1000';
             });
             
-            Portfolio.utils.addEvent(badge, 'mouseleave', () => {
+            Utils.on(badge, 'mouseleave', () => {
                 badge.style.transform = '';
                 badge.style.boxShadow = '';
+                badge.style.zIndex = '';
+            });
+            
+            // تأثير النقر
+            Utils.on(badge, 'click', (e) => {
+                e.preventDefault();
+                this.animateBadgeClick(badge);
             });
         });
-    },
+    }
     
-    // Setup intro button
-    setupIntroButton() {
-        const introBtn = Portfolio.utils.$('#playIntro');
-        if (!introBtn) return;
+    animateBadgeClick(badge) {
+        // تأثير اهتزاز
+        badge.style.animation = 'shake 0.5s ease-in-out';
         
-        Portfolio.utils.addEvent(introBtn, 'click', () => {
-            this.showIntroModal();
-        });
-    },
-    
-    // Show intro modal
-    showIntroModal() {
-        if (Portfolio.state.activeModal) return;
+        // تأثير التوهج
+        const originalBoxShadow = badge.style.boxShadow;
+        badge.style.boxShadow = '0 0 30px rgba(106, 17, 203, 0.8)';
         
-        const modal = Portfolio.utils.createElement('div', {
-            className: 'modal-overlay',
-            id: 'introModal'
-        }, [
-            Portfolio.utils.createElement('div', {
-                className: 'modal-content'
-            }, [
-                // Header
-                Portfolio.utils.createElement('div', {
-                    className: 'modal-header'
-                }, [
-                    Portfolio.utils.createElement('h3', {
-                        textContent: 'مقدمة عن غمدان عبده'
-                    }),
-                    Portfolio.utils.createElement('button', {
-                        className: 'modal-close',
-                        innerHTML: '&times;'
-                    })
-                ]),
-                
-                // Body
-                Portfolio.utils.createElement('div', {
-                    className: 'modal-body'
-                }, [
-                    Portfolio.utils.createElement('div', {
-                        className: 'intro-video'
-                    }, [
-                        Portfolio.utils.createElement('div', {
-                            className: 'video-placeholder'
-                        }, [
-                            Portfolio.utils.createElement('i', {
-                                className: 'fas fa-play-circle'
-                            }),
-                            Portfolio.utils.createElement('p', {
-                                textContent: 'فيديو تعريفي قريباً'
-                            })
-                        ])
-                    ]),
-                    
-                    Portfolio.utils.createElement('div', {
-                        className: 'intro-text'
-                    }, [
-                        Portfolio.utils.createElement('p', {
-                            textContent: 'غمدان عبده هو مبرمج ومحلل نظم يمني متخصص في تطوير الحلول الرقمية والأنظمة الإدارية. يتمتع بخبرة تزيد عن 5 سنوات في مجال البرمجة وتحليل النظم.'
-                        })
-                    ])
-                ])
-            ])
-        ]);
-        
-        document.body.appendChild(modal);
-        Portfolio.state.activeModal = modal;
-        
-        // Add animations
         setTimeout(() => {
-            modal.classList.add('show');
+            badge.style.animation = '';
+            badge.style.boxShadow = originalBoxShadow;
+        }, 500);
+        
+        // إظهار رسالة
+        const techName = badge.querySelector('span')?.textContent || 'التقنية';
+        this.showTechMessage(techName);
+    }
+    
+    showTechMessage(techName) {
+        const message = document.createElement('div');
+        message.className = 'tech-message';
+        message.innerHTML = `
+            <i class="fas fa-code"></i>
+            <span>${techName} - إحدى تقنياتي المفضلة!</span>
+        `;
+        
+        document.body.appendChild(message);
+        
+        // إظهار الرسالة
+        setTimeout(() => {
+            Utils.addClass(message, 'show');
         }, 10);
         
-        // Close button
-        const closeBtn = Portfolio.utils.$('.modal-close', modal);
-        Portfolio.utils.addEvent(closeBtn, 'click', () => {
-            this.closeIntroModal();
-        });
-        
-        // Close on overlay click
-        Portfolio.utils.addEvent(modal, 'click', (e) => {
-            if (e.target === modal) {
-                this.closeIntroModal();
-            }
-        });
-        
-        // Close on Escape key
-        Portfolio.utils.addEvent(document, 'keydown', (e) => {
-            if (e.key === 'Escape' && Portfolio.state.activeModal) {
-                this.closeIntroModal();
-            }
-        });
-    },
+        // إخفاء الرسالة تلقائياً
+        setTimeout(() => {
+            Utils.removeClass(message, 'show');
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 300);
+        }, 2000);
+    }
     
-    // Close intro modal
-    closeIntroModal() {
-        const modal = Portfolio.state.activeModal;
-        if (!modal) return;
+    setupSocialIcons() {
+        this.socialIcons.forEach(icon => {
+            // تأثير الموجة عند المرور
+            Utils.on(icon, 'mouseenter', () => {
+                const wave = Utils.$('.icon-wave', icon);
+                if (wave) {
+                    wave.style.animation = 'waveEffect 0.6s ease-out';
+                    setTimeout(() => {
+                        wave.style.animation = '';
+                    }, 600);
+                }
+                
+                // تأثير الارتفاع
+                icon.style.transform = 'translateY(-8px) scale(1.2)';
+            });
+            
+            Utils.on(icon, 'mouseleave', () => {
+                icon.style.transform = '';
+            });
+            
+            // تأثير النقر
+            Utils.on(icon, 'click', (e) => {
+                e.preventDefault();
+                this.animateSocialClick(icon);
+            });
+        });
+    }
+    
+    animateSocialClick(icon) {
+        // تأثير النبض
+        icon.style.animation = 'pulse 0.5s ease-in-out';
         
-        modal.classList.remove('show');
+        // جسيمات صغيرة
+        this.createClickParticles(icon);
         
+        setTimeout(() => {
+            icon.style.animation = '';
+        }, 500);
+    }
+    
+    createClickParticles(element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'social-particle';
+            
+            // ألوان عشوائية
+            const colors = ['#6a11cb', '#2575fc', '#ff0080', '#ff8c00'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.background = color;
+            particle.style.left = `${centerX}px`;
+            particle.style.top = `${centerY}px`;
+            
+            document.body.appendChild(particle);
+            
+            // حركة عشوائية
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 50;
+            const targetX = centerX + Math.cos(angle) * distance;
+            const targetY = centerY + Math.sin(angle) * distance;
+            
+            // تحريك الجسيم
+            particle.animate([
+                {
+                    transform: 'translate(0, 0) scale(1)',
+                    opacity: 1
+                },
+                {
+                    transform: `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 800,
+                easing: 'ease-out'
+            });
+            
+            // إزالة الجسيم بعد الانتهاء
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 800);
+        }
+    }
+    
+    setupIntroButton() {
+        if (!this.playIntroButton) return;
+        
+        // تأثير النبض المستمر
+        setInterval(() => {
+            Utils.addClass(this.playIntroButton, 'pulsing');
+            setTimeout(() => {
+                Utils.removeClass(this.playIntroButton, 'pulsing');
+            }, 1000);
+        }, 3000);
+        
+        // تأثير النقر
+        Utils.on(this.playIntroButton, 'click', () => {
+            this.playIntroVideo();
+        });
+    }
+    
+    playIntroVideo() {
+        // في هذه الحالة، سنقوم بعرض رسالة بدلاً من الفيديو
+        const modal = this.createIntroModal();
+        document.body.appendChild(modal);
+        
+        // إظهار النافذة
+        setTimeout(() => {
+            Utils.addClass(modal, 'show');
+        }, 10);
+        
+        // إغلاق النافذة
+        const closeBtn = Utils.$('.modal-close', modal);
+        Utils.on(closeBtn, 'click', () => {
+            this.closeIntroModal(modal);
+        });
+        
+        // إغلاق عند النقر خارج النافذة
+        Utils.on(modal, 'click', (e) => {
+            if (e.target === modal) {
+                this.closeIntroModal(modal);
+            }
+        });
+        
+        // إغلاق بمفتاح Escape
+        Utils.on(document, 'keydown', (e) => {
+            if (e.key === 'Escape' && Utils.hasClass(modal, 'show')) {
+                this.closeIntroModal(modal);
+            }
+        });
+    }
+    
+    createIntroModal() {
+        const modal = document.createElement('div');
+        modal.className = 'intro-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-play-circle"></i> مقدمة عن غمدان عبده</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="video-placeholder">
+                        <i class="fas fa-video"></i>
+                        <p>فيديو تعريفي قريباً</p>
+                        <div class="loading-animation">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    <div class="intro-text">
+                        <p>مرحباً! أنا غمدان عبده، مبرمج ومحلل نظم متخصص في تطوير الحلول الرقمية.</p>
+                        <p>أمتلك خبرة واسعة في تصميم وتنفيذ الأنظمة الإدارية المتكاملة.</p>
+                        <div class="intro-stats">
+                            <div class="stat">
+                                <i class="fas fa-code"></i>
+                                <span>5+ سنوات خبرة</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-project-diagram"></i>
+                                <span>10+ مشروع مكتمل</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-users"></i>
+                                <span>عملاء راضون</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        return modal;
+    }
+    
+    closeIntroModal(modal) {
+        Utils.removeClass(modal, 'show');
         setTimeout(() => {
             if (modal.parentNode) {
                 modal.parentNode.removeChild(modal);
             }
-            Portfolio.state.activeModal = null;
         }, 300);
-    },
+    }
     
-    // Setup social icons
-    setupSocialIcons() {
-        const socialIcons = Portfolio.utils.$$('.social-icon');
-        socialIcons.forEach(icon => {
-            Portfolio.utils.addEvent(icon, 'mouseenter', () => {
-                const wave = Portfolio.utils.$('.icon-wave', icon);
-                if (wave) {
-                    wave.style.animation = 'waveEffect 0.5s ease-out';
-                    setTimeout(() => {
-                        wave.style.animation = '';
-                    }, 500);
-                }
+    setupScrollIndicator() {
+        const scrollIndicator = Utils.$('.scroll-indicator');
+        if (!scrollIndicator) return;
+        
+        // تأثير النبض
+        setInterval(() => {
+            Utils.addClass(scrollIndicator, 'pulse');
+            setTimeout(() => {
+                Utils.removeClass(scrollIndicator, 'pulse');
+            }, 1000);
+        }, 2000);
+        
+        // النقر للتمرير لأسفل
+        Utils.on(scrollIndicator, 'click', () => {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
             });
         });
     }
-};
+}
 
 // ==========================================================================
-// Skills Section
+// قسم المهارات
 // ==========================================================================
 
-Portfolio.skills = {
-    // Initialize skills section
+class SkillsSection {
+    constructor() {
+        this.skillItems = Utils.$$('.skill-item');
+        this.skillChartCanvas = Utils.$('#skillChart');
+        this.proSkillItems = Utils.$$('.pro-skill-item');
+    }
+    
     init() {
-        this.setupSkillBars();
+        this.setupSkillAnimations();
         this.setupSkillsChart();
         this.setupProfessionalSkills();
-    },
+    }
     
-    // Setup skill bars animation
-    setupSkillBars() {
-        const skillItems = Portfolio.utils.$$('.skill-item');
-        
+    setupSkillAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const skillItem = entry.target;
-                    const progressBar = Portfolio.utils.$('.progress-bar', skillItem);
-                    const percentText = Portfolio.utils.$('.skill-percent', skillItem);
+                    const progressBar = Utils.$('.progress-bar', skillItem);
+                    const percentText = Utils.$('.skill-percent', skillItem);
                     
                     if (progressBar && percentText) {
                         const percent = parseInt(percentText.textContent);
-                        progressBar.style.width = `${percent}%`;
-                        skillItem.classList.add('animated');
                         
-                        // Stop observing
+                        // تحريك شريط التقدم
+                        progressBar.style.transition = 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                        progressBar.style.width = `${percent}%`;
+                        
+                        // عد عكسي للنسبة
+                        this.animateCounter(percentText, 0, percent);
+                        
+                        // تأثير عند اكتمال التحميل
+                        setTimeout(() => {
+                            Utils.addClass(skillItem, 'animated');
+                            
+                            // تأثير التوهج
+                            progressBar.style.boxShadow = '0 0 15px rgba(106, 17, 203, 0.5)';
+                            setTimeout(() => {
+                                progressBar.style.boxShadow = '';
+                            }, 1000);
+                        }, 1500);
+                        
+                        // التوقف عن المراقبة
                         observer.unobserve(skillItem);
                     }
                 }
@@ -1458,18 +1197,34 @@ Portfolio.skills = {
             rootMargin: '0px 0px -100px 0px'
         });
         
-        skillItems.forEach(item => observer.observe(item));
-    },
+        this.skillItems.forEach(item => observer.observe(item));
+    }
     
-    // Setup skills chart
+    animateCounter(element, start, end, duration = 1500) {
+        let startTimestamp = null;
+        
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            
+            element.textContent = `${value}%`;
+            
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        };
+        
+        requestAnimationFrame(step);
+    }
+    
     setupSkillsChart() {
-        const chartCanvas = Portfolio.utils.$('#skillChart');
-        if (!chartCanvas || typeof Chart === 'undefined') return;
+        if (!this.skillChartCanvas || typeof Chart === 'undefined') return;
         
         try {
-            const ctx = chartCanvas.getContext('2d');
+            const ctx = this.skillChartCanvas.getContext('2d');
             
-            // Chart data
+            // بيانات الرسم البياني
             const data = {
                 labels: ['تطوير الويب', 'قواعد البيانات', 'البرمجة', 'الأدوات', 'المهارات الشخصية'],
                 datasets: [{
@@ -1489,15 +1244,22 @@ Portfolio.skills = {
                         'rgba(64, 224, 208, 1)'
                     ],
                     borderWidth: 2,
-                    hoverOffset: 15
+                    hoverOffset: 20,
+                    hoverBackgroundColor: [
+                        'rgba(106, 17, 203, 1)',
+                        'rgba(37, 117, 252, 1)',
+                        'rgba(255, 0, 128, 1)',
+                        'rgba(255, 140, 0, 1)',
+                        'rgba(64, 224, 208, 1)'
+                    ]
                 }]
             };
             
-            // Chart options
+            // خيارات الرسم البياني
             const options = {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '70%',
+                cutout: '75%',
                 plugins: {
                     legend: {
                         display: false
@@ -1507,583 +1269,959 @@ Portfolio.skills = {
                             label: function(context) {
                                 return `${context.label}: ${context.parsed}%`;
                             }
-                        }
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        cornerRadius: 8
                     }
                 },
                 animation: {
                     animateScale: true,
                     animateRotate: true,
-                    duration: 1500,
-                    easing: 'easeOutQuart'
+                    duration: 2000,
+                    easing: 'easeOutQuart',
+                    onComplete: () => {
+                        // تأثير عند اكتمال الرسم
+                        this.skillChartCanvas.style.boxShadow = '0 0 30px rgba(106, 17, 203, 0.3)';
+                        setTimeout(() => {
+                            this.skillChartCanvas.style.boxShadow = '';
+                        }, 1000);
+                    }
                 }
             };
             
-            // Create chart
-            Portfolio.skillsChart = new Chart(ctx, {
+            // إنشاء الرسم البياني
+            this.chart = new Chart(ctx, {
                 type: 'doughnut',
                 data: data,
                 options: options
             });
             
-            // Add custom methods
-            Portfolio.skillsChart.updateLanguage = function() {
-                // تثبيت التسميات بالعربية فقط
-                this.data.labels = ['تطوير الويب', 'قواعد البيانات', 'البرمجة', 'الأدوات', 'المهارات الشخصية'];
-                this.update();
-            };
-            
-            Portfolio.skillsChart.updateTheme = function() {
-                // Update chart colors based on theme if needed
-                this.update();
-            };
-        } catch (error) {
-            console.error('Chart.js initialization error:', error);
-        }
-    },
-    
-    // Setup professional skills
-    setupProfessionalSkills() {
-        const proSkills = Portfolio.utils.$$('.pro-skill-item');
-        proSkills.forEach(skill => {
-            Portfolio.utils.addEvent(skill, 'mouseenter', () => {
-                skill.style.transform = 'translateY(-8px) scale(1.05)';
+            // تأثير عند المرور على الرسم البياني
+            Utils.on(this.skillChartCanvas, 'mouseenter', () => {
+                this.chart.options.animation.duration = 1000;
+                this.chart.update();
             });
             
-            Portfolio.utils.addEvent(skill, 'mouseleave', () => {
+        } catch (error) {
+            console.error('حدث خطأ في تهيئة الرسم البياني:', error);
+        }
+    }
+    
+    setupProfessionalSkills() {
+        this.proSkillItems.forEach(skill => {
+            // تأثير عند المرور
+            Utils.on(skill, 'mouseenter', () => {
+                skill.style.transform = 'translateY(-10px) scale(1.1) rotate(2deg)';
+                skill.style.boxShadow = '0 20px 40px rgba(106, 17, 203, 0.3)';
+                
+                // تأثير على الأيقونة
+                const icon = Utils.$('.pro-skill-icon', skill);
+                if (icon) {
+                    icon.style.transform = 'rotate(15deg) scale(1.2)';
+                    icon.style.background = 'linear-gradient(45deg, #ff0080, #ff8c00)';
+                }
+            });
+            
+            Utils.on(skill, 'mouseleave', () => {
                 skill.style.transform = '';
+                skill.style.boxShadow = '';
+                
+                // إعادة الأيقونة
+                const icon = Utils.$('.pro-skill-icon', skill);
+                if (icon) {
+                    icon.style.transform = '';
+                    icon.style.background = '';
+                }
+            });
+            
+            // تأثير النقر
+            Utils.on(skill, 'click', () => {
+                this.animateSkillClick(skill);
             });
         });
     }
-};
+    
+    animateSkillClick(skill) {
+        // تأثير الاهتزاز
+        skill.style.animation = 'shake 0.5s ease-in-out';
+        
+        // جسيمات صغيرة
+        this.createSkillParticles(skill);
+        
+        // إظهار معلومات إضافية
+        const skillName = Utils.$('h5', skill)?.textContent;
+        if (skillName) {
+            this.showSkillDetails(skillName);
+        }
+        
+        setTimeout(() => {
+            skill.style.animation = '';
+        }, 500);
+    }
+    
+    createSkillParticles(element) {
+        const rect = element.getBoundingClientRect();
+        
+        for (let i = 0; i < 6; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'skill-particle';
+            
+            // لون عشوائي من التدرج اللوني
+            const colors = ['#6a11cb', '#2575fc', '#ff0080'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.background = color;
+            particle.style.left = `${rect.left + Math.random() * rect.width}px`;
+            particle.style.top = `${rect.top + Math.random() * rect.height}px`;
+            
+            document.body.appendChild(particle);
+            
+            // حركة الجسيم
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 40;
+            
+            particle.animate([
+                {
+                    transform: 'scale(1) rotate(0deg)',
+                    opacity: 1
+                },
+                {
+                    transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0) rotate(360deg)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 600,
+                easing: 'ease-out'
+            });
+            
+            // إزالة الجسيم
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 600);
+        }
+    }
+    
+    showSkillDetails(skillName) {
+        // في التطبيق الحقيقي، يمكن عرض معلومات إضافية عن المهارة
+        console.log(`مهارة مختارة: ${skillName}`);
+    }
+}
 
 // ==========================================================================
-// Projects Section
+// قسم المشاريع
 // ==========================================================================
 
-Portfolio.projects = {
-    // Initialize projects section
+class ProjectsSection {
+    constructor() {
+        this.projectFilter = Utils.$('#projectsTab');
+        this.projectCards = Utils.$$('.project-card-item');
+        this.viewMoreBtn = Utils.$('#viewMoreProjects');
+    }
+    
     init() {
         this.setupProjectFilter();
         this.setupProjectCards();
-        this.setupProjectModals();
-    },
+        this.setupViewMoreButton();
+    }
     
-    // Setup project filter
     setupProjectFilter() {
-        const filterButtons = Portfolio.utils.$$('#projectsTab .nav-link');
-        const projectItems = Portfolio.utils.$$('.project-card-item');
+        if (!this.projectFilter) return;
         
-        if (filterButtons.length === 0 || projectItems.length === 0) return;
+        const filterButtons = Utils.$$('#projectsTab .nav-link');
         
         filterButtons.forEach(button => {
-            Portfolio.utils.addEvent(button, 'click', function(e) {
+            Utils.on(button, 'click', function(e) {
                 e.preventDefault();
                 
-                // Update active button
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                // إزالة النشط من جميع الأزرار
+                filterButtons.forEach(btn => Utils.removeClass(btn, 'active'));
                 
-                // Get filter value
-                const filterValue = this.dataset.bsTarget.replace('#', '');
+                // إضافة النشط للزر المحدد
+                Utils.addClass(button, 'active');
                 
-                // Filter projects
-                projectItems.forEach(item => {
-                    if (filterValue === 'all-projects') {
-                        item.style.display = 'block';
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateY(20px)';
-                        setTimeout(() => {
-                            item.style.display = 'none';
-                        }, 300);
-                    }
-                });
-            });
+                // تأثير النقر
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
+                
+                // تصفية المشاريع
+                const filterValue = button.getAttribute('data-bs-target');
+                this.filterProjects(filterValue);
+            }.bind(this));
         });
-    },
+    }
     
-    // Setup project cards
+    filterProjects(filter) {
+        this.projectCards.forEach(card => {
+            const category = Utils.$('.project-category', card)?.textContent.toLowerCase() || '';
+            const filterType = filter.replace('#', '').replace('-projects', '');
+            
+            if (filter === '#all-projects' || 
+                (filterType === 'web' && category.includes('ويب')) ||
+                (filterType === 'system' && category.includes('نظام')) ||
+                (filterType === 'game' && category.includes('لعبة'))) {
+                
+                // إظهار مع تأثير
+                card.style.display = 'block';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+            } else {
+                // إخفاء مع تأثير
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px) scale(0.9)';
+                setTimeout(() => {
+                    card.style.display = 'none';
+                }, 300);
+            }
+        });
+    }
+    
     setupProjectCards() {
-        const projectCards = Portfolio.utils.$$('.project-card-item');
-        
-        projectCards.forEach(card => {
-            // Add hover effects
-            Portfolio.utils.addEvent(card, 'mouseenter', () => {
+        this.projectCards.forEach((card, index) => {
+            // تأخير الظهور الأولي
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            // تأثير عند المرور
+            Utils.on(card, 'mouseenter', () => {
                 if (!Portfolio.config.isTouchDevice) {
-                    card.style.transform = 'translateY(-10px)';
-                    card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.2)';
+                    card.style.transform = 'translateY(-15px) scale(1.02)';
+                    card.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.25)';
+                    
+                    // تأثير على الصورة
+                    const image = Utils.$('img', card);
+                    if (image) {
+                        image.style.transform = 'scale(1.1)';
+                    }
+                    
+                    // تأثير على الزر
+                    const overlay = Utils.$('.project-overlay', card);
+                    if (overlay) {
+                        overlay.style.opacity = '1';
+                        overlay.style.transform = 'translateY(0)';
+                    }
                 }
             });
             
-            Portfolio.utils.addEvent(card, 'mouseleave', () => {
+            Utils.on(card, 'mouseleave', () => {
                 if (!Portfolio.config.isTouchDevice) {
                     card.style.transform = '';
                     card.style.boxShadow = '';
+                    
+                    // إعادة الصورة
+                    const image = Utils.$('img', card);
+                    if (image) {
+                        image.style.transform = '';
+                    }
+                    
+                    // إعادة الزر
+                    const overlay = Utils.$('.project-overlay', card);
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        overlay.style.transform = 'translateY(20px)';
+                    }
                 }
             });
-        });
-    },
-    
-    // Setup project modals
-    setupProjectModals() {
-        const viewButtons = Portfolio.utils.$$('.btn-view');
-        
-        viewButtons.forEach(button => {
-            Portfolio.utils.addEvent(button, 'click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            
+            // تأثير النقر
+            Utils.on(card, 'click', (e) => {
+                if (!e.target.closest('.project-links')) {
+                    this.showProjectDetails(card);
+                }
+            });
+            
+            // تأثيرات الأزرار داخل البطاقة
+            const buttons = Utils.$$('.project-links a', card);
+            buttons.forEach(button => {
+                Utils.on(button, 'mouseenter', () => {
+                    button.style.transform = 'scale(1.2) rotate(5deg)';
+                });
                 
-                const projectCard = button.closest('.project-card-item');
-                const projectTitle = Portfolio.utils.$('h3', projectCard)?.textContent;
-                const projectDescription = Portfolio.utils.$('p', projectCard)?.textContent;
-                
-                this.showProjectModal(projectTitle, projectDescription);
+                Utils.on(button, 'mouseleave', () => {
+                    button.style.transform = '';
+                });
             });
         });
-    },
+    }
     
-    // Show project modal
-    showProjectModal(title, description) {
-        if (Portfolio.state.activeModal) return;
+    showProjectDetails(card) {
+        const title = Utils.$('h3', card)?.textContent;
+        const description = Utils.$('p', card)?.textContent;
+        const technologies = Array.from(Utils.$$('.project-tech span', card)).map(span => span.textContent);
         
-        const modal = Portfolio.utils.createElement('div', {
-            className: 'modal-overlay',
-            id: 'projectModal'
-        }, [
-            Portfolio.utils.createElement('div', {
-                className: 'modal-content'
-            }, [
-                // Header
-                Portfolio.utils.createElement('div', {
-                    className: 'modal-header'
-                }, [
-                    Portfolio.utils.createElement('h3', {
-                        textContent: title
-                    }),
-                    Portfolio.utils.createElement('button', {
-                        className: 'modal-close',
-                        innerHTML: '&times;'
-                    })
-                ]),
-                
-                // Body
-                Portfolio.utils.createElement('div', {
-                    className: 'modal-body'
-                }, [
-                    Portfolio.utils.createElement('div', {
-                        className: 'project-details'
-                    }, [
-                        Portfolio.utils.createElement('p', {
-                            textContent: description
-                        }),
-                        Portfolio.utils.createElement('div', {
-                            className: 'project-actions'
-                        }, [
-                            Portfolio.utils.createElement('button', {
-                                className: 'btn btn-primary',
-                                textContent: 'عرض المشروع'
-                            }),
-                            Portfolio.utils.createElement('button', {
-                                className: 'btn btn-outline-primary',
-                                textContent: 'إغلاق'
-                            })
-                        ])
-                    ])
-                ])
-            ])
-        ]);
-        
+        // إنشاء نافذة تفاصيل المشروع
+        const modal = this.createProjectModal(title, description, technologies);
         document.body.appendChild(modal);
-        Portfolio.state.activeModal = modal;
         
-        // Add animations
+        // إظهار النافذة
         setTimeout(() => {
-            modal.classList.add('show');
+            Utils.addClass(modal, 'show');
         }, 10);
         
-        // Close button
-        const closeBtn = Portfolio.utils.$('.modal-close', modal);
-        Portfolio.utils.addEvent(closeBtn, 'click', () => {
-            this.closeProjectModal();
-        });
-        
-        // Close button in actions
-        const closeActionBtn = Portfolio.utils.$('.btn-outline-primary', modal);
-        Portfolio.utils.addEvent(closeActionBtn, 'click', () => {
-            this.closeProjectModal();
-        });
-        
-        // Close on overlay click
-        Portfolio.utils.addEvent(modal, 'click', (e) => {
-            if (e.target === modal) {
-                this.closeProjectModal();
-            }
-        });
-        
-        // Close on Escape key
-        Portfolio.utils.addEvent(document, 'keydown', (e) => {
-            if (e.key === 'Escape' && Portfolio.state.activeModal) {
-                this.closeProjectModal();
-            }
-        });
-    },
+        // إعدادات الإغلاق
+        this.setupModalClose(modal);
+    }
     
-    // Close project modal
-    closeProjectModal() {
-        const modal = Portfolio.state.activeModal;
-        if (!modal) return;
+    createProjectModal(title, description, technologies) {
+        const modal = document.createElement('div');
+        modal.className = 'project-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-project-diagram"></i> ${title}</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="project-details">
+                        <p class="description">${description}</p>
+                        
+                        <div class="technologies">
+                            <h4><i class="fas fa-tools"></i> التقنيات المستخدمة</h4>
+                            <div class="tech-tags">
+                                ${technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="project-features">
+                            <h4><i class="fas fa-star"></i> المميزات</h4>
+                            <ul>
+                                <li>تصميم متجاوب وعصري</li>
+                                <li>واجهة مستخدم سهلة الاستخدام</li>
+                                <li>أداء عالي وسريع</li>
+                                <li>توافق مع جميع المتصفحات</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-eye"></i> عرض المشروع
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-code"></i> عرض الكود
+                    </button>
+                </div>
+            </div>
+        `;
         
-        modal.classList.remove('show');
+        return modal;
+    }
+    
+    setupModalClose(modal) {
+        const closeBtn = Utils.$('.modal-close', modal);
+        Utils.on(closeBtn, 'click', () => {
+            this.closeProjectModal(modal);
+        });
         
+        // إغلاق عند النقر خارج النافذة
+        Utils.on(modal, 'click', (e) => {
+            if (e.target === modal) {
+                this.closeProjectModal(modal);
+            }
+        });
+        
+        // إغلاق بمفتاح Escape
+        Utils.on(document, 'keydown', (e) => {
+            if (e.key === 'Escape' && Utils.hasClass(modal, 'show')) {
+                this.closeProjectModal(modal);
+            }
+        });
+    }
+    
+    closeProjectModal(modal) {
+        Utils.removeClass(modal, 'show');
         setTimeout(() => {
             if (modal.parentNode) {
                 modal.parentNode.removeChild(modal);
             }
-            Portfolio.state.activeModal = null;
         }, 300);
     }
-};
+    
+    setupViewMoreButton() {
+        if (!this.viewMoreBtn) return;
+        
+        // تأثير عند المرور
+        Utils.on(this.viewMoreBtn, 'mouseenter', () => {
+            this.viewMoreBtn.style.transform = 'translateY(-5px)';
+            this.viewMoreBtn.style.boxShadow = '0 10px 20px rgba(106, 17, 203, 0.3)';
+        });
+        
+        Utils.on(this.viewMoreBtn, 'mouseleave', () => {
+            this.viewMoreBtn.style.transform = '';
+            this.viewMoreBtn.style.boxShadow = '';
+        });
+        
+        // تأثير النقر
+        Utils.on(this.viewMoreBtn, 'click', (e) => {
+            e.preventDefault();
+            this.loadMoreProjects();
+        });
+    }
+    
+    loadMoreProjects() {
+        // في التطبيق الحقيقي، يمكن جلب المزيد من المشاريع من قاعدة البيانات
+        this.viewMoreBtn.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            جاري التحميل...
+        `;
+        this.viewMoreBtn.disabled = true;
+        
+        setTimeout(() => {
+            // محاكاة جلب بيانات جديدة
+            this.viewMoreBtn.innerHTML = `
+                <i class="fas fa-plus"></i>
+                عرض المزيد من المشاريع
+            `;
+            this.viewMoreBtn.disabled = false;
+            
+            // إظهار رسالة
+            this.showLoadMoreMessage();
+        }, 1500);
+    }
+    
+    showLoadMoreMessage() {
+        const message = document.createElement('div');
+        message.className = 'load-more-message';
+        message.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <span>سيتم إضافة المزيد من المشاريع قريباً!</span>
+        `;
+        
+        document.body.appendChild(message);
+        
+        // إظهار الرسالة
+        setTimeout(() => {
+            Utils.addClass(message, 'show');
+        }, 10);
+        
+        // إخفاء الرسالة تلقائياً
+        setTimeout(() => {
+            Utils.removeClass(message, 'show');
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 300);
+        }, 2000);
+    }
+}
 
 // ==========================================================================
-// Contact Section
+// قسم التواصل
 // ==========================================================================
 
-Portfolio.contact = {
-    // Initialize contact section
+class ContactSection {
+    constructor() {
+        this.contactForm = Utils.$('#contactForm');
+        this.newsletterForm = Utils.$('#newsletterForm');
+        this.backToTopBtn = Utils.$('#backToTop');
+        this.socialLinks = Utils.$$('.social-link');
+    }
+    
     init() {
         this.setupContactForm();
         this.setupNewsletter();
         this.setupBackToTop();
-    },
+        this.setupSocialLinks();
+    }
     
-    // Setup contact form
     setupContactForm() {
-        const contactForm = Portfolio.utils.$('#contactForm');
-        if (!contactForm) return;
+        if (!this.contactForm) return;
         
-        Portfolio.utils.addEvent(contactForm, 'submit', async (e) => {
+        // التحقق من الحقول عند الكتابة
+        const inputs = Utils.$$('input, textarea, select', this.contactForm);
+        inputs.forEach(input => {
+            Utils.on(input, 'input', () => {
+                this.validateField(input);
+            });
+            
+            Utils.on(input, 'blur', () => {
+                this.validateField(input);
+            });
+        });
+        
+        // إرسال النموذج
+        Utils.on(this.contactForm, 'submit', async (e) => {
             e.preventDefault();
             
-            // Get form data
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData);
+            // التحقق من جميع الحقول
+            let isValid = true;
+            inputs.forEach(input => {
+                if (!this.validateField(input)) {
+                    isValid = false;
+                }
+            });
             
-            // Validate form
-            if (!this.validateForm(data)) {
+            if (!isValid) {
+                this.showFormMessage('يرجى تصحيح الأخطاء في النموذج', 'error');
                 return;
             }
             
-            // Show loading state
-            const submitBtn = Portfolio.utils.$('.btn-send', contactForm);
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `
-                <i class="fas fa-spinner fa-spin"></i>
-                جاري الإرسال...
-            `;
-            
-            try {
-                // Simulate API call
-                await this.simulateApiCall(data);
-                
-                // Show success message
-                Portfolio.utils.showNotification(
-                    'تم إرسال رسالتك بنجاح!',
-                    'success'
-                );
-                
-                // Reset form
-                contactForm.reset();
-            } catch (error) {
-                // Show error message
-                Portfolio.utils.showNotification(
-                    'حدث خطأ أثناء إرسال الرسالة. حاول مرة أخرى.',
-                    'error'
-                );
-            } finally {
-                // Restore button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            }
+            // إرسال النموذج
+            await this.submitContactForm();
         });
-    },
+    }
     
-    // Validate form data
-    validateForm(data) {
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(data.email)) {
-            Portfolio.utils.showNotification(
-                'البريد الإلكتروني غير صحيح',
-                'error'
-            );
-            return false;
-        }
+    validateField(field) {
+        let isValid = true;
+        let message = '';
         
-        // Validate required fields
-        const requiredFields = ['name', 'email', 'message'];
-        for (const field of requiredFields) {
-            if (!data[field] || data[field].trim() === '') {
-                Portfolio.utils.showNotification(
-                    'يرجى ملء جميع الحقول المطلوبة',
-                    'error'
-                );
-                return false;
+        // إعادة تعليمات الحقل
+        field.style.borderColor = '';
+        
+        if (field.required && !field.value.trim()) {
+            isValid = false;
+            message = 'هذا الحقل مطلوب';
+        } else if (field.type === 'email' && field.value.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(field.value.trim())) {
+                isValid = false;
+                message = 'البريد الإلكتروني غير صحيح';
             }
         }
         
-        return true;
-    },
+        // إظهار/إخفاء رسالة الخطأ
+        this.updateFieldValidation(field, isValid, message);
+        
+        return isValid;
+    }
     
-    // Simulate API call
-    simulateApiCall(data) {
-        return new Promise((resolve) => {
+    updateFieldValidation(field, isValid, message) {
+        // إزالة رسالة الخطأ السابقة
+        const existingError = field.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.parentNode.removeChild(existingError);
+        }
+        
+        // إزالة رسالة النجاح السابقة
+        const existingSuccess = field.parentNode.querySelector('.success-message');
+        if (existingSuccess) {
+            existingSuccess.parentNode.removeChild(existingSuccess);
+        }
+        
+        if (!isValid && message) {
+            // إضافة رسالة الخطأ
+            const errorElement = document.createElement('div');
+            errorElement.className = 'error-message';
+            errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            field.parentNode.appendChild(errorElement);
+            
+            // تأثير الخطأ
+            field.style.borderColor = '#ff4757';
+            field.style.animation = 'shake 0.5s ease-in-out';
+            
             setTimeout(() => {
-                // In a real application, you would send data to your server here
-                console.log('Form data:', data);
-                resolve();
-            }, 1500);
-        });
-    },
+                field.style.animation = '';
+            }, 500);
+        } else if (field.value.trim() && field.type !== 'submit') {
+            // إضافة رسالة النجاح
+            const successElement = document.createElement('div');
+            successElement.className = 'success-message';
+            successElement.innerHTML = `<i class="fas fa-check-circle"></i> صحيح`;
+            field.parentNode.appendChild(successElement);
+            
+            // تأثير النجاح
+            field.style.borderColor = '#11998e';
+        }
+    }
     
-    // Setup newsletter
-    setupNewsletter() {
-        const newsletterForm = Portfolio.utils.$('#newsletterForm');
-        if (!newsletterForm) return;
+    async submitContactForm() {
+        const submitBtn = Utils.$('.btn-send', this.contactForm);
+        const originalText = submitBtn.innerHTML;
         
-        Portfolio.utils.addEvent(newsletterForm, 'submit', async (e) => {
+        // حالة التحميل
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            جاري الإرسال...
+        `;
+        
+        // محاكاة إرسال البيانات
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // نجاح الإرسال
+            this.showFormMessage('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.', 'success');
+            this.contactForm.reset();
+            
+            // إعادة تعيين رسائل الحقول
+            const messages = Utils.$$('.error-message, .success-message', this.contactForm);
+            messages.forEach(msg => msg.remove());
+            
+        } catch (error) {
+            // فشل الإرسال
+            this.showFormMessage('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', 'error');
+        } finally {
+            // إعادة الزر
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    }
+    
+    showFormMessage(text, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `form-message ${type}`;
+        messageDiv.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${text}</span>
+        `;
+        
+        // إضافة الرسالة قبل زر الإرسال
+        const submitBtn = Utils.$('.btn-send', this.contactForm);
+        this.contactForm.insertBefore(messageDiv, submitBtn);
+        
+        // إخفاء الرسالة تلقائياً
+        setTimeout(() => {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateY(-10px)';
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 300);
+        }, 5000);
+    }
+    
+    setupNewsletter() {
+        if (!this.newsletterForm) return;
+        
+        const emailInput = Utils.$('input[type="email"]', this.newsletterForm);
+        
+        Utils.on(this.newsletterForm, 'submit', async (e) => {
             e.preventDefault();
             
-            const emailInput = Portfolio.utils.$('input[type="email"]', newsletterForm);
             const email = emailInput.value.trim();
             
-            // Validate email
+            // التحقق من البريد الإلكتروني
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                emailInput.style.borderColor = 'red';
-                Portfolio.utils.showNotification(
-                    'البريد الإلكتروني غير صحيح',
-                    'error'
-                );
+                this.showNewsletterMessage('البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
             
-            // Disable inputs
-            emailInput.disabled = true;
-            const submitBtn = Portfolio.utils.$('button', newsletterForm);
-            submitBtn.disabled = true;
-            
-            try {
-                // Simulate subscription
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // Show success message
-                Portfolio.utils.showNotification(
-                    'تم الاشتراك في النشرة البريدية بنجاح!',
-                    'success'
-                );
-                
-                // Reset form
-                emailInput.value = '';
-            } catch (error) {
-                Portfolio.utils.showNotification(
-                    'حدث خطأ أثناء الاشتراك. حاول مرة أخرى.',
-                    'error'
-                );
-            } finally {
-                // Re-enable inputs
-                emailInput.disabled = false;
-                submitBtn.disabled = false;
-                emailInput.style.borderColor = '';
-            }
+            // إرسال الاشتراك
+            await this.subscribeNewsletter(email);
         });
-    },
+    }
     
-    // Setup back to top button
+    async subscribeNewsletter(email) {
+        const submitBtn = Utils.$('button', this.newsletterForm);
+        const originalText = submitBtn.innerHTML;
+        
+        // حالة التحميل
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+        
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // نجاح الاشتراك
+            this.showNewsletterMessage('تم الاشتراك في النشرة البريدية بنجاح!', 'success');
+            this.newsletterForm.reset();
+            
+        } catch (error) {
+            // فشل الاشتراك
+            this.showNewsletterMessage('حدث خطأ أثناء الاشتراك', 'error');
+        } finally {
+            // إعادة الزر
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    }
+    
+    showNewsletterMessage(text, type) {
+        const existingMessage = Utils.$('.newsletter-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        const message = document.createElement('div');
+        message.className = `newsletter-message ${type}`;
+        message.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${text}</span>
+        `;
+        
+        this.newsletterForm.appendChild(message);
+        
+        // إخفاء الرسالة تلقائياً
+        setTimeout(() => {
+            message.style.opacity = '0';
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
     setupBackToTop() {
-        const backToTopBtn = Portfolio.utils.$('#backToTop');
-        if (!backToTopBtn) return;
+        if (!this.backToTopBtn) return;
         
-        // Show/hide button on scroll
-        window.addEventListener('scroll', Portfolio.utils.throttle(() => {
+        // إظهار/إخفاء الزر حسب التمرير
+        Utils.on(window, 'scroll', Utils.debounce(() => {
             if (window.scrollY > 500) {
-                backToTopBtn.classList.add('visible');
+                Utils.addClass(this.backToTopBtn, 'visible');
             } else {
-                backToTopBtn.classList.remove('visible');
+                Utils.removeClass(this.backToTopBtn, 'visible');
             }
-        }, Portfolio.constants.THROTTLE_DELAY));
+        }, 10));
         
-        // Scroll to top on click
-        Portfolio.utils.addEvent(backToTopBtn, 'click', () => {
+        // التمرير إلى الأعلى
+        Utils.on(this.backToTopBtn, 'click', () => {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
+            
+            // تأثير النقر
+            this.backToTopBtn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.backToTopBtn.style.transform = '';
+            }, 150);
+        });
+        
+        // تأثير عند المرور
+        Utils.on(this.backToTopBtn, 'mouseenter', () => {
+            this.backToTopBtn.style.transform = 'scale(1.1)';
+        });
+        
+        Utils.on(this.backToTopBtn, 'mouseleave', () => {
+            this.backToTopBtn.style.transform = '';
         });
     }
-};
+    
+    setupSocialLinks() {
+        this.socialLinks.forEach(link => {
+            Utils.on(link, 'mouseenter', () => {
+                link.style.transform = 'translateY(-5px) scale(1.1)';
+            });
+            
+            Utils.on(link, 'mouseleave', () => {
+                link.style.transform = '';
+            });
+            
+            // تأثير النقر
+            Utils.on(link, 'click', (e) => {
+                e.preventDefault();
+                this.animateSocialClick(link);
+                
+                // في التطبيق الحقيقي، سيتم توجيه المستخدم إلى الرابط
+                const href = link.getAttribute('href');
+                if (href && href !== '#') {
+                    setTimeout(() => {
+                        window.open(href, '_blank');
+                    }, 300);
+                }
+            });
+        });
+    }
+    
+    animateSocialClick(link) {
+        // تأثير الاهتزاز
+        link.style.animation = 'shake 0.5s ease-in-out';
+        
+        // تأثير التوهج
+        const originalColor = link.style.color;
+        link.style.color = '#6a11cb';
+        
+        setTimeout(() => {
+            link.style.animation = '';
+            link.style.color = originalColor;
+        }, 500);
+    }
+}
 
 // ==========================================================================
-// Download CV Functionality
+// تحميل السيرة الذاتية
 // ==========================================================================
 
-Portfolio.download = {
-    // Initialize download functionality
+class DownloadManager {
+    constructor() {
+        this.downloadCVBtn = Utils.$('#downloadCV');
+        this.downloadButtons = Utils.$$('.btn-download');
+    }
+    
     init() {
         this.setupCVDownload();
         this.setupProjectDownloads();
-    },
+    }
     
-    // Setup CV download
     setupCVDownload() {
-        const downloadCVBtn = Portfolio.utils.$('#downloadCV');
-        if (!downloadCVBtn) return;
+        if (!this.downloadCVBtn) return;
         
-        Portfolio.utils.addEvent(downloadCVBtn, 'click', (e) => {
+        // تأثير عند المرور
+        Utils.on(this.downloadCVBtn, 'mouseenter', () => {
+            this.downloadCVBtn.style.transform = 'translateY(-5px)';
+            this.downloadCVBtn.style.boxShadow = '0 10px 20px rgba(247, 151, 30, 0.3)';
+        });
+        
+        Utils.on(this.downloadCVBtn, 'mouseleave', () => {
+            this.downloadCVBtn.style.transform = '';
+            this.downloadCVBtn.style.boxShadow = '';
+        });
+        
+        // النقر للتحميل
+        Utils.on(this.downloadCVBtn, 'click', (e) => {
             e.preventDefault();
             this.downloadCV();
         });
-    },
+    }
     
-    // Download CV
     async downloadCV() {
+        const originalText = this.downloadCVBtn.innerHTML;
+        
+        // حالة التحميل
+        this.downloadCVBtn.disabled = true;
+        this.downloadCVBtn.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            جاري التحميل...
+        `;
+        
         try {
-            // Show loading state
-            const downloadCVBtn = Portfolio.utils.$('#downloadCV');
-            const originalText = downloadCVBtn.innerHTML;
-            
-            downloadCVBtn.disabled = true;
-            downloadCVBtn.innerHTML = `
-                <i class="fas fa-spinner fa-spin"></i>
-                جاري التحميل...
-            `;
-            
-            // Simulate download
+            // محاكاة التحميل
             await new Promise(resolve => setTimeout(resolve, 1000));
             
-            // Create download link
+            // إنشاء محتوى PDF وهمي
             const cvContent = this.generateCVContent();
             const blob = new Blob([cvContent], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             
+            // إنشاء رابط تحميل
             const link = document.createElement('a');
             link.href = url;
             link.download = 'سيرة_غمدان_عبده.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            // تحرير الذاكرة
             URL.revokeObjectURL(url);
             
-            // Show success message
-            Portfolio.utils.showNotification(
-                'تم بدء تحميل السيرة الذاتية',
-                'success'
-            );
+            // إظهار رسالة النجاح
+            this.showDownloadMessage('تم بدء تحميل السيرة الذاتية');
+            
         } catch (error) {
-            Portfolio.utils.showNotification(
-                'حدث خطأ أثناء التحميل. حاول مرة أخرى.',
-                'error'
-            );
+            console.error('خطأ في التحميل:', error);
+            this.showDownloadMessage('حدث خطأ أثناء التحميل', 'error');
         } finally {
-            // Restore button
-            const downloadCVBtn = Portfolio.utils.$('#downloadCV');
-            if (downloadCVBtn) {
-                downloadCVBtn.disabled = false;
-                downloadCVBtn.innerHTML = originalText;
-            }
-        }
-    },
-    
-    // Generate CV content
-    generateCVContent() {
-        const texts = Portfolio.translations.ar;
-        
-        return `
-            غمدان عبده - السيرة الذاتية
-            
-            المعلومات الشخصية:
-            - الاسم: غمدان عبده علي صالح
-            - تاريخ الميلاد: ٢ أغسطس ١٩٩٧
-            - العنوان: محافظة مارب - ريمة، اليمن
-            - البريد الإلكتروني: m739265566@gmail.com
-            - الهاتف: ٧٧٤٠٣٨٤٧٥
-            
-            التعليم:
-            - بكالوريوس علوم الحاسوب، جامعة إقليم سيا (٢٠٢٥)
-            - الثانوية العامة، مدرسة الثورة (٢٠١٦)
-            
-            المهارات:
-            - البرمجة: PHP، JavaScript، Python، C#
-            - تطوير الويب: HTML5/CSS3، Bootstrap، React.js
-            - قواعد البيانات: MySQL، SQL Server، MongoDB
-            - الأدوات: Git، Docker، AWS
-            
-            الخبرات:
-            - مطور نظم متقدم (٢٠٢٣-الآن)
-            - محلل ومبرمج نظم (٢٠٢١-٢٠٢٣)
-            - مبرمج ويب (٢٠١٩-٢٠٢١)
-            
-            المشاريع:
-            - نظام بوابة الطالب الإلكترونية
-            - نظام إدارة المحتوى
-            - تطبيق إدارة المهام
-            - منصة التجارة الإلكترونية
-        `;
-    },
-    
-    // Setup project downloads
-    setupProjectDownloads() {
-        const downloadButtons = Portfolio.utils.$$('.btn-download');
-        
-        downloadButtons.forEach(button => {
-            Portfolio.utils.addEvent(button, 'click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const projectId = button.id.replace('downloadProject', '');
-                this.downloadProject(projectId);
-            });
-        });
-    },
-    
-    // Download project
-    async downloadProject(projectId) {
-        try {
-            // Show loading
-            Portfolio.utils.showNotification(
-                'جاري تحميل المشروع...',
-                'info'
-            );
-            
-            // Simulate download
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            Portfolio.utils.showNotification(
-                'تم بدء تحميل المشروع',
-                'success'
-            );
-        } catch (error) {
-            Portfolio.utils.showNotification(
-                'حدث خطأ أثناء التحميل',
-                'error'
-            );
+            // إعادة الزر
+            this.downloadCVBtn.disabled = false;
+            this.downloadCVBtn.innerHTML = originalText;
         }
     }
-};
+    
+    generateCVContent() {
+        return `سيرة غمدان عبده الذاتية
+        
+الاسم: غمدان عبده علي صالح
+تاريخ الميلاد: ٢ أغسطس ١٩٩٧
+العنوان: محافظة مارب - اليمن
+البريد الإلكتروني: ghamdan@gmail.com
+الهاتف: ٧٧٤٠٣٨٤٧٥
+
+التعليم:
+- بكالوريوس علوم الحاسوب، جامعة إقليم سيا (تخرج ٢٠٢٥)
+- الثانوية العامة، مدرسة الثورة (٢٠١٦)
+
+المهارات التقنية:
+- البرمجة: PHP، JavaScript، Python، C#
+- تطوير الويب: HTML5/CSS3، Bootstrap، React.js
+- قواعد البيانات: MySQL، SQL Server، Flutter
+- الأدوات: Git، Docker، AWS
+
+الخبرات المهنية:
+- مطور نظم متقدم (٢٠٢٣ - الآن)
+- محلل ومبرمج نظم (٢٠٢١ - ٢٠٢٣)
+- مبرمج ويب (٢٠١٩ - ٢٠٢١)
+
+المشاريع:
+- بوابة الطالب الإلكترونية (نظام إدارة أكاديمي)
+- نظام إدارة المحتوى
+- تطبيق إدارة المهام
+- منصة التجارة الإلكترونية
+
+الشهادات:
+- الأمن السيبراني
+- الرخصة الدولية لقيادة الحاسوب (ICDL)
+- حماية الطرفيات والأجهزة`;
+    }
+    
+    setupProjectDownloads() {
+        this.downloadButtons.forEach(button => {
+            Utils.on(button, 'click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.downloadProject(button);
+            });
+        });
+    }
+    
+    async downloadProject(button) {
+        const projectId = button.id.replace('downloadProject', '');
+        const originalText = button.innerHTML;
+        
+        // حالة التحميل
+        button.disabled = true;
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+        
+        try {
+            // محاكاة التحميل
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // في التطبيق الحقيقي، سيتم تحميل ملف المشروع
+            this.showDownloadMessage('تم بدء تحميل ملف المشروع');
+            
+        } catch (error) {
+            this.showDownloadMessage('حدث خطأ أثناء التحميل', 'error');
+        } finally {
+            // إعادة الزر
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+    }
+    
+    showDownloadMessage(text, type = 'success') {
+        const message = document.createElement('div');
+        message.className = `download-message ${type}`;
+        message.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${text}</span>
+        `;
+        
+        document.body.appendChild(message);
+        
+        // إظهار الرسالة
+        setTimeout(() => {
+            Utils.addClass(message, 'show');
+        }, 10);
+        
+        // إخفاء الرسالة تلقائياً
+        setTimeout(() => {
+            Utils.removeClass(message, 'show');
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 300);
+        }, 3000);
+    }
+}
 
 // ==========================================================================
-// AOS Initialization
+// تهيئة AOS (الرسوم المتحركة عند التمرير)
 // ==========================================================================
 
-Portfolio.animations = {
-    // Initialize animations
+class AnimationManager {
     init() {
-        if (typeof AOS === 'undefined' || Portfolio.config.reducedMotion) {
+        if (typeof AOS === 'undefined') {
             Portfolio.config.animationsEnabled = false;
             return;
         }
@@ -2101,285 +2239,538 @@ Portfolio.animations = {
             
             Portfolio.config.animationsEnabled = true;
             
-            // Refresh AOS on resize
-            window.addEventListener('resize', Portfolio.utils.debounce(() => {
+            // تحديث AOS عند تغيير الحجم
+            Utils.on(window, 'resize', Utils.debounce(() => {
                 AOS.refresh();
             }, 250));
         } catch (error) {
-            console.error('AOS initialization error:', error);
+            console.error('خطأ في تهيئة AOS:', error);
             Portfolio.config.animationsEnabled = false;
         }
     }
-};
-
-// ==========================================================================
-// Network Status Monitoring
-// ==========================================================================
-
-Portfolio.network = {
-    // Initialize network monitoring
-    init() {
-        this.updateNetworkStatus();
-        this.setupNetworkEvents();
-    },
-    
-    // Update network status
-    updateNetworkStatus() {
-        Portfolio.config.networkStatus = navigator.onLine ? 'online' : 'offline';
-        
-        if (!navigator.onLine) {
-            Portfolio.utils.showNotification(
-                'أنت غير متصل بالإنترنت. بعض الميزات قد لا تعمل.',
-                'warning',
-                5000
-            );
-        }
-    },
-    
-    // Setup network events
-    setupNetworkEvents() {
-        window.addEventListener('online', () => {
-            Portfolio.config.networkStatus = 'online';
-            Portfolio.utils.showNotification(
-                'أنت متصل بالإنترنت الآن!',
-                'success',
-                3000
-            );
-        });
-        
-        window.addEventListener('offline', () => {
-            Portfolio.config.networkStatus = 'offline';
-            Portfolio.utils.showNotification(
-                'أنت غير متصل بالإنترنت. بعض الميزات قد لا تعمل.',
-                'warning',
-                5000
-            );
-        });
-    }
-};
-
-// ==========================================================================
-// Main Initialization
-// ==========================================================================
-
-Portfolio.main = {
-    // Initialize everything
-    init() {
-        // Detect device
-        Portfolio.utils.detectDevice();
-        
-        // Initialize performance optimizations
-        Portfolio.performance.init();
-        
-        // Initialize language and theme
-        Portfolio.language.init();
-        Portfolio.theme.init();
-        
-        // Initialize navigation
-        Portfolio.navigation.init();
-        
-        // Initialize sections
-        Portfolio.hero.init();
-        Portfolio.skills.init();
-        Portfolio.projects.init();
-        Portfolio.contact.init();
-        Portfolio.download.init();
-        
-        // Initialize animations
-        Portfolio.animations.init();
-        
-        // Initialize network monitoring
-        Portfolio.network.init();
-        
-        // Setup resize handler
-        this.setupResizeHandler();
-        
-        // Setup beforeunload handler
-        this.setupBeforeUnload();
-        
-        // Log initialization
-        console.log('Portfolio initialized successfully!');
-        console.log('Config:', Portfolio.config);
-    },
-    
-    // Setup resize handler
-    setupResizeHandler() {
-        let resizeTimeout;
-        
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                // Update device detection
-                Portfolio.utils.detectDevice();
-                
-                // Refresh AOS if enabled
-                if (Portfolio.config.animationsEnabled && typeof AOS !== 'undefined') {
-                    AOS.refresh();
-                }
-                
-                // Update particles if enabled
-                if (Portfolio.config.particlesEnabled && window.pJSDom) {
-                    window.pJSDom[0].pJS.fn.vendors.destroypJS();
-                    Portfolio.hero.setupParticles();
-                }
-            }, 250);
-        });
-    },
-    
-    // Setup beforeunload handler
-    setupBeforeUnload() {
-        window.addEventListener('beforeunload', () => {
-            // Clean up resources
-            this.cleanup();
-        });
-    },
-    
-    // Cleanup resources
-    cleanup() {
-        // Clear all timers
-        Portfolio.state.timers.forEach(timer => clearTimeout(timer));
-        Portfolio.state.timers.clear();
-        
-        // Disconnect all observers
-        Portfolio.state.observers.forEach(observer => observer.disconnect());
-        Portfolio.state.observers.clear();
-        
-        // Remove all event listeners
-        if (Portfolio.state.eventListeners) {
-            Portfolio.state.eventListeners.forEach((listeners, eventId) => {
-                const [elementId, event] = eventId.split('-');
-                const element = document.getElementById(elementId);
-                if (element) {
-                    listeners.forEach(({ handler, options }) => {
-                        element.removeEventListener(event, handler, options);
-                    });
-                }
-            });
-            Portfolio.state.eventListeners.clear();
-        }
-        
-        // Stop animations
-        Portfolio.state.animations.forEach(animation => {
-            if (animation.stop) animation.stop();
-        });
-        Portfolio.state.animations.clear();
-        
-        // Cancel idle callback
-        if (Portfolio.state.idleCallback) {
-            cancelIdleCallback(Portfolio.state.idleCallback);
-        }
-        
-        // Destroy typed instance
-        if (Portfolio.typed && Portfolio.typed.destroy) {
-            Portfolio.typed.destroy();
-        }
-        
-        // Destroy chart instance
-        if (Portfolio.skillsChart && Portfolio.skillsChart.destroy) {
-            Portfolio.skillsChart.destroy();
-        }
-        
-        // Destroy particles
-        if (Portfolio.config.particlesEnabled && window.pJSDom) {
-            window.pJSDom[0].pJS.fn.vendors.destroypJS();
-        }
-    }
-};
-
-// ==========================================================================
-// Error Handling
-// ==========================================================================
-
-// Global error handler
-window.addEventListener('error', function(e) {
-    console.error('Global error:', e.error);
-    
-    // Show user-friendly error message
-    if (e.error && e.error.message) {
-        Portfolio.utils.showNotification(
-            'حدث خطأ غير متوقع. يرجى تحديث الصفحة.',
-            'error',
-            5000
-        );
-    }
-});
-
-// Unhandled promise rejection handler
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Unhandled promise rejection:', e.reason);
-    
-    Portfolio.utils.showNotification(
-        'حدث خطأ في العملية. يرجى المحاولة مرة أخرى.',
-        'error',
-        5000
-    );
-});
-
-// ==========================================================================
-// Service Worker Registration
-// ==========================================================================
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-        });
-    });
 }
 
 // ==========================================================================
-// Initialize on DOM Content Loaded
+// التطبيق الرئيسي
 // ==========================================================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if we should use performance mode
-    Portfolio.config.performanceMode = 
-        'hardwareConcurrency' in navigator && 
-        navigator.hardwareConcurrency <= 2;
+class App {
+    static init() {
+        // اكتشاف نوع الجهاز
+        this.detectDevice();
+        
+        // تهيئة المكونات
+        this.initializeComponents();
+        
+        // إعداد مستمعي الأحداث
+        this.setupEventListeners();
+        
+        console.log('تم تهيئة التطبيق بنجاح! 🌟');
+    }
     
-    // Start preloader
-    Portfolio.preloader.init();
-});
-
-// ==========================================================================
-// CSS Variables Setup
-// ==========================================================================
-
-// Set CSS custom properties
-document.documentElement.style.setProperty('--primary-color', '#6a11cb');
-document.documentElement.style.setProperty('--secondary-color', '#2575fc');
-document.documentElement.style.setProperty('--accent-color', '#ff0080');
-document.documentElement.style.setProperty('--success-color', '#11998e');
-document.documentElement.style.setProperty('--warning-color', '#f7971e');
-document.documentElement.style.setProperty('--error-color', '#ff4757');
-
-// ==========================================================================
-// Export for global access (if needed)
-// ==========================================================================
-
-window.Portfolio = Portfolio;
-
-// ==========================================================================
-// Performance Monitoring
-// ==========================================================================
-
-// Log page load performance
-if ('performance' in window) {
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            const perfEntries = performance.getEntriesByType('navigation');
-            if (perfEntries.length > 0) {
-                const navigationEntry = perfEntries[0];
-                console.log('Page load time:', navigationEntry.loadEventEnd - navigationEntry.startTime, 'ms');
-                
-                // Log other performance metrics
-                const paintEntries = performance.getEntriesByType('paint');
-                paintEntries.forEach(entry => {
-                    console.log(`${entry.name}:`, entry.startTime, 'ms');
-                });
+    static detectDevice() {
+        const width = window.innerWidth;
+        const ua = navigator.userAgent;
+        
+        Portfolio.config.isMobile = width <= 768;
+        Portfolio.config.isTablet = width > 768 && width <= 1024;
+        Portfolio.config.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
+    
+    static initializeComponents() {
+        // تأثيرات الاسم
+        new NameAnimation().init();
+        
+        // إدارة الثيم
+        new ThemeManager().init();
+        
+        // التنقل
+        new NavigationManager().init();
+        
+        // القسم الرئيسي
+        new HeroSection().init();
+        
+        // المهارات
+        new SkillsSection().init();
+        
+        // المشاريع
+        new ProjectsSection().init();
+        
+        // التواصل
+        new ContactSection().init();
+        
+        // التحميل
+        new DownloadManager().init();
+        
+        // الرسوم المتحركة
+        new AnimationManager().init();
+    }
+    
+    static setupEventListeners() {
+        // تحديث اكتشاف الجهاز عند تغيير الحجم
+        Utils.on(window, 'resize', Utils.debounce(() => {
+            this.detectDevice();
+        }, 250));
+        
+        // منع التحميل المزدوج للنماذج
+        Utils.on(document, 'submit', (e) => {
+            if (e.target.tagName === 'FORM') {
+                const submitBtn = Utils.$('[type="submit"]', e.target);
+                if (submitBtn && submitBtn.disabled) {
+                    e.preventDefault();
+                }
             }
-        }, 0);
-    });
+        });
+        
+        // تحسين الأداء للجوال
+        if (Portfolio.config.isMobile) {
+            this.optimizeForMobile();
+        }
+    }
+    
+    static optimizeForMobile() {
+        // إيقاف بعض التأثيرات على الجوال لتحسين الأداء
+        Portfolio.config.particlesEnabled = false;
+        
+        const particlesContainer = Utils.$('#particles-js');
+        if (particlesContainer) {
+            particlesContainer.style.display = 'none';
+        }
+        
+        // تقليل التأثيرات البصرية
+        document.documentElement.style.setProperty('--animation-speed', '0.5s');
+    }
 }
+
+// ==========================================================================
+// إضافة أنماط CSS الديناميكية
+// ==========================================================================
+
+const dynamicStyles = `
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes waveEffect {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.glow {
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 5px #6a11cb, 0 0 10px #6a11cb, 0 0 15px #6a11cb; }
+    to { text-shadow: 0 0 10px #2575fc, 0 0 20px #2575fc, 0 0 30px #2575fc; }
+}
+
+.floating-element {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.theme-notification {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(12, 12, 20, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-notification.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.tech-message {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(106, 17, 203, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9998;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(106, 17, 203, 0.4);
+}
+
+.tech-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.social-particle {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9997;
+}
+
+.skill-particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9997;
+}
+
+.intro-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.intro-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.intro-modal .modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
+    transform: translateY(30px);
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.intro-modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.project-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.project-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.load-more-message {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(56, 239, 125, 0.9);
+    backdrop-filter: blur(10px);
+    color: #1a1a2e;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9998;
+    opacity: 0;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(56, 239, 125, 0.4);
+}
+
+.load-more-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.download-message {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(106, 17, 203, 0.9);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9998;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(106, 17, 203, 0.4);
+}
+
+.download-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.download-message.error {
+    background: rgba(255, 71, 87, 0.9);
+}
+
+.error-message {
+    color: #ff4757;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.success-message {
+    color: #11998e;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-message {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.form-message.success {
+    background: rgba(56, 239, 125, 0.1);
+    border: 1px solid rgba(56, 239, 125, 0.3);
+    color: #11998e;
+}
+
+.form-message.error {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    color: #ff4757;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.newsletter-message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.newsletter-message.success {
+    background: rgba(56, 239, 125, 0.1);
+    border: 1px solid rgba(56, 239, 125, 0.3);
+    color: #11998e;
+}
+
+.newsletter-message.error {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    color: #ff4757;
+}
+
+@media (max-width: 768px) {
+    .theme-notification,
+    .tech-message,
+    .load-more-message,
+    .download-message {
+        width: 90%;
+        text-align: center;
+        padding: 10px 15px;
+    }
+}
+
+body.dark-mode {
+    --bg-light: #1a1a2e;
+    --bg-lighter: #16213e;
+    --text-dark: #f8f9fa;
+    --border-light: #343a40;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+`;
+
+// إضافة الأنماط الديناميكية
+const styleSheet = document.createElement('style');
+styleSheet.textContent = dynamicStyles;
+document.head.appendChild(styleSheet);
+
+// ==========================================================================
+// بدء التطبيق
+// ==========================================================================
+
+// الانتظار حتى تحميل DOM
+document.addEventListener('DOMContentLoaded', () => {
+    // بدء Preloader
+    new Preloader().init();
+    
+    // إضافة تأثيرات CSS إضافية للاسم
+    const nameStyles = `
+        #typedName {
+            position: relative;
+            display: inline-block;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        #logoName {
+            position: relative;
+            background: linear-gradient(45deg, #6a11cb, #2575fc, #ff0080, #ff8c00);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite;
+            font-weight: 800;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glowing {
+            text-shadow: 0 0 20px rgba(106, 17, 203, 0.8),
+                         0 0 40px rgba(37, 117, 252, 0.6),
+                         0 0 60px rgba(255, 0, 128, 0.4);
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+    `;
+    
+    const nameStyleSheet = document.createElement('style');
+    nameStyleSheet.textContent = nameStyles;
+    document.head.appendChild(nameStyleSheet);
+});
+
+// معالجة الأخطاء العالمية
+window.addEventListener('error', function(e) {
+    console.error('خطأ في التطبيق:', e.error);
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('رفض promise غير معالج:', e.reason);
+});
+// ==========================================================================
+// تهيئة التطبيق
+// ==========================================================================
+
+// بدء التطبيق بعد تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    // تهيئة مدير التنقل
+    const navigation = new NavigationManager();
+    navigation.init();
+    
+    // إضافة تأثيرات بسيطة للروابط
+    setTimeout(() => {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.style.transition = 'all 0.2s ease';
+        });
+    }, 100);
+    
+    // إغلاق القائمة عند تغيير حجم النافذة (اختياري)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 992 && navigation.isMenuOpen()) {
+            navigation.closeMobileMenu();
+        }
+    });
+});
+
+// التأكد من أن الروابط تعمل بشكل صحيح
+document.addEventListener('click', (e) => {
+    // إذا كان النقر على رابط تنقل داخلي
+    if (e.target.matches('.nav-link') || e.target.closest('.nav-link')) {
+        const link = e.target.matches('.nav-link') ? e.target : e.target.closest('.nav-link');
+        const href = link.getAttribute('href');
+        
+        // إذا كان الرابط يشير إلى قسم في الصفحة
+        if (href && href.startsWith('#')) {
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // تأخير بسيط لإغلاق القائمة
+                setTimeout(() => {
+                    const navigation = window.navigationManager;
+                    if (navigation && navigation.isMenuOpen()) {
+                        navigation.closeMobileMenu();
+                    }
+                }, 100);
+            }
+        }
+    }
+});
+
+// جعل كائن NavigationManager متاحاً عالمياً للتصحيح
+window.navigationManager = new NavigationManager();
